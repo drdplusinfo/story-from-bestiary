@@ -1,0 +1,9 @@
+/.idea
+/vendor
+/phpunit_log
+/index.php
+/html/css
+/html/images
+/css/generic
+/js/generic
+/images/generic
