@@ -27,7 +27,6 @@
   "prefer-stable": true,
   "scripts": {
     "pre-autoload-dump": [
-      "rm -f $PWD/index.php && ln -s $PWD/vendor/drd-plus/rules-html-skeleton/index.php $PWD/index.php",
       "mkdir -p $PWD/Tests/",
       "cp -r $PWD/vendor/drd-plus/rules-html-skeleton/Tests/* $PWD/Tests/",
       "cp --no-clobber $PWD/vendor/drd-plus/rules-html-skeleton/favicon.ico $PWD",
