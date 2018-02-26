@@ -34,7 +34,7 @@
       "rm -f ./css/generic && ln -s ../vendor/drd-plus/rules-html-skeleton/css/generic ./css/generic"
     ],
     "post-install-cmd": [
-      "rm -f cache/pages/**"
+      "rm -f cache/pages/*"
     ]
   }
 }
