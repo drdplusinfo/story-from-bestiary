@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6484f41d90c1671d3235d86297e91ba8",
+    "hash": "31b1ae34c820e2ad74f220b04b2de478",
     "content-hash": "069294d82b58d1c79ff68aa7cef915b2",
     "packages": [
         {
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-rules-html-skeleton.git",
-                "reference": "3a124baa4c93a7bc4460304c113f1b523d7e49b2"
+                "reference": "6b4da2638139944b1482d558c2ecea289a7055cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-html-skeleton/zipball/3a124baa4c93a7bc4460304c113f1b523d7e49b2",
-                "reference": "3a124baa4c93a7bc4460304c113f1b523d7e49b2",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-html-skeleton/zipball/6b4da2638139944b1482d558c2ecea289a7055cc",
+                "reference": "6b4da2638139944b1482d558c2ecea289a7055cc",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-02-26 08:30:39"
+            "time": "2018-02-27 13:16:15"
         },
         {
             "name": "granam/scalar",
