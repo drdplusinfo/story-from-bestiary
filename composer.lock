@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "31b1ae34c820e2ad74f220b04b2de478",
+    "hash": "8141bca5299072019e2cbfef8daa2ec6",
     "content-hash": "069294d82b58d1c79ff68aa7cef915b2",
     "packages": [
         {
@@ -13,16 +13,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-rules-html-skeleton.git",
-                "reference": "9ec808f5febb5b966488a370522a473148dcd9f9"
+                "reference": "d9b1e3625f06b5390f8a05ca9225e88b27690fd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-html-skeleton/zipball/9ec808f5febb5b966488a370522a473148dcd9f9",
-                "reference": "9ec808f5febb5b966488a370522a473148dcd9f9",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-html-skeleton/zipball/d9b1e3625f06b5390f8a05ca9225e88b27690fd2",
+                "reference": "d9b1e3625f06b5390f8a05ca9225e88b27690fd2",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
+                "granam/exceptions-hierarchy": "dev-master",
                 "granam/string": "dev-master",
                 "php": ">=7.1",
                 "phpgt/dom": "^1.0",
@@ -52,7 +53,48 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-02-28 13:46:29"
+            "time": "2018-03-06 07:42:12"
+        },
+        {
+            "name": "granam/exceptions-hierarchy",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
+                "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jaroslavtyc/granam-exceptions-hierarchy/zipball/a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
+                "reference": "a90ec9df0bdb91e41dd85ed42cf6d5eed0444c22",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Granam\\": "Granam/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The hierarchy skeleton of exceptions in a project",
+            "homepage": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy",
+            "keywords": [
+                "exception",
+                "hierarchy",
+                "logic",
+                "php",
+                "runtime"
+            ],
+            "time": "2017-02-19 12:25:09"
         },
         {
             "name": "granam/scalar",
@@ -160,12 +202,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/granam-string.git",
-                "reference": "14c55f2ab3982d0a30068445c666824e7e10c6ae"
+                "reference": "dd2942317b13a6306ce645bdce4082086ec9913d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/14c55f2ab3982d0a30068445c666824e7e10c6ae",
-                "reference": "14c55f2ab3982d0a30068445c666824e7e10c6ae",
+                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/dd2942317b13a6306ce645bdce4082086ec9913d",
+                "reference": "dd2942317b13a6306ce645bdce4082086ec9913d",
                 "shasum": ""
             },
             "require": {
@@ -176,7 +218,7 @@
             "require-dev": {
                 "ext-mbstring": "*",
                 "granam/exceptions-hierarchy": "~4.0",
-                "mockery/mockery": "~0.9",
+                "mockery/mockery": "~1.0",
                 "phpunit/phpunit": "~6.0"
             },
             "suggest": {
@@ -206,7 +248,7 @@
                 "php",
                 "string"
             ],
-            "time": "2017-10-12 11:38:23"
+            "time": "2018-03-07 11:01:24"
         },
         {
             "name": "granam/tools",
@@ -416,16 +458,16 @@
         },
         {
             "name": "piwik/device-detector",
-            "version": "3.9.2",
+            "version": "3.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matomo-org/device-detector.git",
-                "reference": "2c69fc7a73df8e78ba712771dc43b58a637d5395"
+                "reference": "d2769e8b6e983cf31666a0f5b921ef1c8564cfb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/2c69fc7a73df8e78ba712771dc43b58a637d5395",
-                "reference": "2c69fc7a73df8e78ba712771dc43b58a637d5395",
+                "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/d2769e8b6e983cf31666a0f5b921ef1c8564cfb1",
+                "reference": "d2769e8b6e983cf31666a0f5b921ef1c8564cfb1",
                 "shasum": ""
             },
             "require": {
@@ -466,7 +508,7 @@
                 "parser",
                 "useragent"
             ],
-            "time": "2018-02-04 18:36:27"
+            "time": "2018-03-05 12:45:57"
         },
         {
             "name": "roave/security-advisories",
@@ -474,12 +516,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "8df7344c55a84691ec559db5c9e6f8a2c7086443"
+                "reference": "664836e89c7ecad3dbaabc1572ea752c0d532d80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/8df7344c55a84691ec559db5c9e6f8a2c7086443",
-                "reference": "8df7344c55a84691ec559db5c9e6f8a2c7086443",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/664836e89c7ecad3dbaabc1572ea752c0d532d80",
+                "reference": "664836e89c7ecad3dbaabc1572ea752c0d532d80",
                 "shasum": ""
             },
             "conflict": {
@@ -509,9 +551,9 @@
                 "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
                 "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
                 "dompdf/dompdf": ">=0.6,<0.6.2",
-                "drupal/core": ">=8,<8.3.7",
-                "drupal/drupal": ">=8,<8.3.7",
-                "erusev/parsedown": "<=1.6.4",
+                "drupal/core": ">=8,<8.4.5",
+                "drupal/drupal": ">=8,<8.4.5",
+                "erusev/parsedown": "<1.7",
                 "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.3|>=5.4,<5.4.11.3|>=2017.8,<2017.8.1.1|>=2017.12,<2017.12.2.1",
                 "firebase/php-jwt": "<2",
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
@@ -533,7 +575,7 @@
                 "oro/crm": ">=1.7,<1.7.4",
                 "oro/platform": ">=1.7,<1.7.4",
                 "padraic/humbug_get_contents": "<1.1.2",
-                "pagarme/pagarme-php": ">=0,<9.9.99",
+                "pagarme/pagarme-php": ">=0,<3",
                 "paragonie/random_compat": "<2",
                 "phpmailer/phpmailer": ">=5,<5.2.24",
                 "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
@@ -547,7 +589,7 @@
                 "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
                 "silverstripe/framework": ">=3,<3.3",
                 "silverstripe/userforms": "<3",
-                "simplesamlphp/saml2": "<1.10.4|>=2,<2.3.5|>=3,<3.1.1",
+                "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
                 "simplesamlphp/simplesamlphp": "<1.15.2",
                 "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
                 "socalnick/scn-social-auth": "<1.15.2",
@@ -572,7 +614,7 @@
                 "symfony/web-profiler-bundle": ">=2,<2.3.19|>=2.4,<2.4.9|>=2.5,<2.5.4",
                 "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
                 "thelia/backoffice-default-template": ">=2.1,<2.1.2",
-                "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
+                "thelia/thelia": ">=2.1,<2.1.2|>=2.1.0-beta1,<2.1.3",
                 "titon/framework": ">=0,<9.9.99",
                 "twig/twig": "<1.20",
                 "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.22|>=8,<8.7.5",
@@ -622,7 +664,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-02-27 21:53:45"
+            "time": "2018-03-07 15:45:44"
         },
         {
             "name": "symfony/css-selector",
