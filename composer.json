@@ -27,10 +27,10 @@
   "prefer-stable": true,
   "scripts": {
     "pre-update-cmd": [
-      "cd $PWD/vendor/drd-plus/rules-html-skeleton && git checkout *.css"
+      "if [ -d ./vendor/drd-plus/rules-html-skeleton ]; then cd ./vendor/drd-plus/rules-html-skeleton && git checkout *.css; fi"
     ],
     "pre-install-cmd": [
-      "cd $PWD/vendor/drd-plus/rules-html-skeleton && git checkout *.css"
+      "if [ -d ./vendor/drd-plus/rules-html-skeleton ]; then cd ./vendor/drd-plus/rules-html-skeleton && git checkout *.css; fi"
     ],
     "pre-autoload-dump": [
       "mkdir -p Tests",
@@ -48,7 +48,7 @@
     "post-install-cmd": [
       "./vendor/drd-plus/rules-html-skeleton/bin/assets --dir=css",
       "find ./cache -mindepth 2 -type f -exec rm {} +",
-      "wget https://pribeh.bestiar.drdplus.info --background --output-document=/dev/null --output-file=/dev/null"
+      "wget https://pribeh.bestiar.drdplus.info --background --output-document=/dev/null --output-file=/dev/null >> /dev/null"
     ]
   }
 }
