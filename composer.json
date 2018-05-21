@@ -33,22 +33,19 @@
       "if [ -d ./vendor/drd-plus/rules-html-skeleton ]; then cd ./vendor/drd-plus/rules-html-skeleton && git checkout *.css; fi"
     ],
     "pre-autoload-dump": [
-      "mkdir -p Tests",
-      "echo '*' > Tests/.gitignore",
-      "cp -r vendor/drd-plus/rules-html-skeleton/Tests/* Tests/",
-      "cp --no-clobber vendor/drd-plus/rules-html-skeleton/phpunit.xml.dist $PWD",
-      "rm -f ./images/generic && ln -s ../vendor/drd-plus/rules-html-skeleton/images/generic ./images/generic",
-      "rm -f ./css/generic && ln -s ../vendor/drd-plus/rules-html-skeleton/css/generic ./css/generic",
-      "rm -f ./js/generic && ln -s ../vendor/drd-plus/rules-html-skeleton/js/generic ./js/generic"
+      "mkdir --parents DrdPlus/Tests/BestiaryStory",
+      "cp -r vendor/drd-plus/rules-html-skeleton/DrdPlus/Tests/RulesSkeleton/* DrdPlus/Tests/BestiaryStory",
+      "rm -fr ./images/generic && ln -s ../vendor/drd-plus/rules-html-skeleton/images/generic ./images/generic",
+      "rm -fr ./css/generic && ln -s ../vendor/drd-plus/rules-html-skeleton/css/generic ./css/generic",
+      "rm -fr ./js/generic && ln -s ../vendor/drd-plus/rules-html-skeleton/js/generic ./js/generic",
+      "find ./cache -mindepth 2 -type f -exec rm {} +"
     ],
     "post-update-cmd": [
-      "./vendor/drd-plus/rules-html-skeleton/bin/assets --dir=css",
-      "find ./cache -mindepth 2 -type f -exec rm {} +"
+      "./vendor/drd-plus/rules-html-skeleton/bin/assets --dir=css"
     ],
     "post-install-cmd": [
       "./vendor/drd-plus/rules-html-skeleton/bin/assets --dir=css",
-      "find ./cache -mindepth 2 -type f -exec rm {} +",
-      "wget https://pribeh.bestiar.drdplus.info --background --output-document=/dev/null --output-file=/dev/null >> /dev/null"
+      "wget https://pribeh.bestiar.drdplus.info --post-data=\"trial=1\" --background --output-document=- --output-file=- >> /dev/null"
     ]
   }
 }

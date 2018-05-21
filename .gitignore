@@ -1,11 +1,10 @@
 /.idea
 /vendor
 /phpunit_log
-/html/css
-/html/images
+/web/css
+/web/images
+/web/js
 /css/generic
 /js/generic
 /images/generic
-/cache
-/Tests/DrdPlus/RulesSkeleton
 /composer_install_result.txt

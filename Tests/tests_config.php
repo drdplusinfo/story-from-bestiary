@@ -1,3 +1,0 @@
-<?php
-const JUST_TEXT_TESTING = true;
-const NO_EXTERNAL_ANCHORS_WITH_HASH_EXPECTED = true;
