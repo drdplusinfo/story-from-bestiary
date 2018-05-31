@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "217bf65b1b4ec7c579f6cda613c8a38858faf232"
+                "reference": "1185cf26ea8ede7347f828bf6c5e664428a4a290"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/217bf65b1b4ec7c579f6cda613c8a38858faf232",
-                "reference": "217bf65b1b4ec7c579f6cda613c8a38858faf232",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/1185cf26ea8ede7347f828bf6c5e664428a4a290",
+                "reference": "1185cf26ea8ede7347f828bf6c5e664428a4a290",
                 "shasum": ""
             },
             "require": {
@@ -32,7 +32,7 @@
                 "tracy/tracy": "^2.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "~6.0",
+                "phpunit/phpunit": "~7.0",
                 "roave/security-advisories": "dev-master"
             },
             "type": "library",
@@ -55,7 +55,7 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-05-30 11:46:59"
+            "time": "2018-05-31 09:51:58"
         },
         {
             "name": "drd-plus/rules-html-skeleton",
@@ -63,12 +63,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-rules-html-skeleton.git",
-                "reference": "9b8bf39245ca708615237c92ac35edf904d1ad02"
+                "reference": "0de4feb306c5c23087407c3e636f1ad255a6d617"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-html-skeleton/zipball/2377218b68eb82940029540a8b192d4eb0fae880",
-                "reference": "9b8bf39245ca708615237c92ac35edf904d1ad02",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-html-skeleton/zipball/0de4feb306c5c23087407c3e636f1ad255a6d617",
+                "reference": "0de4feb306c5c23087407c3e636f1ad255a6d617",
                 "shasum": ""
             },
             "require": {
@@ -104,7 +104,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-05-30 11:06:37"
+            "time": "2018-05-31 11:07:25"
         },
         {
             "name": "granam/exceptions-hierarchy",
