@@ -12,3 +12,5 @@ $testsConfiguration->disableHasDebugContacts();
 $testsConfiguration->disableHasCharacterSheet();
 $testsConfiguration->disableCanBeBoughtOnEshop();
 $testsConfiguration->setBlockNamesToExpectedContent([]);
+$testsConfiguration->setExpectedWebName('Příběh z DrD+ bestiáře');
+$testsConfiguration->setExpectedPageTitle('⛏️ Příběh z DrD+ bestiáře');
