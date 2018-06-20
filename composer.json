@@ -39,7 +39,7 @@
     ],
     "post-install-cmd": [
       "./vendor/bin/assets --css --dir=css",
-      "wget https://pribeh.bestiar.drdplus.info --post-data=\"trial=1\" --background --output-document=- --output-file=- >> /dev/null"
+      "wget https://pribeh.bestiar.drdplus.info --post-data=\"trial=1\" --background --output-document=- --output-file=/dev/null >> /dev/null"
     ]
   }
 }
