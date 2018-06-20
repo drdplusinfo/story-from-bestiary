@@ -6,6 +6,7 @@ $vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
 require_once $vendorRoot . '/autoload.php';
 
 $controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController(
+        \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($documentRoot),
         $documentRoot,
         $webRoot,
         $vendorRoot
