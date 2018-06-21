@@ -1,6 +1,6 @@
 <?php
 global $testsConfiguration;
-$testsConfiguration = new \DrdPlus\Tests\RulesSkeleton\TestsConfiguration();
+$testsConfiguration = new \DrdPlus\Tests\RulesSkeleton\TestsConfiguration('https://pribeh.bestiar.drdplus.info');
 $testsConfiguration->disableHasLinksToJournals();
 $testsConfiguration->disableHasLinkToSingleJournal();
 $testsConfiguration->disableHasTables();
@@ -16,3 +16,4 @@ $testsConfiguration->setExpectedWebName('Příběh z DrD+ bestiáře');
 $testsConfiguration->setExpectedPageTitle('⛏️ Příběh z DrD+ bestiáře');
 $testsConfiguration->disableHasLinksToAltar();
 $testsConfiguration->disableHasMoreVersions();
+$testsConfiguration->disableHasExternalAnchorsWithHashes();

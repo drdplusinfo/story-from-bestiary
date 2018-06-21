@@ -1,6 +1,6 @@
 {
   "name": "drd-plus/story-from-bestiary",
-  "license": "proprietary",
+  "license": "MIT",
   "type": "library",
   "description": "Story from Drd+ bestiary",
   "keywords": [
@@ -35,11 +35,11 @@
       "find ./cache -mindepth 2 -type f -exec rm {} +"
     ],
     "post-update-cmd": [
-      "./vendor/bin/assets --css --dir=css"
+      "php ./vendor/bin/assets --css --dir=css"
     ],
     "post-install-cmd": [
-      "./vendor/bin/assets --css --dir=css",
-      "wget https://pribeh.bestiar.drdplus.info --post-data=\"trial=1\" --background --output-document=- --output-file=/dev/null >> /dev/null"
+      "php ./vendor/bin/assets --css --dir=css",
+      "wget https://pribeh.bestiar.drdplus.info --background --output-document=- --output-file=/dev/null >> /dev/null"
     ]
   }
 }

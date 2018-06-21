@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "24a15bc718d4509c6059175de7d51da5",
+    "hash": "1c119304782f2e5b16ad82f3eededf7d",
     "content-hash": "04a0bb7a3597706b1a10ad37f9cf7ae9",
     "packages": [
         {
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "1f62a40bbb8cab68f1e5dc8f73067a39d87d361a"
+                "reference": "cbe67dbe5a344923fe012bf8e2d489d13bebb0d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/1f62a40bbb8cab68f1e5dc8f73067a39d87d361a",
-                "reference": "1f62a40bbb8cab68f1e5dc8f73067a39d87d361a",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/cbe67dbe5a344923fe012bf8e2d489d13bebb0d2",
+                "reference": "cbe67dbe5a344923fe012bf8e2d489d13bebb0d2",
                 "shasum": ""
             },
             "require": {
@@ -59,7 +59,7 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-06-20 05:16:35"
+            "time": "2018-06-21 15:29:47"
         },
         {
             "name": "drd-plus/rules-skeleton",
@@ -67,12 +67,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
-                "reference": "f02221d8b0e00c3f5ef731f391a89e549a912fbd"
+                "reference": "6921d5ad0d6d2ecf887cc2f367ed3501f3cca61a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/f02221d8b0e00c3f5ef731f391a89e549a912fbd",
-                "reference": "f02221d8b0e00c3f5ef731f391a89e549a912fbd",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/6921d5ad0d6d2ecf887cc2f367ed3501f3cca61a",
+                "reference": "6921d5ad0d6d2ecf887cc2f367ed3501f3cca61a",
                 "shasum": ""
             },
             "require": {
@@ -108,7 +108,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-06-19 14:38:30"
+            "time": "2018-06-21 15:47:40"
         },
         {
             "name": "granam/exceptions-hierarchy",
@@ -1674,16 +1674,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.2.4",
+            "version": "7.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "00bc0b93f0ff4f557e9ea766557fde96da9a03dd"
+                "reference": "400a3836ee549ae6f665323ac3f21e27eac7155f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/00bc0b93f0ff4f557e9ea766557fde96da9a03dd",
-                "reference": "00bc0b93f0ff4f557e9ea766557fde96da9a03dd",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/400a3836ee549ae6f665323ac3f21e27eac7155f",
+                "reference": "400a3836ee549ae6f665323ac3f21e27eac7155f",
                 "shasum": ""
             },
             "require": {
@@ -1699,7 +1699,7 @@
                 "php": "^7.1",
                 "phpspec/prophecy": "^1.7",
                 "phpunit/php-code-coverage": "^6.0.7",
-                "phpunit/php-file-iterator": "^2.0",
+                "phpunit/php-file-iterator": "^2.0.1",
                 "phpunit/php-text-template": "^1.2.1",
                 "phpunit/php-timer": "^2.0",
                 "sebastian/comparator": "^3.0",
@@ -1754,7 +1754,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-06-05 03:40:05"
+            "time": "2018-06-21 13:13:39"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
