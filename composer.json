@@ -33,7 +33,8 @@
       "rm -f ./images/generic && ln -s ../vendor/drd-plus/rules-skeleton/images/generic ./images/generic",
       "rm -f ./js/generic && ln -s ../vendor/drd-plus/rules-skeleton/js/generic ./js/generic",
       "find ./cache -mindepth 2 -type f -exec rm {} +",
-      "cp ./vendor/drd-plus/rules-skeleton/google8d8724e0c2818dfc.html ."
+      "cp ./vendor/drd-plus/rules-skeleton/google8d8724e0c2818dfc.html .",
+      "cp ./vendor/drd-plus/rules-skeleton/phpunit.xml.dist ."
     ],
     "post-update-cmd": [
       "php ./vendor/bin/assets --css --dir=css"

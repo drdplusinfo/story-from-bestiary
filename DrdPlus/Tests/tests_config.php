@@ -17,3 +17,4 @@ $testsConfiguration->setExpectedPageTitle('⛏️ Příběh z DrD+ bestiáře');
 $testsConfiguration->disableHasLinksToAltar();
 $testsConfiguration->disableHasMoreVersions();
 $testsConfiguration->disableHasExternalAnchorsWithHashes();
+$testsConfiguration->setExpectedGoogleAnalyticsId('UA-121206931-13');
