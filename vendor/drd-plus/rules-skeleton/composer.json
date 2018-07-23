@@ -1,0 +1,58 @@
+{
+  "name": "drd-plus/rules-skeleton",
+  "license": "MIT",
+  "type": "library",
+  "description": "Skeleton for DrD+ rules as HTML",
+  "keywords": [
+    "drd plus",
+    "rules",
+    "helper",
+    "skeleton"
+  ],
+  "autoload": {
+    "psr-4": {
+      "DrdPlus\\": "DrdPlus/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ext-mbstring": "*",
+    "phpgt/dom": "~1.0",
+    "piwik/device-detector": "^3.9",
+    "tracy/tracy": "^2.4",
+    "phpmailer/phpmailer": "^6.0",
+    "drd-plus/frontend-skeleton": "dev-master"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master",
+    "phpunit/phpunit": "~7.0",
+    "mockery/mockery": "~1.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "pre-autoload-dump": [
+      "rm ./images/generic/skeleton/frontend*",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/images/generic ./images/",
+      "rm ./css/generic/skeleton/frontend*",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/css/generic ./css/",
+      "rm ./js/generic/skeleton/frontend*",
+      "cp -r ./vendor/drd-plus/frontend-skeleton/js/generic ./js/",
+      "find ./cache -mindepth 2 -type f -exec rm {} +",
+      "cp ./vendor/drd-plus/frontend-skeleton/google8d8724e0c2818dfc.html .",
+      "cp ./vendor/drd-plus/frontend-skeleton/phpunit.xml.dist ."
+    ],
+    "post-update-cmd": [
+      "php ./vendor/bin/assets --css --dir=css"
+    ],
+    "post-install-cmd": [
+      "php ./vendor/bin/assets --css --dir=css"
+    ]
+  }
+}

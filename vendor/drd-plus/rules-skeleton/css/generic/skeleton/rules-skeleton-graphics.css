@@ -1,0 +1,12 @@
+.delimiter {
+    margin: 1em auto;
+    display: block;
+    width: 30em;
+    max-width: 100%;
+}
+
+.sand-glass {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+}
