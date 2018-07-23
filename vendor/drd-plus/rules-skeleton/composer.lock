@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4514cb69f7e949a699e9da5aecb5818c",
-    "content-hash": "f49202871a6c49b34296420c9c4a0589",
+    "hash": "87581d7c56c1d84b98759c7bb9a42082",
+    "content-hash": "409d1e29a5ae6cec8228ef0785929dd7",
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
-            "version": "dev-master",
+            "version": "1.0.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "1c09b1a9318946c7fd5e32c954ee2705579adc97"
+                "reference": "a2e5ec8bfd8d132ab13a2c381ba68026686c15f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/1c09b1a9318946c7fd5e32c954ee2705579adc97",
-                "reference": "1c09b1a9318946c7fd5e32c954ee2705579adc97",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/a2e5ec8bfd8d132ab13a2c381ba68026686c15f1",
+                "reference": "a2e5ec8bfd8d132ab13a2c381ba68026686c15f1",
                 "shasum": ""
             },
             "require": {
@@ -70,10 +70,10 @@
                 "view"
             ],
             "support": {
-                "source": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/tree/master",
+                "source": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/tree/1.0.21",
                 "issues": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/issues"
             },
-            "time": "2018-07-23 06:17:18"
+            "time": "2018-07-23 11:29:39"
         },
         {
             "name": "granam/exceptions-hierarchy",
@@ -2381,7 +2381,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drd-plus/frontend-skeleton": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

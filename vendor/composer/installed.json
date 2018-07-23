@@ -2382,17 +2382,17 @@
     },
     {
         "name": "drd-plus/frontend-skeleton",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "1.0.21",
+        "version_normalized": "1.0.21.0",
         "source": {
             "type": "git",
             "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-            "reference": "00b4eae1eb57cecee6b085ab71e419290d9b02c6"
+            "reference": "a2e5ec8bfd8d132ab13a2c381ba68026686c15f1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/00b4eae1eb57cecee6b085ab71e419290d9b02c6",
-            "reference": "00b4eae1eb57cecee6b085ab71e419290d9b02c6",
+            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/a2e5ec8bfd8d132ab13a2c381ba68026686c15f1",
+            "reference": "a2e5ec8bfd8d132ab13a2c381ba68026686c15f1",
             "shasum": ""
         },
         "require": {
@@ -2410,7 +2410,7 @@
             "phpunit/phpunit": "~7.0",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2018-07-23 09:43:37",
+        "time": "2018-07-23 11:29:39",
         "bin": [
             "bin/assets"
         ],
@@ -2438,21 +2438,21 @@
     },
     {
         "name": "drd-plus/rules-skeleton",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "1.0.14",
+        "version_normalized": "1.0.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
-            "reference": "80dfb524f1dd912eaf502888475ab23d7faa411a"
+            "reference": "23e5bf2e506540d8791d57e53006c4bc3671d68f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/80dfb524f1dd912eaf502888475ab23d7faa411a",
-            "reference": "80dfb524f1dd912eaf502888475ab23d7faa411a",
+            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/23e5bf2e506540d8791d57e53006c4bc3671d68f",
+            "reference": "23e5bf2e506540d8791d57e53006c4bc3671d68f",
             "shasum": ""
         },
         "require": {
-            "drd-plus/frontend-skeleton": "dev-master",
+            "drd-plus/frontend-skeleton": "~1.0",
             "ext-mbstring": "*",
             "php": ">=7.1",
             "phpgt/dom": "~1.0",
@@ -2465,7 +2465,7 @@
             "phpunit/phpunit": "~7.0",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2018-07-23 09:43:07",
+        "time": "2018-07-23 14:11:28",
         "type": "library",
         "installation-source": "source",
         "autoload": {
