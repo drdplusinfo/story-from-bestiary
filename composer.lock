@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b32a8e5ab65ab69ec97ad959064b3b26",
+    "hash": "adf964276ad5b42305809a646c49be6a",
     "content-hash": "2a5088198c57c15346ea2a5571dd97df",
     "packages": [
         {
@@ -63,16 +63,16 @@
         },
         {
             "name": "drd-plus/rules-skeleton",
-            "version": "1.0.14",
+            "version": "1.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
-                "reference": "23e5bf2e506540d8791d57e53006c4bc3671d68f"
+                "reference": "129382d310b854e159217ee171a1c14b11e31403"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/23e5bf2e506540d8791d57e53006c4bc3671d68f",
-                "reference": "23e5bf2e506540d8791d57e53006c4bc3671d68f",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/129382d310b854e159217ee171a1c14b11e31403",
+                "reference": "129382d310b854e159217ee171a1c14b11e31403",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-07-23 14:11:28"
+            "time": "2018-07-23 15:32:18"
         },
         {
             "name": "granam/exceptions-hierarchy",

@@ -22,29 +22,6 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
     /**
      * @test
      */
-    public function Libraries_git_dirs_are_removed(): void
-    {
-        $preAutoloadDumpScripts = static::$composerConfig['scripts']['pre-autoload-dump'] ?? [];
-        self::assertNotEmpty($preAutoloadDumpScripts, 'Missing pre-autoload-dump scripts');
-        if ($this->isSkeletonChecked()) {
-            self::assertNotContains(
-                'find ./vendor -type d -name .git -exec rm -fr {} +',
-                $preAutoloadDumpScripts,
-                'There is no reason to remove vendors .git dir in skeleton as vendor dir is not versioned'
-            );
-        } else {
-            self::assertContains(
-                'find ./vendor -type d -name .git -exec rm -fr {} +',
-                $preAutoloadDumpScripts,
-                'Missing vendors .git dir removal, there are configs '
-                . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($preAutoloadDumpScripts, true))
-            );
-        }
-    }
-
-    /**
-     * @test
-     */
     public function PHPUnit_config_is_copied_from_skeleton(): void
     {
         $preAutoloadDumpScripts = static::$composerConfig['scripts']['pre-autoload-dump'] ?? [];
