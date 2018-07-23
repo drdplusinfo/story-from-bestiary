@@ -38,12 +38,9 @@
   "prefer-stable": true,
   "scripts": {
     "pre-autoload-dump": [
-      "rm ./images/generic/skeleton/frontend*",
-      "cp -r ./vendor/drd-plus/frontend-skeleton/images/generic ./images/",
-      "rm ./css/generic/skeleton/frontend*",
-      "cp -r ./vendor/drd-plus/frontend-skeleton/css/generic ./css/",
-      "rm ./js/generic/skeleton/frontend*",
-      "cp -r ./vendor/drd-plus/frontend-skeleton/js/generic ./js/",
+      "rm -f ./images/generic/skeleton/frontend* && cp -r ./vendor/drd-plus/frontend-skeleton/images/generic ./images/",
+      "rm -f ./css/generic/skeleton/frontend* && cp -r ./vendor/drd-plus/frontend-skeleton/css/generic ./css/",
+      "rm -f ./js/generic/skeleton/frontend* && cp -r ./vendor/drd-plus/frontend-skeleton/js/generic ./js/",
       "find ./cache -mindepth 2 -type f -exec rm {} +",
       "cp ./vendor/drd-plus/frontend-skeleton/google8d8724e0c2818dfc.html .",
       "cp ./vendor/drd-plus/frontend-skeleton/phpunit.xml.dist ."

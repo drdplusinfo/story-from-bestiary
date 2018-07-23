@@ -18,3 +18,4 @@ $testsConfiguration->disableHasLinksToAltar();
 $testsConfiguration->disableHasMoreVersions();
 $testsConfiguration->disableHasExternalAnchorsWithHashes();
 $testsConfiguration->setExpectedGoogleAnalyticsId('UA-121206931-13');
+$testsConfiguration->setExpectedLastVersion('master');

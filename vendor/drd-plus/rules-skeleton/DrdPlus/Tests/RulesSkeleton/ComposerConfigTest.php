@@ -75,4 +75,26 @@ class ComposerConfigTest extends \DrdPlus\Tests\FrontendSkeleton\ComposerConfigT
             . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($preAutoloadDumpScripts, true))
         );
     }
+
+    /**
+     * @test
+     */
+    public function Generic_assets_are_hard_copied_from_libraries(): void
+    {
+        $preAutoloadDump = static::$composerConfig['scripts']['pre-autoload-dump'] ?? [];
+        self::assertNotEmpty($preAutoloadDump, 'Missing pre-autoload-dump scripts');
+        if ($this->isSkeletonChecked()) {
+            self::assertFalse(false, 'Skeleton does not have assets hard copied as it is their creator');
+
+            return;
+        }
+        foreach (['css', 'js', 'images'] as $assets) {
+            self::assertContains(
+                "rm -fr ./$assets/generic && cp -r ./vendor/drd-plus/rules-skeleton/$assets/generic ./$assets/",
+                $preAutoloadDump,
+                "Missing script to copy $assets assets, there are only scripts "
+                . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($preAutoloadDump, true))
+            );
+        }
+    }
 }

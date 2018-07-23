@@ -2387,12 +2387,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-            "reference": "953da0e59d240ec2f4e33bec9042baff53588a0f"
+            "reference": "00b4eae1eb57cecee6b085ab71e419290d9b02c6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/953da0e59d240ec2f4e33bec9042baff53588a0f",
-            "reference": "953da0e59d240ec2f4e33bec9042baff53588a0f",
+            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/00b4eae1eb57cecee6b085ab71e419290d9b02c6",
+            "reference": "00b4eae1eb57cecee6b085ab71e419290d9b02c6",
             "shasum": ""
         },
         "require": {
@@ -2410,7 +2410,7 @@
             "phpunit/phpunit": "~7.0",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2018-07-22 13:13:50",
+        "time": "2018-07-23 09:43:37",
         "bin": [
             "bin/assets"
         ],
@@ -2443,12 +2443,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
-            "reference": "c38c4401b9ca0031c99359c84beda4aa84e43d0c"
+            "reference": "80dfb524f1dd912eaf502888475ab23d7faa411a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/c38c4401b9ca0031c99359c84beda4aa84e43d0c",
-            "reference": "c38c4401b9ca0031c99359c84beda4aa84e43d0c",
+            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/80dfb524f1dd912eaf502888475ab23d7faa411a",
+            "reference": "80dfb524f1dd912eaf502888475ab23d7faa411a",
             "shasum": ""
         },
         "require": {
@@ -2465,7 +2465,7 @@
             "phpunit/phpunit": "~7.0",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2018-07-22 15:50:36",
+        "time": "2018-07-23 09:43:07",
         "type": "library",
         "installation-source": "source",
         "autoload": {
