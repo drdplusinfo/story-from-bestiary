@@ -3,11 +3,7 @@ if (PHP_SAPI !== 'cli') {
 // anyone can show content of this page
     \header('Access-Control-Allow-Origin: *', true);
 }
-$documentRoot = $documentRoot ?? (PHP_SAPI !== 'cli' ? \rtrim(\dirname($_SERVER['SCRIPT_FILENAME']), '\/') : \getcwd());
-$vendorRoot = $vendorRoot ?? $documentRoot . '/vendor';
-
-/** @noinspection PhpIncludeInspection */
-require_once $vendorRoot . '/autoload.php';
+require_once __DIR__ . '/safe_autoload.php';
 
 /**
  * @var \DrdPlus\RulesSkeleton\RulesController $controller
@@ -25,7 +21,7 @@ if ($tablesCache->isCacheValid()) {
 }
 // must NOT include current content.php as it uses router and that requires this script so endless recursion happens
 /** @noinspection PhpIncludeInspection */
-$rawContent = require $vendorRoot . '/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';
+$rawContent = require $controller->getDirs()->getDocumentRoot() . '/vendor/drd-plus/frontend-skeleton/parts/frontend-skeleton/content.php';
 $rawContentDocument = new \DrdPlus\FrontendSkeleton\HtmlDocument($rawContent);
 $tables = $htmlHelper->findTablesWithIds($rawContentDocument, $controller->getRequest()->getWantedTablesIds());
 $tablesContent = '';
@@ -38,13 +34,13 @@ unset($rawContent, $rawContentDocument);
   <!DOCTYPE html>
   <html lang="cs">
     <head>
-      <title>Tabulky pro Drd+ <?= \basename($documentRoot) ?></title>
+      <title>Tabulky pro Drd+ <?= \basename($controller->getDirs()->getDocumentRoot()) ?></title>
       <link rel="shortcut icon" href="../../favicon.ico">
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <?php
         /** @var array|string[] $cssFiles */
-        $cssRoot = $documentRoot . '/css';
+        $cssRoot = $controller->getDirs()->getDocumentRoot() . '/css';
         $cssFiles = new \DrdPlus\FrontendSkeleton\CssFiles($cssRoot);
         foreach ($cssFiles as $cssFile) { ?>
           <link rel="stylesheet" type="text/css" href="css/<?= $cssFile ?>">
@@ -55,7 +51,7 @@ unset($rawContent, $rawContentDocument);
         }
       </style>
       <script type="text/javascript">
-          // let just second level domain to be the document domain to allow access to iframes from other subdomains
+          // let just second level domain to be the document domain to allow access to iframes from other sub-domains
           document.domain = document.domain.replace(/^(?:[^.]+\.)*([^.]+\.[^.]+).*/, '$1');
       </script>
     </head>

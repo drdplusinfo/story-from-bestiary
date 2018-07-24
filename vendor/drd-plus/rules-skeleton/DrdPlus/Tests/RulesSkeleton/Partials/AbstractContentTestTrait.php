@@ -193,6 +193,8 @@ trait AbstractContentTestTrait
             if ($hide !== '') {
                 $_GET['hide'] = $hide;
             }
+            /** @noinspection PhpUnusedLocalVariableInspection */
+            $latestVersion = $this->getTestsConfiguration()->getExpectedLastUnstableVersion();
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;

@@ -1,8 +1,7 @@
 <?php
 /** @var \DrdPlus\RulesSkeleton\RulesController $controller */
 if (\array_key_exists('tables', $_GET) || \array_key_exists('tabulky', $_GET)) { // we do not require licence confirmation for tables only
-    /** @noinspection PhpIncludeInspection */
-    echo include $controller->getDirs()->getGenericPartsRoot() . '/get_tables.php';
+    echo include __DIR__ . '/get_tables.php';
 
     return true; // routing solved
 }

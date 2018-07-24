@@ -63,16 +63,16 @@
         },
         {
             "name": "drd-plus/rules-skeleton",
-            "version": "1.0.15",
+            "version": "1.0.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
-                "reference": "129382d310b854e159217ee171a1c14b11e31403"
+                "reference": "986ac7a9f43c49805d82ad514345340001dee4b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/129382d310b854e159217ee171a1c14b11e31403",
-                "reference": "129382d310b854e159217ee171a1c14b11e31403",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/986ac7a9f43c49805d82ad514345340001dee4b6",
+                "reference": "986ac7a9f43c49805d82ad514345340001dee4b6",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-07-23 15:32:18"
+            "time": "2018-07-24 07:34:46"
         },
         {
             "name": "granam/exceptions-hierarchy",
