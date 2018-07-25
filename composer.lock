@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
-            "version": "1.0.22",
+            "version": "1.0.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd"
+                "reference": "41d3386222edd82483836e560fdc6715d43440ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd",
-                "reference": "d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/41d3386222edd82483836e560fdc6715d43440ac",
+                "reference": "41d3386222edd82483836e560fdc6715d43440ac",
                 "shasum": ""
             },
             "require": {
@@ -59,20 +59,20 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-07-24 13:13:50"
+            "time": "2018-07-25 12:15:22"
         },
         {
             "name": "drd-plus/rules-skeleton",
-            "version": "1.0.19",
+            "version": "1.0.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
-                "reference": "986ac7a9f43c49805d82ad514345340001dee4b6"
+                "reference": "5a47a550371f5921a17a95c7c25edc2e3f5b92bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/986ac7a9f43c49805d82ad514345340001dee4b6",
-                "reference": "986ac7a9f43c49805d82ad514345340001dee4b6",
+                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/5a47a550371f5921a17a95c7c25edc2e3f5b92bd",
+                "reference": "5a47a550371f5921a17a95c7c25edc2e3f5b92bd",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-07-24 07:34:46"
+            "time": "2018-07-25 13:23:03"
         },
         {
             "name": "granam/exceptions-hierarchy",

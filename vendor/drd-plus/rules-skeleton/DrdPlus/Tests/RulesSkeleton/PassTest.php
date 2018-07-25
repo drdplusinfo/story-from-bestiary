@@ -62,8 +62,15 @@ class PassTest extends AbstractContentTest
     private function I_can_continue_after_confirmation_of_owning(Element $confirmForm): void
     {
         self::assertSame('post', $confirmForm->getAttribute('method'));
-        self::assertSame('confirm', $confirmForm->getElementsByTagName('button')->current()->getAttribute('name'));
-        self::assertStringStartsWith('return window.confirm', $confirmForm->getAttribute('onsubmit'));
+        $buttons =$confirmForm->getElementsByTagName('button');
+        self::assertNotEmpty($buttons);
+        $confirmButton = null;
+        foreach ($buttons as $button) {
+            if ($button->getAttribute('name') === 'confirm') {
+                $confirmButton = $button;
+            }
+        }
+        self::assertNotNull($confirmButton, "Missing button[name=confirm] in \n" . $confirmForm->outerHTML);
     }
 
     private function I_can_continue_with_trial(Element $trialForm): void

@@ -23,6 +23,10 @@ body.pass {
     margin: 0.5em;
 }
 
+.pass h2, .pass h3 {
+    margin: 0 0 0.1em;
+}
+
 .pass .manifest {
     padding-bottom: 1em;
 }

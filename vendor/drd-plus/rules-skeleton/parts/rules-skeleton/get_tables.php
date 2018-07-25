@@ -39,10 +39,7 @@ unset($rawContent, $rawContentDocument);
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <?php
-        /** @var array|string[] $cssFiles */
-        $cssRoot = $controller->getDirs()->getDocumentRoot() . '/css';
-        $cssFiles = new \DrdPlus\FrontendSkeleton\CssFiles($cssRoot);
-        foreach ($cssFiles as $cssFile) { ?>
+        foreach ($controller->getCssFiles() as $cssFile) { ?>
           <link rel="stylesheet" type="text/css" href="css/<?= $cssFile ?>">
         <?php } ?>
       <style>

@@ -4,22 +4,16 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "87581d7c56c1d84b98759c7bb9a42082",
-    "content-hash": "409d1e29a5ae6cec8228ef0785929dd7",
+    "hash": "389373b3a295ae4fe287ac64d5c3f175",
+    "content-hash": "0e982c5e1db086d0c4ccd299cf9da2e5",
     "packages": [
         {
             "name": "drd-plus/frontend-skeleton",
-            "version": "1.0.21",
+            "version": "1.0.27",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-                "reference": "a2e5ec8bfd8d132ab13a2c381ba68026686c15f1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/a2e5ec8bfd8d132ab13a2c381ba68026686c15f1",
-                "reference": "a2e5ec8bfd8d132ab13a2c381ba68026686c15f1",
-                "shasum": ""
+                "url": "/home/jaroslav/Projects/drd-plus/frontend-skeleton",
+                "reference": "41d3386222edd82483836e560fdc6715d43440ac"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -69,11 +63,7 @@
                 "skeleton",
                 "view"
             ],
-            "support": {
-                "source": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/tree/1.0.21",
-                "issues": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton/issues"
-            },
-            "time": "2018-07-23 11:29:39"
+            "time": "2018-07-25 12:15:22"
         },
         {
             "name": "granam/exceptions-hierarchy",

@@ -20,15 +20,14 @@ if (empty($visitorCanAccessContent) && !$controller->isFreeAccess()) { // can be
     if (!$visitorCanAccessContent) {
         $visitorCanAccessContent = $controller->getUsagePolicy()->hasVisitorConfirmedOwnership();
         if (!$visitorCanAccessContent) {
-            $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorUsingTrial();
+            $visitorCanAccessContent = $controller->getUsagePolicy()->isVisitorUsingValidTrial();
         }
         if (!$visitorCanAccessContent) {
             if (!empty($_POST['confirm'])) {
                 $visitorCanAccessContent = $controller->getUsagePolicy()->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
             }
             if (!$visitorCanAccessContent && !empty($_POST['trial'])) {
-                $now = $now ?? new \DateTime();
-                $visitorCanAccessContent = $controller->activateTrial((clone $now)->modify('+4 minutes'));
+                $visitorCanAccessContent = $controller->activateTrial($now ?? new \DateTime());
             }
             if (!$visitorCanAccessContent) {
                 $controller->getDirs()->setWebRoot(\file_exists($controller->getDirs()->getDocumentRoot() . '/web/pass')

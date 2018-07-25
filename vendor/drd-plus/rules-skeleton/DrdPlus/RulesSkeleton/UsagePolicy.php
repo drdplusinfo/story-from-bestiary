@@ -91,9 +91,9 @@ class UsagePolicy extends StrictObject
     /**
      * @return bool
      */
-    public function isVisitorUsingTrial(): bool
+    public function isVisitorUsingValidTrial(): bool
     {
-        return $this->cookiesService->getCookie($this->getTrialName()) !== null;
+        return $this->cookiesService->getCookie($this->getTrialName()) !== null && !$this->trialJustExpired();
     }
 
     /**

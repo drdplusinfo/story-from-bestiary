@@ -922,111 +922,6 @@
         ]
     },
     {
-        "name": "drd-plus/frontend-skeleton",
-        "version": "1.0.22",
-        "version_normalized": "1.0.22.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-            "reference": "d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd",
-            "reference": "d9a91b7c8fe38a20d5ae47fce73cbcfd90c5d9dd",
-            "shasum": ""
-        },
-        "require": {
-            "ext-mbstring": "*",
-            "granam/exceptions-hierarchy": "^4.0",
-            "granam/string": "^3.0",
-            "php": ">=7.1",
-            "phpgt/dom": "~1.0",
-            "phpmailer/phpmailer": "^6.0",
-            "piwik/device-detector": "^3.9",
-            "tracy/tracy": "^2.4"
-        },
-        "require-dev": {
-            "mockery/mockery": "~1.0",
-            "phpunit/phpunit": "~7.0",
-            "roave/security-advisories": "dev-master"
-        },
-        "time": "2018-07-24 13:13:50",
-        "bin": [
-            "bin/assets"
-        ],
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "DrdPlus\\": "DrdPlus/",
-                "Tests\\": "Tests/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Skeleton for DrD+ pages",
-        "keywords": [
-            "Skeleton",
-            "drd plus",
-            "frontend",
-            "helper",
-            "pages",
-            "view"
-        ]
-    },
-    {
-        "name": "drd-plus/rules-skeleton",
-        "version": "1.0.19",
-        "version_normalized": "1.0.19.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
-            "reference": "986ac7a9f43c49805d82ad514345340001dee4b6"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/986ac7a9f43c49805d82ad514345340001dee4b6",
-            "reference": "986ac7a9f43c49805d82ad514345340001dee4b6",
-            "shasum": ""
-        },
-        "require": {
-            "drd-plus/frontend-skeleton": "~1.0",
-            "ext-mbstring": "*",
-            "php": ">=7.1",
-            "phpgt/dom": "~1.0",
-            "phpmailer/phpmailer": "^6.0",
-            "piwik/device-detector": "^3.9",
-            "tracy/tracy": "^2.4"
-        },
-        "require-dev": {
-            "mockery/mockery": "~1.0",
-            "phpunit/phpunit": "~7.0",
-            "roave/security-advisories": "dev-master"
-        },
-        "time": "2018-07-24 07:34:46",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "DrdPlus\\": "DrdPlus/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Skeleton for DrD+ rules as HTML",
-        "keywords": [
-            "Skeleton",
-            "drd plus",
-            "helper",
-            "rules"
-        ]
-    },
-    {
         "name": "sebastian/version",
         "version": "2.0.1",
         "version_normalized": "2.0.1.0",
@@ -2483,6 +2378,111 @@
             "phpunit",
             "testing",
             "xunit"
+        ]
+    },
+    {
+        "name": "drd-plus/frontend-skeleton",
+        "version": "1.0.27",
+        "version_normalized": "1.0.27.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
+            "reference": "41d3386222edd82483836e560fdc6715d43440ac"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/41d3386222edd82483836e560fdc6715d43440ac",
+            "reference": "41d3386222edd82483836e560fdc6715d43440ac",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "granam/exceptions-hierarchy": "^4.0",
+            "granam/string": "^3.0",
+            "php": ">=7.1",
+            "phpgt/dom": "~1.0",
+            "phpmailer/phpmailer": "^6.0",
+            "piwik/device-detector": "^3.9",
+            "tracy/tracy": "^2.4"
+        },
+        "require-dev": {
+            "mockery/mockery": "~1.0",
+            "phpunit/phpunit": "~7.0",
+            "roave/security-advisories": "dev-master"
+        },
+        "time": "2018-07-25 12:15:22",
+        "bin": [
+            "bin/assets"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "DrdPlus\\": "DrdPlus/",
+                "Tests\\": "Tests/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Skeleton for DrD+ pages",
+        "keywords": [
+            "Skeleton",
+            "drd plus",
+            "frontend",
+            "helper",
+            "pages",
+            "view"
+        ]
+    },
+    {
+        "name": "drd-plus/rules-skeleton",
+        "version": "1.0.21",
+        "version_normalized": "1.0.21.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
+            "reference": "5a47a550371f5921a17a95c7c25edc2e3f5b92bd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/5a47a550371f5921a17a95c7c25edc2e3f5b92bd",
+            "reference": "5a47a550371f5921a17a95c7c25edc2e3f5b92bd",
+            "shasum": ""
+        },
+        "require": {
+            "drd-plus/frontend-skeleton": "~1.0",
+            "ext-mbstring": "*",
+            "php": ">=7.1",
+            "phpgt/dom": "~1.0",
+            "phpmailer/phpmailer": "^6.0",
+            "piwik/device-detector": "^3.9",
+            "tracy/tracy": "^2.4"
+        },
+        "require-dev": {
+            "mockery/mockery": "~1.0",
+            "phpunit/phpunit": "~7.0",
+            "roave/security-advisories": "dev-master"
+        },
+        "time": "2018-07-25 13:23:03",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "DrdPlus\\": "DrdPlus/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Skeleton for DrD+ rules as HTML",
+        "keywords": [
+            "Skeleton",
+            "drd plus",
+            "helper",
+            "rules"
         ]
     }
 ]

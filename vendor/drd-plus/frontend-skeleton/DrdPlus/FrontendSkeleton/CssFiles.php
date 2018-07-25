@@ -9,11 +9,12 @@ class CssFiles extends AbstractPublicFiles
     /**
      * @var string
      */
-    private $dirWithCss;
+    private $cssRoot;
 
-    public function __construct(string $dirWithCss)
+    public function __construct(bool $preferMinified, Dirs $dirs)
     {
-        $this->dirWithCss = rtrim($dirWithCss, '\/');
+        parent::__construct($preferMinified);
+        $this->cssRoot = rtrim($dirs->getCssRoot(), '\/');
     }
 
     /**
@@ -21,7 +22,7 @@ class CssFiles extends AbstractPublicFiles
      */
     public function getIterator(): \Iterator
     {
-        return new \ArrayIterator($this->scanForCssFiles($this->dirWithCss));
+        return new \ArrayIterator($this->scanForCssFiles($this->cssRoot));
     }
 
     /**
@@ -68,6 +69,8 @@ class CssFiles extends AbstractPublicFiles
             /** @noinspection SlowArrayOperationsInLoopInspection */
             $flattenedCss = \array_merge($flattenedCss, $sameLevelCssFiles); // deeper files can be overloaded by shallow ones
         }
+        $flattenedCss = $this->removeMapFiles($flattenedCss);
+        $flattenedCss = $this->filterUniqueFiles($flattenedCss);
 
         return $flattenedCss;
     }

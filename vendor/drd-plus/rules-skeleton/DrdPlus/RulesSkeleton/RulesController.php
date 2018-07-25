@@ -107,14 +107,17 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         return $this->eshopUrl;
     }
 
-    public function activateTrial(\DateTime $trialExpiration): bool
+    public function activateTrial(\DateTime $now): bool
     {
+        $trialExpiration = (clone $now)->modify('+4 minutes');
         $visitorCanAccessContent = $this->getUsagePolicy()->activateTrial($trialExpiration);
         if ($visitorCanAccessContent) {
+            $at = $trialExpiration->getTimestamp() + 1; // one second "insurance" overlap
+            $afterSeconds = $at - $now->getTimestamp();
             $this->setRedirect(
                 new \DrdPlus\FrontendSkeleton\Redirect(
-                    "/?{$this->getUsagePolicy()->getTrialExpiredAtName()}={$trialExpiration->getTimestamp()}",
-                    $trialExpiration->getTimestamp() - \time()
+                    "/?{$this->getUsagePolicy()->getTrialExpiredAtName()}={$at}",
+                    $afterSeconds
                 )
             );
         }
