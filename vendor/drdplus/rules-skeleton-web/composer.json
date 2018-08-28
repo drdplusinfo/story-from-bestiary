@@ -1,0 +1,16 @@
+{
+  "name": "drdplus/rules-skeleton-web",
+  "license": "MIT",
+  "type": "library",
+  "description": "Content for DrD+ rules skeleton",
+  "keywords": [
+    "drd plus",
+    "rules",
+    "helper",
+    "skeleton",
+    "content"
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^7.3"
+  }
+}

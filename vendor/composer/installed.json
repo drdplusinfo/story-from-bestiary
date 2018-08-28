@@ -1,306 +1,17 @@
 [
     {
-        "name": "roave/security-advisories",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Roave/SecurityAdvisories.git",
-            "reference": "053766d789f6393e5bc0896635d35abf8d2d362e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/053766d789f6393e5bc0896635d35abf8d2d362e",
-            "reference": "053766d789f6393e5bc0896635d35abf8d2d362e",
-            "shasum": ""
-        },
-        "conflict": {
-            "3f/pygmentize": "<1.2",
-            "adodb/adodb-php": "<5.20.12",
-            "amphp/artax": "<1.0.6|>=2,<2.0.6",
-            "amphp/http": "<1.0.1",
-            "asymmetricrypt/asymmetricrypt": ">=0,<9.9.99",
-            "aws/aws-sdk-php": ">=3,<3.2.1",
-            "bugsnag/bugsnag-laravel": ">=2,<2.0.2",
-            "cakephp/cakephp": ">=1.3,<1.3.18|>=2,<2.4.99|>=2.5,<2.5.99|>=2.6,<2.6.12|>=2.7,<2.7.6|>=3,<3.0.15|>=3.1,<3.1.4|>=3.4,<3.4.14|>=3.5,<3.5.17|>=3.6,<3.6.4",
-            "cart2quote/module-quotation": ">=4.1.6,<=4.4.5|>=5,<5.4.4",
-            "cartalyst/sentry": "<=2.1.6",
-            "codeigniter/framework": "<=3.0.6",
-            "composer/composer": "<=1.0.0-alpha11",
-            "contao-components/mediaelement": ">=2.14.2,<2.21.1",
-            "contao/core": ">=2,<3.5.35",
-            "contao/core-bundle": ">=4,<4.4.18|>=4.5,<4.5.8",
-            "contao/listing-bundle": ">=4,<4.4.8",
-            "contao/newsletter-bundle": ">=4,<4.1",
-            "doctrine/annotations": ">=1,<1.2.7",
-            "doctrine/cache": ">=1,<1.3.2|>=1.4,<1.4.2",
-            "doctrine/common": ">=2,<2.4.3|>=2.5,<2.5.1",
-            "doctrine/dbal": ">=2,<2.0.8|>=2.1,<2.1.2",
-            "doctrine/doctrine-bundle": "<1.5.2",
-            "doctrine/doctrine-module": "<=0.7.1",
-            "doctrine/mongodb-odm": ">=1,<1.0.2",
-            "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
-            "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
-            "dompdf/dompdf": ">=0.6,<0.6.2",
-            "drupal/core": ">=7,<7.59|>=8,<8.4.8|>=8.5,<8.5.3",
-            "drupal/drupal": ">=7,<7.59|>=8,<8.4.8|>=8.5,<8.5.3",
-            "erusev/parsedown": "<1.7",
-            "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.3|>=5.4,<5.4.11.3|>=2017.8,<2017.8.1.1|>=2017.12,<2017.12.2.1",
-            "firebase/php-jwt": "<2",
-            "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
-            "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
-            "fuel/core": "<1.8.1",
-            "gree/jose": "<=2.2",
-            "gregwar/rst": "<1.0.3",
-            "guzzlehttp/guzzle": ">=6,<6.2.1|>=4.0.0-rc2,<4.2.4|>=5,<5.3.1",
-            "illuminate/auth": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.10",
-            "illuminate/database": ">=4,<4.0.99|>=4.1,<4.1.29",
-            "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
-            "joomla/session": "<1.3.1",
-            "kreait/firebase-php": ">=3.2,<3.8.1",
-            "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
-            "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
-            "magento/magento1ce": "<1.9.3.9",
-            "magento/magento1ee": ">=1.9,<1.14.3.2",
-            "magento/product-community-edition": ">=2,<2.2.5",
-            "monolog/monolog": ">=1.8,<1.12",
-            "namshi/jose": "<2.2",
-            "onelogin/php-saml": "<2.10.4",
-            "oro/crm": ">=1.7,<1.7.4",
-            "oro/platform": ">=1.7,<1.7.4",
-            "padraic/humbug_get_contents": "<1.1.2",
-            "pagarme/pagarme-php": ">=0,<3",
-            "paragonie/random_compat": "<2",
-            "paypal/merchant-sdk-php": "<3.12",
-            "phpmailer/phpmailer": ">=5,<5.2.24",
-            "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
-            "phpxmlrpc/extras": "<0.6.1",
-            "propel/propel": ">=2.0.0-alpha1,<=2.0.0-alpha7",
-            "propel/propel1": ">=1,<=1.7.1",
-            "pusher/pusher-php-server": "<2.2.1",
-            "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
-            "sensiolabs/connect": "<4.2.3",
-            "shopware/shopware": "<5.3.7",
-            "silverstripe/cms": ">=3,<=3.0.11|>=3.1,<3.1.11",
-            "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
-            "silverstripe/framework": ">=3,<3.3",
-            "silverstripe/userforms": "<3",
-            "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
-            "simplesamlphp/simplesamlphp": "<1.15.2",
-            "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
-            "slim/slim": "<2.6",
-            "socalnick/scn-social-auth": "<1.15.2",
-            "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
-            "stormpath/sdk": ">=0,<9.9.99",
-            "swiftmailer/swiftmailer": ">=4,<5.4.5",
-            "sylius/admin-bundle": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
-            "sylius/sylius": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
-            "symfony/dependency-injection": ">=2,<2.0.17",
-            "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
-            "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2",
-            "symfony/http-foundation": ">=2,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
-            "symfony/http-kernel": ">=2,<2.3.29|>=2.4,<2.5.12|>=2.6,<2.6.8",
-            "symfony/intl": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
-            "symfony/routing": ">=2,<2.0.19",
-            "symfony/security": ">=2,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
-            "symfony/security-bundle": ">=2,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
-            "symfony/security-core": ">=2.4,<2.6.13|>=2.7,<2.7.9|>=2.7.30,<2.7.32|>=2.8,<2.8.37|>=3,<3.3.17|>=3.4,<3.4.7|>=4,<4.0.7",
-            "symfony/security-csrf": ">=2.4,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
-            "symfony/security-guard": ">=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
-            "symfony/security-http": ">=2.3,<2.3.41|>=2.4,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
-            "symfony/serializer": ">=2,<2.0.11",
-            "symfony/symfony": ">=2,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
-            "symfony/translation": ">=2,<2.0.17",
-            "symfony/validator": ">=2,<2.0.24|>=2.1,<2.1.12|>=2.2,<2.2.5|>=2.3,<2.3.3",
-            "symfony/web-profiler-bundle": ">=2,<2.3.19|>=2.4,<2.4.9|>=2.5,<2.5.4",
-            "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
-            "thelia/backoffice-default-template": ">=2.1,<2.1.2",
-            "thelia/thelia": ">=2.1,<2.1.2|>=2.1.0-beta1,<2.1.3",
-            "titon/framework": ">=0,<9.9.99",
-            "twig/twig": "<1.20",
-            "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.30|>=8,<8.7.17|>=9,<9.3.2",
-            "typo3/cms-core": ">=8,<8.7.17|>=9,<9.3.2",
-            "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5",
-            "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
-            "willdurand/js-translation-bundle": "<2.1.1",
-            "yiisoft/yii": ">=1.1.14,<1.1.15",
-            "yiisoft/yii2": "<2.0.15",
-            "yiisoft/yii2-bootstrap": "<2.0.4",
-            "yiisoft/yii2-dev": "<2.0.15",
-            "yiisoft/yii2-elasticsearch": "<2.0.5",
-            "yiisoft/yii2-gii": "<2.0.4",
-            "yiisoft/yii2-jui": "<2.0.4",
-            "yiisoft/yii2-redis": "<2.0.8",
-            "zendframework/zend-cache": ">=2.4,<2.4.8|>=2.5,<2.5.3",
-            "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
-            "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
-            "zendframework/zend-db": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.10|>=2.3,<2.3.5",
-            "zendframework/zend-diactoros": ">=1,<1.0.4",
-            "zendframework/zend-form": ">=2,<2.2.7|>=2.3,<2.3.1",
-            "zendframework/zend-http": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.3,<2.3.8|>=2.4,<2.4.1",
-            "zendframework/zend-json": ">=2.1,<2.1.6|>=2.2,<2.2.6",
-            "zendframework/zend-ldap": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.8|>=2.3,<2.3.3",
-            "zendframework/zend-mail": ">=2,<2.4.11|>=2.5,<2.7.2",
-            "zendframework/zend-navigation": ">=2,<2.2.7|>=2.3,<2.3.1",
-            "zendframework/zend-session": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.9|>=2.3,<2.3.4",
-            "zendframework/zend-validator": ">=2.3,<2.3.6",
-            "zendframework/zend-view": ">=2,<2.2.7|>=2.3,<2.3.1",
-            "zendframework/zend-xmlrpc": ">=2.1,<2.1.6|>=2.2,<2.2.6",
-            "zendframework/zendframework": ">=2,<2.4.11|>=2.5,<2.5.1",
-            "zendframework/zendframework1": "<1.12.20",
-            "zendframework/zendopenid": ">=2,<2.0.2",
-            "zendframework/zendxml": ">=1,<1.0.1",
-            "zetacomponents/mail": "<1.8.2",
-            "zf-commons/zfc-user": "<1.2.2",
-            "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
-            "zfr/zfr-oauth2-server-module": "<0.1.2"
-        },
-        "time": "2018-07-18 13:51:34",
-        "type": "metapackage",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Marco Pivetta",
-                "email": "ocramius@gmail.com",
-                "role": "maintainer"
-            }
-        ],
-        "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it"
-    },
-    {
-        "name": "hamcrest/hamcrest-php",
-        "version": "v2.0.0",
-        "version_normalized": "2.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/hamcrest/hamcrest-php.git",
-            "reference": "776503d3a8e85d4f9a1148614f95b7a608b046ad"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/776503d3a8e85d4f9a1148614f95b7a608b046ad",
-            "reference": "776503d3a8e85d4f9a1148614f95b7a608b046ad",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.3|^7.0"
-        },
-        "replace": {
-            "cordoval/hamcrest-php": "*",
-            "davedevelopment/hamcrest-php": "*",
-            "kodova/hamcrest-php": "*"
-        },
-        "require-dev": {
-            "phpunit/php-file-iterator": "1.3.3",
-            "phpunit/phpunit": "~4.0",
-            "satooshi/php-coveralls": "^1.0"
-        },
-        "time": "2016-01-20 08:20:44",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "hamcrest"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD"
-        ],
-        "description": "This is the PHP port of Hamcrest Matchers",
-        "keywords": [
-            "test"
-        ]
-    },
-    {
-        "name": "mockery/mockery",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/mockery/mockery.git",
-            "reference": "99e29d3596b16dabe4982548527d5ddf90232e99"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/mockery/mockery/zipball/99e29d3596b16dabe4982548527d5ddf90232e99",
-            "reference": "99e29d3596b16dabe4982548527d5ddf90232e99",
-            "shasum": ""
-        },
-        "require": {
-            "hamcrest/hamcrest-php": "~2.0",
-            "lib-pcre": ">=7.0",
-            "php": ">=5.6.0"
-        },
-        "require-dev": {
-            "phpdocumentor/phpdocumentor": "^2.9",
-            "phpunit/phpunit": "~5.7.10|~6.5"
-        },
-        "time": "2018-05-08 08:54:48",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Mockery": "library/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Pádraic Brady",
-                "email": "padraic.brady@gmail.com",
-                "homepage": "http://blog.astrumfutura.com"
-            },
-            {
-                "name": "Dave Marshall",
-                "email": "dave.marshall@atstsolutions.co.uk",
-                "homepage": "http://davedevelopment.co.uk"
-            }
-        ],
-        "description": "Mockery is a simple yet flexible PHP mock object framework",
-        "homepage": "https://github.com/mockery/mockery",
-        "keywords": [
-            "BDD",
-            "TDD",
-            "library",
-            "mock",
-            "mock objects",
-            "mockery",
-            "stub",
-            "test",
-            "test double",
-            "testing"
-        ]
-    },
-    {
         "name": "tracy/tracy",
-        "version": "v2.5.1",
-        "version_normalized": "2.5.1.0",
+        "version": "v2.5.2",
+        "version_normalized": "2.5.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/tracy.git",
-            "reference": "bea9df15a1cdbf3ec50ef3a75f5ada1ab536d679"
+            "reference": "93f89fbff33db4d583062104c71d6083b717371a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/tracy/zipball/bea9df15a1cdbf3ec50ef3a75f5ada1ab536d679",
-            "reference": "bea9df15a1cdbf3ec50ef3a75f5ada1ab536d679",
+            "url": "https://api.github.com/repos/nette/tracy/zipball/93f89fbff33db4d583062104c71d6083b717371a",
+            "reference": "93f89fbff33db4d583062104c71d6083b717371a",
             "shasum": ""
         },
         "require": {
@@ -315,7 +26,7 @@
         "suggest": {
             "https://nette.org/donate": "Please support Tracy via a donation"
         },
-        "time": "2018-07-03 11:34:33",
+        "time": "2018-08-13 16:46:17",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -409,17 +120,17 @@
     },
     {
         "name": "piwik/device-detector",
-        "version": "3.10.2",
-        "version_normalized": "3.10.2.0",
+        "version": "3.11.1",
+        "version_normalized": "3.11.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/matomo-org/device-detector.git",
-            "reference": "67e96595cd7649b7967533053fcbfbe02d5c55a3"
+            "reference": "0ec14d28cbf71c48b21697e65b892cfd8c3ca519"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/67e96595cd7649b7967533053fcbfbe02d5c55a3",
-            "reference": "67e96595cd7649b7967533053fcbfbe02d5c55a3",
+            "url": "https://api.github.com/repos/matomo-org/device-detector/zipball/0ec14d28cbf71c48b21697e65b892cfd8c3ca519",
+            "reference": "0ec14d28cbf71c48b21697e65b892cfd8c3ca519",
             "shasum": ""
         },
         "require": {
@@ -436,7 +147,7 @@
         "suggest": {
             "doctrine/cache": "Can directly be used for caching purpose"
         },
-        "time": "2018-05-07 19:33:29",
+        "time": "2018-08-10 18:28:32",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -666,49 +377,6 @@
         "description": "The modern DOM API for PHP 7 projects."
     },
     {
-        "name": "granam/exceptions-hierarchy",
-        "version": "4.0.2",
-        "version_normalized": "4.0.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
-            "reference": "846b8592c8b673818569bbb103016723130bbf98"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/granam-exceptions-hierarchy/zipball/846b8592c8b673818569bbb103016723130bbf98",
-            "reference": "846b8592c8b673818569bbb103016723130bbf98",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=7.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~6.0"
-        },
-        "time": "2017-02-19 12:25:30",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Granam\\": "Granam/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "The hierarchy skeleton of exceptions in a project",
-        "homepage": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy",
-        "keywords": [
-            "exception",
-            "hierarchy",
-            "logic",
-            "php",
-            "runtime"
-        ]
-    },
-    {
         "name": "granam/strict-object",
         "version": "3.0.1",
         "version_normalized": "3.0.1.0",
@@ -816,17 +484,17 @@
     },
     {
         "name": "granam/scalar",
-        "version": "4.0.1",
-        "version_normalized": "4.0.1.0",
+        "version": "4.1.0",
+        "version_normalized": "4.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/jaroslavtyc/granam-scalar.git",
-            "reference": "e31a7ef14a25f9fb7a3e926773b1571c8dd35fb1"
+            "reference": "c3f78968da6a24ca24b4bb3a2729e61287df7ae3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/granam-scalar/zipball/e31a7ef14a25f9fb7a3e926773b1571c8dd35fb1",
-            "reference": "e31a7ef14a25f9fb7a3e926773b1571c8dd35fb1",
+            "url": "https://api.github.com/repos/jaroslavtyc/granam-scalar/zipball/c3f78968da6a24ca24b4bb3a2729e61287df7ae3",
+            "reference": "c3f78968da6a24ca24b4bb3a2729e61287df7ae3",
             "shasum": ""
         },
         "require": {
@@ -839,7 +507,7 @@
             "mockery/mockery": "~1.0",
             "phpunit/phpunit": "~7.0"
         },
-        "time": "2018-07-10 11:55:50",
+        "time": "2018-08-13 13:05:50",
         "type": "project",
         "installation-source": "dist",
         "autoload": {
@@ -867,17 +535,17 @@
     },
     {
         "name": "granam/string",
-        "version": "3.0.0",
-        "version_normalized": "3.0.0.0",
+        "version": "3.1.0",
+        "version_normalized": "3.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/jaroslavtyc/granam-string.git",
-            "reference": "dd856dd14a2216f07adbcfdbb66935f995b1aef4"
+            "reference": "1cebae4311a10029e9a1a94a668d871627b94143"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/dd856dd14a2216f07adbcfdbb66935f995b1aef4",
-            "reference": "dd856dd14a2216f07adbcfdbb66935f995b1aef4",
+            "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/1cebae4311a10029e9a1a94a668d871627b94143",
+            "reference": "1cebae4311a10029e9a1a94a668d871627b94143",
             "shasum": ""
         },
         "require": {
@@ -892,9 +560,11 @@
             "phpunit/phpunit": "~7.0"
         },
         "suggest": {
-            "ext-intl": "*"
+            "ext-iconv": "*",
+            "ext-intl": "*",
+            "ext-mbstring": "*"
         },
-        "time": "2018-07-10 14:17:18",
+        "time": "2018-07-31 07:12:46",
         "type": "project",
         "installation-source": "dist",
         "autoload": {
@@ -920,6 +590,393 @@
             "php",
             "string"
         ]
+    },
+    {
+        "name": "granam/exceptions-hierarchy",
+        "version": "4.0.2",
+        "version_normalized": "4.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy.git",
+            "reference": "846b8592c8b673818569bbb103016723130bbf98"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jaroslavtyc/granam-exceptions-hierarchy/zipball/846b8592c8b673818569bbb103016723130bbf98",
+            "reference": "846b8592c8b673818569bbb103016723130bbf98",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~6.0"
+        },
+        "time": "2017-02-19 12:25:30",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Granam\\": "Granam/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "The hierarchy skeleton of exceptions in a project",
+        "homepage": "https://github.com/jaroslavtyc/granam-exceptions-hierarchy",
+        "keywords": [
+            "exception",
+            "hierarchy",
+            "logic",
+            "php",
+            "runtime"
+        ]
+    },
+    {
+        "name": "erusev/parsedown",
+        "version": "1.7.1",
+        "version_normalized": "1.7.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/erusev/parsedown.git",
+            "reference": "92e9c27ba0e74b8b028b111d1b6f956a15c01fc1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/erusev/parsedown/zipball/92e9c27ba0e74b8b028b111d1b6f956a15c01fc1",
+            "reference": "92e9c27ba0e74b8b028b111d1b6f956a15c01fc1",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8.35"
+        },
+        "time": "2018-03-08 01:11:30",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Parsedown": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Emanuil Rusev",
+                "email": "hello@erusev.com",
+                "homepage": "http://erusev.com"
+            }
+        ],
+        "description": "Parser for Markdown.",
+        "homepage": "http://parsedown.org",
+        "keywords": [
+            "markdown",
+            "parser"
+        ]
+    },
+    {
+        "name": "drdplus/frontend-skeleton",
+        "version": "1.0.51",
+        "version_normalized": "1.0.51.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/drdplusinfo/drdplus-frontend-skeleton.git",
+            "reference": "473f4481b470ae96a70db9e803354d9b78d4176c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/drdplusinfo/drdplus-frontend-skeleton/zipball/473f4481b470ae96a70db9e803354d9b78d4176c",
+            "reference": "473f4481b470ae96a70db9e803354d9b78d4176c",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1.0",
+            "erusev/parsedown": "^1.7",
+            "ext-curl": "*",
+            "ext-dom": "*",
+            "ext-json": "*",
+            "ext-mbstring": "*",
+            "ext-posix": "*",
+            "ext-yaml": "*",
+            "ext-zlib": "*",
+            "granam/exceptions-hierarchy": "^4.0",
+            "granam/string": "^3.1",
+            "php": ">=7.1",
+            "phpgt/dom": "~1.0",
+            "phpmailer/phpmailer": "^6.0",
+            "piwik/device-detector": "^3.9",
+            "tracy/tracy": "^2.4"
+        },
+        "require-dev": {
+            "composer/composer": "^1.7",
+            "mockery/mockery": "~1.0",
+            "phpunit/phpunit": "~7.0",
+            "roave/security-advisories": "dev-master"
+        },
+        "time": "2018-08-28 11:53:13",
+        "bin": [
+            "bin/assets"
+        ],
+        "type": "composer-plugin",
+        "extra": {
+            "class": "DrdPlus\\FrontendSkeleton\\SkeletonInjectorComposerPlugin"
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "DrdPlus\\": "DrdPlus/",
+                "Tests\\": "Tests/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Skeleton for DrD+ pages",
+        "keywords": [
+            "Skeleton",
+            "drd plus",
+            "frontend",
+            "helper",
+            "pages",
+            "view"
+        ]
+    },
+    {
+        "name": "drdplus/rules-skeleton",
+        "version": "1.0.31",
+        "version_normalized": "1.0.31.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/drdplusinfo/drdplus-rules-skeleton.git",
+            "reference": "4bc65b282af4c6372073426f42e7a71c72cb23bc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/drdplusinfo/drdplus-rules-skeleton/zipball/4bc65b282af4c6372073426f42e7a71c72cb23bc",
+            "reference": "4bc65b282af4c6372073426f42e7a71c72cb23bc",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1.0",
+            "drdplus/frontend-skeleton": "~1.0",
+            "ext-mbstring": "*",
+            "php": ">=7.1",
+            "phpgt/dom": "~1.0",
+            "phpmailer/phpmailer": "^6.0",
+            "piwik/device-detector": "^3.9",
+            "tracy/tracy": "^2.4"
+        },
+        "require-dev": {
+            "composer/composer": "^1.7",
+            "drdplus/rules-skeleton-web": "dev-master",
+            "mockery/mockery": "~1.0",
+            "phpunit/phpunit": "~7.0",
+            "roave/security-advisories": "dev-master"
+        },
+        "time": "2018-08-28 10:29:52",
+        "type": "composer-plugin",
+        "extra": {
+            "class": "DrdPlus\\RulesSkeleton\\SkeletonInjectorComposerPlugin"
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "DrdPlus\\": "DrdPlus/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Skeleton for DrD+ rules as HTML",
+        "keywords": [
+            "Skeleton",
+            "drd plus",
+            "helper",
+            "rules"
+        ]
+    },
+    {
+        "name": "roave/security-advisories",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Roave/SecurityAdvisories.git",
+            "reference": "0abc14e0df387fe74b4b32e0b8647d1639256d38"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0abc14e0df387fe74b4b32e0b8647d1639256d38",
+            "reference": "0abc14e0df387fe74b4b32e0b8647d1639256d38",
+            "shasum": ""
+        },
+        "conflict": {
+            "3f/pygmentize": "<1.2",
+            "adodb/adodb-php": "<5.20.12",
+            "amphp/artax": "<1.0.6|>=2,<2.0.6",
+            "amphp/http": "<1.0.1",
+            "asymmetricrypt/asymmetricrypt": ">=0,<9.9.99",
+            "aws/aws-sdk-php": ">=3,<3.2.1",
+            "bugsnag/bugsnag-laravel": ">=2,<2.0.2",
+            "cakephp/cakephp": ">=1.3,<1.3.18|>=2,<2.4.99|>=2.5,<2.5.99|>=2.6,<2.6.12|>=2.7,<2.7.6|>=3,<3.0.15|>=3.1,<3.1.4|>=3.4,<3.4.14|>=3.5,<3.5.17|>=3.6,<3.6.4",
+            "cart2quote/module-quotation": ">=4.1.6,<=4.4.5|>=5,<5.4.4",
+            "cartalyst/sentry": "<=2.1.6",
+            "codeigniter/framework": "<=3.0.6",
+            "composer/composer": "<=1.0.0-alpha11",
+            "contao-components/mediaelement": ">=2.14.2,<2.21.1",
+            "contao/core": ">=2,<3.5.35",
+            "contao/core-bundle": ">=4,<4.4.18|>=4.5,<4.5.8",
+            "contao/listing-bundle": ">=4,<4.4.8",
+            "contao/newsletter-bundle": ">=4,<4.1",
+            "doctrine/annotations": ">=1,<1.2.7",
+            "doctrine/cache": ">=1,<1.3.2|>=1.4,<1.4.2",
+            "doctrine/common": ">=2,<2.4.3|>=2.5,<2.5.1",
+            "doctrine/dbal": ">=2,<2.0.8|>=2.1,<2.1.2",
+            "doctrine/doctrine-bundle": "<1.5.2",
+            "doctrine/doctrine-module": "<=0.7.1",
+            "doctrine/mongodb-odm": ">=1,<1.0.2",
+            "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
+            "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
+            "dompdf/dompdf": ">=0.6,<0.6.2",
+            "drupal/core": ">=7,<7.59|>=8,<8.4.8|>=8.5,<8.5.3",
+            "drupal/drupal": ">=7,<7.59|>=8,<8.4.8|>=8.5,<8.5.3",
+            "erusev/parsedown": "<1.7",
+            "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.3|>=5.4,<5.4.11.3|>=2017.8,<2017.8.1.1|>=2017.12,<2017.12.2.1",
+            "firebase/php-jwt": "<2",
+            "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
+            "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
+            "fuel/core": "<1.8.1",
+            "gree/jose": "<=2.2",
+            "gregwar/rst": "<1.0.3",
+            "guzzlehttp/guzzle": ">=6,<6.2.1|>=4.0.0-rc2,<4.2.4|>=5,<5.3.1",
+            "illuminate/auth": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.10",
+            "illuminate/cookie": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.42|>=5.6,<5.6.30",
+            "illuminate/database": ">=4,<4.0.99|>=4.1,<4.1.29",
+            "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
+            "joomla/session": "<1.3.1",
+            "kreait/firebase-php": ">=3.2,<3.8.1",
+            "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.42|>=5.6,<5.6.30",
+            "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
+            "magento/magento1ce": "<1.9.3.9",
+            "magento/magento1ee": ">=1.9,<1.14.3.2",
+            "magento/product-community-edition": ">=2,<2.2.5",
+            "monolog/monolog": ">=1.8,<1.12",
+            "namshi/jose": "<2.2",
+            "onelogin/php-saml": "<2.10.4",
+            "oro/crm": ">=1.7,<1.7.4",
+            "oro/platform": ">=1.7,<1.7.4",
+            "padraic/humbug_get_contents": "<1.1.2",
+            "pagarme/pagarme-php": ">=0,<3",
+            "paragonie/random_compat": "<2",
+            "paypal/merchant-sdk-php": "<3.12",
+            "phpmailer/phpmailer": ">=5,<5.2.24",
+            "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
+            "phpxmlrpc/extras": "<0.6.1",
+            "propel/propel": ">=2.0.0-alpha1,<=2.0.0-alpha7",
+            "propel/propel1": ">=1,<=1.7.1",
+            "pusher/pusher-php-server": "<2.2.1",
+            "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
+            "sensiolabs/connect": "<4.2.3",
+            "shopware/shopware": "<5.3.7",
+            "silverstripe/cms": ">=3,<=3.0.11|>=3.1,<3.1.11",
+            "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
+            "silverstripe/framework": ">=3,<3.3",
+            "silverstripe/userforms": "<3",
+            "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
+            "simplesamlphp/simplesamlphp": "<1.15.2",
+            "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
+            "slim/slim": "<2.6",
+            "socalnick/scn-social-auth": "<1.15.2",
+            "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
+            "stormpath/sdk": ">=0,<9.9.99",
+            "swiftmailer/swiftmailer": ">=4,<5.4.5",
+            "sylius/admin-bundle": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
+            "sylius/sylius": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
+            "symfony/dependency-injection": ">=2,<2.0.17",
+            "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
+            "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2",
+            "symfony/http-foundation": ">=2,<2.7.49|>=2.8,<2.8.44|>=3,<3.3.18|>=3.4,<3.4.14|>=4,<4.0.14|>=4.1,<4.1.3",
+            "symfony/http-kernel": ">=2,<2.3.29|>=2.4,<2.5.12|>=2.6,<2.6.8",
+            "symfony/intl": ">=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
+            "symfony/routing": ">=2,<2.0.19",
+            "symfony/security": ">=2,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
+            "symfony/security-bundle": ">=2,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
+            "symfony/security-core": ">=2.4,<2.6.13|>=2.7,<2.7.9|>=2.7.30,<2.7.32|>=2.8,<2.8.37|>=3,<3.3.17|>=3.4,<3.4.7|>=4,<4.0.7",
+            "symfony/security-csrf": ">=2.4,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
+            "symfony/security-guard": ">=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
+            "symfony/security-http": ">=2.3,<2.3.41|>=2.4,<2.7.48|>=2.8,<2.8.41|>=3,<3.3.17|>=3.4,<3.4.11|>=4,<4.0.11",
+            "symfony/serializer": ">=2,<2.0.11",
+            "symfony/symfony": ">=2,<2.7.49|>=2.8,<2.8.44|>=3,<3.3.18|>=3.4,<3.4.14|>=4,<4.0.14|>=4.1,<4.1.3",
+            "symfony/translation": ">=2,<2.0.17",
+            "symfony/validator": ">=2,<2.0.24|>=2.1,<2.1.12|>=2.2,<2.2.5|>=2.3,<2.3.3",
+            "symfony/web-profiler-bundle": ">=2,<2.3.19|>=2.4,<2.4.9|>=2.5,<2.5.4",
+            "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
+            "thelia/backoffice-default-template": ">=2.1,<2.1.2",
+            "thelia/thelia": ">=2.1,<2.1.2|>=2.1.0-beta1,<2.1.3",
+            "titon/framework": ">=0,<9.9.99",
+            "twig/twig": "<1.20",
+            "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.30|>=8,<8.7.17|>=9,<9.3.2",
+            "typo3/cms-core": ">=8,<8.7.17|>=9,<9.3.2",
+            "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5",
+            "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
+            "willdurand/js-translation-bundle": "<2.1.1",
+            "yiisoft/yii": ">=1.1.14,<1.1.15",
+            "yiisoft/yii2": "<2.0.15",
+            "yiisoft/yii2-bootstrap": "<2.0.4",
+            "yiisoft/yii2-dev": "<2.0.15",
+            "yiisoft/yii2-elasticsearch": "<2.0.5",
+            "yiisoft/yii2-gii": "<2.0.4",
+            "yiisoft/yii2-jui": "<2.0.4",
+            "yiisoft/yii2-redis": "<2.0.8",
+            "zendframework/zend-cache": ">=2.4,<2.4.8|>=2.5,<2.5.3",
+            "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
+            "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
+            "zendframework/zend-db": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.10|>=2.3,<2.3.5",
+            "zendframework/zend-diactoros": ">=1,<1.8.4",
+            "zendframework/zend-feed": ">=1,<2.10.3",
+            "zendframework/zend-form": ">=2,<2.2.7|>=2.3,<2.3.1",
+            "zendframework/zend-http": ">=1,<2.8.1",
+            "zendframework/zend-json": ">=2.1,<2.1.6|>=2.2,<2.2.6",
+            "zendframework/zend-ldap": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.8|>=2.3,<2.3.3",
+            "zendframework/zend-mail": ">=2,<2.4.11|>=2.5,<2.7.2",
+            "zendframework/zend-navigation": ">=2,<2.2.7|>=2.3,<2.3.1",
+            "zendframework/zend-session": ">=2,<2.0.99|>=2.1,<2.1.99|>=2.2,<2.2.9|>=2.3,<2.3.4",
+            "zendframework/zend-validator": ">=2.3,<2.3.6",
+            "zendframework/zend-view": ">=2,<2.2.7|>=2.3,<2.3.1",
+            "zendframework/zend-xmlrpc": ">=2.1,<2.1.6|>=2.2,<2.2.6",
+            "zendframework/zendframework": "<2.5.1",
+            "zendframework/zendframework1": "<1.12.20",
+            "zendframework/zendopenid": ">=2,<2.0.2",
+            "zendframework/zendxml": ">=1,<1.0.1",
+            "zetacomponents/mail": "<1.8.2",
+            "zf-commons/zfc-user": "<1.2.2",
+            "zfcampus/zf-apigility-doctrine": ">=1,<1.0.3",
+            "zfr/zfr-oauth2-server-module": "<0.1.2"
+        },
+        "time": "2018-08-14 15:39:17",
+        "type": "metapackage",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Marco Pivetta",
+                "email": "ocramius@gmail.com",
+                "role": "maintainer"
+            }
+        ],
+        "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it"
     },
     {
         "name": "sebastian/version",
@@ -1011,53 +1068,6 @@
         "homepage": "https://www.github.com/sebastianbergmann/resource-operations"
     },
     {
-        "name": "sebastian/object-reflector",
-        "version": "1.1.1",
-        "version_normalized": "1.1.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/sebastianbergmann/object-reflector.git",
-            "reference": "773f97c67f28de00d397be301821b06708fca0be"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/object-reflector/zipball/773f97c67f28de00d397be301821b06708fca0be",
-            "reference": "773f97c67f28de00d397be301821b06708fca0be",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^6.0"
-        },
-        "time": "2017-03-29 09:07:27",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.1-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Sebastian Bergmann",
-                "email": "sebastian@phpunit.de"
-            }
-        ],
-        "description": "Allows reflection of object attributes, including inherited and non-public ones",
-        "homepage": "https://github.com/sebastianbergmann/object-reflector/"
-    },
-    {
         "name": "sebastian/recursion-context",
         "version": "3.0.0",
         "version_normalized": "3.0.0.0",
@@ -1111,6 +1121,53 @@
         ],
         "description": "Provides functionality to recursively process PHP variables",
         "homepage": "http://www.github.com/sebastianbergmann/recursion-context"
+    },
+    {
+        "name": "sebastian/object-reflector",
+        "version": "1.1.1",
+        "version_normalized": "1.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sebastianbergmann/object-reflector.git",
+            "reference": "773f97c67f28de00d397be301821b06708fca0be"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sebastianbergmann/object-reflector/zipball/773f97c67f28de00d397be301821b06708fca0be",
+            "reference": "773f97c67f28de00d397be301821b06708fca0be",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^6.0"
+        },
+        "time": "2017-03-29 09:07:27",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Sebastian Bergmann",
+                "email": "sebastian@phpunit.de"
+            }
+        ],
+        "description": "Allows reflection of object attributes, including inherited and non-public ones",
+        "homepage": "https://github.com/sebastianbergmann/object-reflector/"
     },
     {
         "name": "sebastian/object-enumerator",
@@ -1808,62 +1865,6 @@
         ]
     },
     {
-        "name": "doctrine/instantiator",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/doctrine/instantiator.git",
-            "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/doctrine/instantiator/zipball/185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
-            "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.1"
-        },
-        "require-dev": {
-            "athletic/athletic": "~0.1.8",
-            "ext-pdo": "*",
-            "ext-phar": "*",
-            "phpunit/phpunit": "^6.2.3",
-            "squizlabs/php_codesniffer": "^3.0.2"
-        },
-        "time": "2017-07-22 11:58:36",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.2.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Marco Pivetta",
-                "email": "ocramius@gmail.com",
-                "homepage": "http://ocramius.github.com/"
-            }
-        ],
-        "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
-        "homepage": "https://github.com/doctrine/instantiator",
-        "keywords": [
-            "constructor",
-            "instantiate"
-        ]
-    },
-    {
         "name": "webmozart/assert",
         "version": "1.3.0",
         "version_normalized": "1.3.0.0",
@@ -2074,18 +2075,74 @@
         "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock."
     },
     {
-        "name": "phpspec/prophecy",
-        "version": "1.7.6",
-        "version_normalized": "1.7.6.0",
+        "name": "doctrine/instantiator",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/phpspec/prophecy.git",
-            "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712"
+            "url": "https://github.com/doctrine/instantiator.git",
+            "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpspec/prophecy/zipball/33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
-            "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
+            "url": "https://api.github.com/repos/doctrine/instantiator/zipball/185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
+            "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.1"
+        },
+        "require-dev": {
+            "athletic/athletic": "~0.1.8",
+            "ext-pdo": "*",
+            "ext-phar": "*",
+            "phpunit/phpunit": "^6.2.3",
+            "squizlabs/php_codesniffer": "^3.0.2"
+        },
+        "time": "2017-07-22 11:58:36",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Marco Pivetta",
+                "email": "ocramius@gmail.com",
+                "homepage": "http://ocramius.github.com/"
+            }
+        ],
+        "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
+        "homepage": "https://github.com/doctrine/instantiator",
+        "keywords": [
+            "constructor",
+            "instantiate"
+        ]
+    },
+    {
+        "name": "phpspec/prophecy",
+        "version": "1.8.0",
+        "version_normalized": "1.8.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phpspec/prophecy.git",
+            "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
+            "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
             "shasum": ""
         },
         "require": {
@@ -2097,13 +2154,13 @@
         },
         "require-dev": {
             "phpspec/phpspec": "^2.5|^3.2",
-            "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
+            "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5 || ^7.1"
         },
-        "time": "2018-04-18 13:57:24",
+        "time": "2018-08-05 17:53:17",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.7.x-dev"
+                "dev-master": "1.8.x-dev"
             }
         },
         "installation-source": "dist",
@@ -2296,17 +2353,17 @@
     },
     {
         "name": "phpunit/phpunit",
-        "version": "7.2.7",
-        "version_normalized": "7.2.7.0",
+        "version": "7.3.2",
+        "version_normalized": "7.3.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sebastianbergmann/phpunit.git",
-            "reference": "8e878aff7917ef66e702e03d1359b16eee254e2c"
+            "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8e878aff7917ef66e702e03d1359b16eee254e2c",
-            "reference": "8e878aff7917ef66e702e03d1359b16eee254e2c",
+            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
+            "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
             "shasum": ""
         },
         "require": {
@@ -2345,14 +2402,14 @@
             "ext-xdebug": "*",
             "phpunit/php-invoker": "^2.0"
         },
-        "time": "2018-07-15 05:20:50",
+        "time": "2018-08-22 06:39:21",
         "bin": [
             "phpunit"
         ],
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "7.2-dev"
+                "dev-master": "7.3-dev"
             }
         },
         "installation-source": "dist",
@@ -2381,105 +2438,152 @@
         ]
     },
     {
-        "name": "drd-plus/frontend-skeleton",
-        "version": "1.0.27",
-        "version_normalized": "1.0.27.0",
+        "name": "hamcrest/hamcrest-php",
+        "version": "v2.0.0",
+        "version_normalized": "2.0.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/jaroslavtyc/drd-plus-frontend-skeleton.git",
-            "reference": "41d3386222edd82483836e560fdc6715d43440ac"
+            "url": "https://github.com/hamcrest/hamcrest-php.git",
+            "reference": "776503d3a8e85d4f9a1148614f95b7a608b046ad"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-frontend-skeleton/zipball/41d3386222edd82483836e560fdc6715d43440ac",
-            "reference": "41d3386222edd82483836e560fdc6715d43440ac",
+            "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/776503d3a8e85d4f9a1148614f95b7a608b046ad",
+            "reference": "776503d3a8e85d4f9a1148614f95b7a608b046ad",
             "shasum": ""
         },
         "require": {
-            "ext-mbstring": "*",
-            "granam/exceptions-hierarchy": "^4.0",
-            "granam/string": "^3.0",
-            "php": ">=7.1",
-            "phpgt/dom": "~1.0",
-            "phpmailer/phpmailer": "^6.0",
-            "piwik/device-detector": "^3.9",
-            "tracy/tracy": "^2.4"
+            "php": "^5.3|^7.0"
+        },
+        "replace": {
+            "cordoval/hamcrest-php": "*",
+            "davedevelopment/hamcrest-php": "*",
+            "kodova/hamcrest-php": "*"
         },
         "require-dev": {
-            "mockery/mockery": "~1.0",
-            "phpunit/phpunit": "~7.0",
-            "roave/security-advisories": "dev-master"
+            "phpunit/php-file-iterator": "1.3.3",
+            "phpunit/phpunit": "~4.0",
+            "satooshi/php-coveralls": "^1.0"
         },
-        "time": "2018-07-25 12:15:22",
-        "bin": [
-            "bin/assets"
-        ],
+        "time": "2016-01-20 08:20:44",
         "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
         "installation-source": "dist",
         "autoload": {
-            "psr-4": {
-                "DrdPlus\\": "DrdPlus/",
-                "Tests\\": "Tests/"
-            }
+            "classmap": [
+                "hamcrest"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "MIT"
+            "BSD"
         ],
-        "description": "Skeleton for DrD+ pages",
+        "description": "This is the PHP port of Hamcrest Matchers",
         "keywords": [
-            "Skeleton",
-            "drd plus",
-            "frontend",
-            "helper",
-            "pages",
-            "view"
+            "test"
         ]
     },
     {
-        "name": "drd-plus/rules-skeleton",
-        "version": "1.0.21",
-        "version_normalized": "1.0.21.0",
+        "name": "mockery/mockery",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/jaroslavtyc/drd-plus-rules-skeleton.git",
-            "reference": "5a47a550371f5921a17a95c7c25edc2e3f5b92bd"
+            "url": "https://github.com/mockery/mockery.git",
+            "reference": "99e29d3596b16dabe4982548527d5ddf90232e99"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jaroslavtyc/drd-plus-rules-skeleton/zipball/5a47a550371f5921a17a95c7c25edc2e3f5b92bd",
-            "reference": "5a47a550371f5921a17a95c7c25edc2e3f5b92bd",
+            "url": "https://api.github.com/repos/mockery/mockery/zipball/99e29d3596b16dabe4982548527d5ddf90232e99",
+            "reference": "99e29d3596b16dabe4982548527d5ddf90232e99",
             "shasum": ""
         },
         "require": {
-            "drd-plus/frontend-skeleton": "~1.0",
-            "ext-mbstring": "*",
-            "php": ">=7.1",
-            "phpgt/dom": "~1.0",
-            "phpmailer/phpmailer": "^6.0",
-            "piwik/device-detector": "^3.9",
-            "tracy/tracy": "^2.4"
+            "hamcrest/hamcrest-php": "~2.0",
+            "lib-pcre": ">=7.0",
+            "php": ">=5.6.0"
         },
         "require-dev": {
-            "mockery/mockery": "~1.0",
-            "phpunit/phpunit": "~7.0",
-            "roave/security-advisories": "dev-master"
+            "phpdocumentor/phpdocumentor": "^2.9",
+            "phpunit/phpunit": "~5.7.10|~6.5"
         },
-        "time": "2018-07-25 13:23:03",
+        "time": "2018-05-08 08:54:48",
         "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
         "installation-source": "dist",
         "autoload": {
-            "psr-4": {
-                "DrdPlus\\": "DrdPlus/"
+            "psr-0": {
+                "Mockery": "library/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Pádraic Brady",
+                "email": "padraic.brady@gmail.com",
+                "homepage": "http://blog.astrumfutura.com"
+            },
+            {
+                "name": "Dave Marshall",
+                "email": "dave.marshall@atstsolutions.co.uk",
+                "homepage": "http://davedevelopment.co.uk"
+            }
+        ],
+        "description": "Mockery is a simple yet flexible PHP mock object framework",
+        "homepage": "https://github.com/mockery/mockery",
+        "keywords": [
+            "BDD",
+            "TDD",
+            "library",
+            "mock",
+            "mock objects",
+            "mockery",
+            "stub",
+            "test",
+            "test double",
+            "testing"
+        ]
+    },
+    {
+        "name": "drdplus/rules-skeleton-web",
+        "version": "1.0.7",
+        "version_normalized": "1.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/drdplusinfo/drdplus-rules-sketon-web.git",
+            "reference": "72b8fb531e14deb9495cd0517238f1d00fc32849"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/drdplusinfo/drdplus-rules-sketon-web/zipball/72b8fb531e14deb9495cd0517238f1d00fc32849",
+            "reference": "72b8fb531e14deb9495cd0517238f1d00fc32849",
+            "shasum": ""
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^7.3"
+        },
+        "time": "2018-08-27 04:12:13",
+        "type": "library",
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
             "MIT"
         ],
-        "description": "Skeleton for DrD+ rules as HTML",
+        "description": "Content for DrD+ rules skeleton",
         "keywords": [
             "Skeleton",
+            "content",
             "drd plus",
             "helper",
             "rules"
