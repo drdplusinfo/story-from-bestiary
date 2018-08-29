@@ -751,61 +751,6 @@
         ]
     },
     {
-        "name": "drdplus/rules-skeleton",
-        "version": "1.0.31",
-        "version_normalized": "1.0.31.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/drdplusinfo/drdplus-rules-skeleton.git",
-            "reference": "4bc65b282af4c6372073426f42e7a71c72cb23bc"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/drdplusinfo/drdplus-rules-skeleton/zipball/4bc65b282af4c6372073426f42e7a71c72cb23bc",
-            "reference": "4bc65b282af4c6372073426f42e7a71c72cb23bc",
-            "shasum": ""
-        },
-        "require": {
-            "composer-plugin-api": "^1.0",
-            "drdplus/frontend-skeleton": "~1.0",
-            "ext-mbstring": "*",
-            "php": ">=7.1",
-            "phpgt/dom": "~1.0",
-            "phpmailer/phpmailer": "^6.0",
-            "piwik/device-detector": "^3.9",
-            "tracy/tracy": "^2.4"
-        },
-        "require-dev": {
-            "composer/composer": "^1.7",
-            "drdplus/rules-skeleton-web": "dev-master",
-            "mockery/mockery": "~1.0",
-            "phpunit/phpunit": "~7.0",
-            "roave/security-advisories": "dev-master"
-        },
-        "time": "2018-08-28 10:29:52",
-        "type": "composer-plugin",
-        "extra": {
-            "class": "DrdPlus\\RulesSkeleton\\SkeletonInjectorComposerPlugin"
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "DrdPlus\\": "DrdPlus/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Skeleton for DrD+ rules as HTML",
-        "keywords": [
-            "Skeleton",
-            "drd plus",
-            "helper",
-            "rules"
-        ]
-    },
-    {
         "name": "roave/security-advisories",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -2584,6 +2529,61 @@
         "keywords": [
             "Skeleton",
             "content",
+            "drd plus",
+            "helper",
+            "rules"
+        ]
+    },
+    {
+        "name": "drdplus/rules-skeleton",
+        "version": "1.0.32",
+        "version_normalized": "1.0.32.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/drdplusinfo/drdplus-rules-skeleton.git",
+            "reference": "baaaed64b60f887f10549235ba4ada4081dd95ac"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/drdplusinfo/drdplus-rules-skeleton/zipball/baaaed64b60f887f10549235ba4ada4081dd95ac",
+            "reference": "baaaed64b60f887f10549235ba4ada4081dd95ac",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1.0",
+            "drdplus/frontend-skeleton": "~1.0",
+            "ext-mbstring": "*",
+            "php": ">=7.1",
+            "phpgt/dom": "~1.0",
+            "phpmailer/phpmailer": "^6.0",
+            "piwik/device-detector": "^3.9",
+            "tracy/tracy": "^2.4"
+        },
+        "require-dev": {
+            "composer/composer": "^1.7",
+            "drdplus/rules-skeleton-web": "dev-master",
+            "mockery/mockery": "~1.0",
+            "phpunit/phpunit": "~7.0",
+            "roave/security-advisories": "dev-master"
+        },
+        "time": "2018-08-28 15:02:24",
+        "type": "composer-plugin",
+        "extra": {
+            "class": "DrdPlus\\RulesSkeleton\\SkeletonInjectorComposerPlugin"
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "DrdPlus\\": "DrdPlus/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Skeleton for DrD+ rules as HTML",
+        "keywords": [
+            "Skeleton",
             "drd plus",
             "helper",
             "rules"

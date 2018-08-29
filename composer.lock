@@ -75,16 +75,16 @@
         },
         {
             "name": "drdplus/rules-skeleton",
-            "version": "1.0.31",
+            "version": "1.0.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drdplusinfo/drdplus-rules-skeleton.git",
-                "reference": "4bc65b282af4c6372073426f42e7a71c72cb23bc"
+                "reference": "baaaed64b60f887f10549235ba4ada4081dd95ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drdplusinfo/drdplus-rules-skeleton/zipball/4bc65b282af4c6372073426f42e7a71c72cb23bc",
-                "reference": "4bc65b282af4c6372073426f42e7a71c72cb23bc",
+                "url": "https://api.github.com/repos/drdplusinfo/drdplus-rules-skeleton/zipball/baaaed64b60f887f10549235ba4ada4081dd95ac",
+                "reference": "baaaed64b60f887f10549235ba4ada4081dd95ac",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-08-28 10:29:52"
+            "time": "2018-08-28 15:02:24"
         },
         {
             "name": "erusev/parsedown",

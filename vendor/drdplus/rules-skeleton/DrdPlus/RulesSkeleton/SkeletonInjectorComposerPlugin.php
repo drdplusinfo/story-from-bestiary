@@ -69,4 +69,18 @@ class SkeletonInjectorComposerPlugin extends AbstractSkeletonInjectorComposerPlu
             $documentRoot
         );
     }
+
+    protected function copyProjectConfig(string $documentRoot): void
+    {
+        if (!\file_exists('config.distribution.yml')) {
+            $this->passThrough(['cp --no-clobber ./vendor/drdplus/rules-skeleton/config.distribution.yml .'], $documentRoot);
+
+            return;
+        }
+        $frontendSkeletonConfigContent = \file_get_contents('vendor/drdplus/frontend-skeleton/config.distribution.yml');
+        if (\file_get_contents('config.distribution.yml') === $frontendSkeletonConfigContent) {
+            return;
+        }
+        $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/config.distribution.yml .'], $documentRoot);
+    }
 }
