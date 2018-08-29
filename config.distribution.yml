@@ -1,6 +1,6 @@
 web:
   last_stable_version: 'master'
-  repository_url: git@github.com:drdplusinfo/frontend-skeleton-web.git
+  repository_url: git@bitbucket.org:drdplusinfo/story-from-bestiary-web.git
   menu_position_fixed: false
   show_home_button: true
   protected_access: false
