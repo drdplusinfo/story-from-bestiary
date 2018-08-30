@@ -31,7 +31,7 @@ $tablesCache = new \DrdPlus\RulesSkeleton\TablesCache(
     $controller->getWebVersions(),
     $controller->getConfiguration()->getDirs(),
     $htmlHelper->isInProduction(),
-    $controller->getConfiguration()->getDirs()->getVersionWebRoot($controller->getWebVersions()->getCurrentVersion())
+    $controller->getConfiguration()->getDirs()->getVersionWebRoot($controller->getWebVersions()->getCurrentMinorVersion())
 );
 $controller->allowAccess();
 if ($tablesCache->isCacheValid()) {

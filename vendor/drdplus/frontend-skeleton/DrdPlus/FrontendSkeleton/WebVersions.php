@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace DrdPlus\FrontendSkeleton;
 
 use DrdPlus\FrontendSkeleton\Exceptions\ExecutingCommandFailed;
-use DrdPlus\FrontendSkeleton\Partials\CurrentVersionProvider;
+use DrdPlus\FrontendSkeleton\Partials\CurrentMinorVersionProvider;
 use Granam\Strict\Object\StrictObject;
 
 /**
@@ -17,12 +17,14 @@ class WebVersions extends StrictObject
 
     /** @var Configuration */
     private $configuration;
-    /** @var string */
-    private $currentVersion;
+    /** @var CurrentMinorVersionProvider */
+    private $currentMinorVersionProvider;
     /** @var string[] */
     private $allVersions;
     /** @var string */
-    private $lastStableVersion;
+    private $lastStableMinorVersion;
+    /** @var string */
+    private $lastStablePatchVersion;
     /** @var string[] */
     private $allStableVersions;
     /** @var string */
@@ -38,10 +40,10 @@ class WebVersions extends StrictObject
     /** @var string */
     private $lastUnstableVersionRoot;
 
-    public function __construct(Configuration $configuration, CurrentVersionProvider $currentVersionProvider)
+    public function __construct(Configuration $configuration, CurrentMinorVersionProvider $currentVersionProvider)
     {
         $this->configuration = $configuration;
-        $this->currentVersion = $currentVersionProvider->getCurrentVersion();
+        $this->currentMinorVersionProvider = $currentVersionProvider;
     }
 
     /**
@@ -49,7 +51,7 @@ class WebVersions extends StrictObject
      * @return array|string[]
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\ExecutingCommandFailed
      */
-    public function getAllVersions(): array
+    public function getAllMinorVersions(): array
     {
         if ($this->allVersions === null) {
             $escapedLatestVersionWebRoot = \escapeshellarg($this->getLastUnstableVersionWebRoot());
@@ -105,18 +107,32 @@ class WebVersions extends StrictObject
     }
 
     /**
-     * Gives last STABLE version, if any, or master if not
+     * Gives last STABLE version, if any, or 'master' if not
      * @return string
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\ExecutingCommandFailed
      */
-    public function getLastStableVersion(): string
+    public function getLastStableMinorVersion(): string
     {
-        if ($this->lastStableVersion === null) {
-            $stableVersions = $this->getAllStableVersions();
-            $this->lastStableVersion = \reset($stableVersions);
+        if ($this->lastStableMinorVersion === null) {
+            $stableMinorVersions = $this->getAllStableMinorVersions();
+            $this->lastStableMinorVersion = \reset($stableMinorVersions);
         }
 
-        return $this->lastStableVersion;
+        return $this->lastStableMinorVersion;
+    }
+
+    /**
+     * Gives last STABLE patch version, if any, or 'master' if not
+     * @return string
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\ExecutingCommandFailed
+     */
+    public function getLastStablePatchVersion(): string
+    {
+        if ($this->lastStablePatchVersion === null) {
+            $this->lastStablePatchVersion = $this->getLastPatchVersionOf($this->getLastStableMinorVersion());
+        }
+
+        return $this->lastStablePatchVersion;
     }
 
     /**
@@ -128,11 +144,11 @@ class WebVersions extends StrictObject
         return static::LAST_UNSTABLE_VERSION;
     }
 
-    public function getAllStableVersions(): array
+    public function getAllStableMinorVersions(): array
     {
         if ($this->allStableVersions === null) {
             $this->allStableVersions = \array_values( // reset indexes
-                \array_diff($this->getAllVersions(), [$this->getLastUnstableVersion()])
+                \array_diff($this->getAllMinorVersions(), [$this->getLastUnstableVersion()])
             );
         }
 
@@ -164,15 +180,15 @@ class WebVersions extends StrictObject
      * @return bool
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\ExecutingCommandFailed
      */
-    public function hasVersion(string $version): bool
+    public function hasMinorVersion(string $version): bool
     {
-        return \in_array($version, $this->getAllVersions(), true);
+        return \in_array($version, $this->getAllMinorVersions(), true);
     }
 
     public function getCurrentPatchVersion(): string
     {
         if ($this->currentPatchVersion === null) {
-            $this->currentPatchVersion = $this->getLastPatchVersionOf($this->getCurrentVersion());
+            $this->currentPatchVersion = $this->getLastPatchVersionOf($this->getCurrentMinorVersion());
         }
 
         return $this->currentPatchVersion;
@@ -181,9 +197,9 @@ class WebVersions extends StrictObject
     /**
      * @return string
      */
-    public function getCurrentVersion(): string
+    public function getCurrentMinorVersion(): string
     {
-        return $this->currentVersion;
+        return $this->currentMinorVersionProvider->getCurrentMinorVersion();
     }
 
     /**
@@ -212,8 +228,8 @@ class WebVersions extends StrictObject
     public function getCurrentCommitHash(): string
     {
         if ($this->currentCommitHash === null) {
-            $this->ensureMinorVersionExists($this->getCurrentVersion());
-            $escapedVersionRoot = \escapeshellarg($this->configuration->getDirs()->getVersionRoot($this->getCurrentVersion()));
+            $this->ensureMinorVersionExists($this->getCurrentMinorVersion());
+            $escapedVersionRoot = \escapeshellarg($this->configuration->getDirs()->getVersionRoot($this->getCurrentMinorVersion()));
             $this->currentCommitHash = $this->execute("git -C $escapedVersionRoot log --max-count=1 --format=%H --no-abbrev-commit");
         }
 
@@ -223,8 +239,8 @@ class WebVersions extends StrictObject
     /**
      * @param string $minorVersion
      * @return bool
-     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotLocallyCloneGitVersion
-     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotUpdateGitVersion
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotLocallyCloneWebVersionViaGit
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotUpdateWebVersionViaGit
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\ExecutingCommandFailed
      */
     protected function ensureMinorVersionExists(string $minorVersion): bool
@@ -243,38 +259,82 @@ class WebVersions extends StrictObject
     /**
      * @param string $minorVersion
      * @param string $toVersionDir
-     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotLocallyCloneGitVersion
+     * @return array
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotLocallyCloneWebVersionViaGit
      */
-    private function clone(string $minorVersion, string $toVersionDir): void
+    private function clone(string $minorVersion, string $toVersionDir): array
     {
         $toVersionDirEscaped = \escapeshellarg($toVersionDir);
         $toVersionEscaped = \escapeshellarg($minorVersion);
         $command = "git clone --branch $toVersionEscaped {$this->configuration->getWebRepositoryUrl()} $toVersionDirEscaped 2>&1";
         \exec($command, $rows, $returnCode);
         if ($returnCode !== 0) {
-            throw new Exceptions\CanNotLocallyCloneGitVersion(
-                "Can not git clone required version '{$minorVersion}' by command '{$command}'"
+            if ($this->remoteBranchExists($minorVersion)) {
+                throw new Exceptions\CanNotLocallyCloneWebVersionViaGit(
+                    "Can not git clone required version '{$minorVersion}' by command '{$command}'"
+                    . ", got return code '{$returnCode}' and output\n"
+                    . \implode("\n", $rows)
+                );
+            }
+            throw new Exceptions\UnknownWebVersion(
+                "Required web minor version $minorVersion as a GIT branch does not exists:\n'{$command}' => " . \implode("\n", $rows)
+            );
+        }
+
+        return $rows;
+    }
+
+    protected function remoteBranchExists(string $branchName): bool
+    {
+        $command = 'git branch --remotes 2>&1';
+        \exec($command, $rows, $returnCode);
+        if ($returnCode !== 0) {
+            throw new Exceptions\CanNotFindOutRemoteBranches(
+                "Can not get remote branches from git by command '{$command}'"
                 . ", got return code '{$returnCode}' and output\n"
                 . \implode("\n", $rows)
             );
         }
+        foreach ($rows as $remoteBranch) {
+            $branchFromRemote = \trim(\explode('/', $remoteBranch)[1] ?? '');
+            if ($branchName === $branchFromRemote) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public function update(string $minorVersion): void
+    /**
+     * @param string $minorVersion
+     * @return array
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotUpdateWebVersionViaGit
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotLocallyCloneWebVersionViaGit
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\UnknownWebVersion
+     */
+    public function update(string $minorVersion): array
     {
-        $toVersionDir = $this->configuration->getDirs()->getVersionRoot($minorVersion);
-        $toVersionDirEscaped = \escapeshellarg($toVersionDir);
+        $toMinorVersionDir = $this->configuration->getDirs()->getVersionRoot($minorVersion);
+        if (!\file_exists($toMinorVersionDir)) {
+            return $this->clone($minorVersion, $toMinorVersionDir);
+        }
+        $toMinorVersionDirEscaped = \escapeshellarg($toMinorVersionDir);
         $commands = [];
-        $commands[] = "cd $toVersionDirEscaped";
+        $commands[] = "cd $toMinorVersionDirEscaped";
         $commands[] = 'git pull --ff-only';
         $commands[] = 'git pull --tags';
         try {
-            $this->executeCommandsChainArray($commands);
+            return $this->executeCommandsChainArray($commands);
         } catch (ExecutingCommandFailed $executingCommandFailed) {
-            throw new Exceptions\CanNotUpdateGitVersion(
-                "Can not update required version '{$minorVersion}': " . $executingCommandFailed->getMessage(),
-                $executingCommandFailed->getCode(),
-                $executingCommandFailed
+            if ($this->remoteBranchExists($minorVersion)) {
+                throw new Exceptions\CanNotUpdateWebVersionViaGit(
+                    "Can not update required version '{$minorVersion}': " . $executingCommandFailed->getMessage(),
+                    $executingCommandFailed->getCode(),
+                    $executingCommandFailed
+                );
+            }
+            throw new Exceptions\UnknownWebVersion(
+                "Required web minor version $minorVersion as a GIT branch does not exists:\n{$executingCommandFailed->getMessage()}"
             );
         }
     }
@@ -348,6 +408,6 @@ CMD
 
     public function isCurrentVersionStable(): bool
     {
-        return $this->getCurrentVersion() !== $this->getLastUnstableVersion();
+        return $this->getCurrentMinorVersion() !== $this->getLastUnstableVersion();
     }
 }

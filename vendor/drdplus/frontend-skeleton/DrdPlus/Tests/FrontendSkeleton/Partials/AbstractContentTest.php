@@ -8,7 +8,7 @@ use DrdPlus\FrontendSkeleton\Configuration;
 use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\FrontendSkeleton\FrontendController;
 use DrdPlus\FrontendSkeleton\HtmlHelper;
-use DrdPlus\FrontendSkeleton\Partials\CurrentVersionProvider;
+use DrdPlus\FrontendSkeleton\Partials\CurrentMinorVersionProvider;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 use Mockery\MockInterface;
@@ -268,7 +268,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return $metaRefreshes;
     }
 
-    protected function getDirVersioning(string $dirToCheck): array
+    protected function getGitFolderIgnoring(string $dirToCheck): array
     {
         $documentRootEscaped = \escapeshellarg($this->getDocumentRoot());
         $dirToCheckEscaped = \escapeshellarg($dirToCheck);
@@ -290,13 +290,13 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return Configuration::createFromYml($dirs ?? $this->createDirs());
     }
 
-    protected function createCurrentVersionProvider(string $currentVersion = null): CurrentVersionProvider
+    protected function createCurrentVersionProvider(string $currentVersion = null): CurrentMinorVersionProvider
     {
-        $currentVersionProvider = $this->mockery(CurrentVersionProvider::class);
-        $currentVersionProvider->allows('getCurrentVersion')
+        $currentVersionProvider = $this->mockery(CurrentMinorVersionProvider::class);
+        $currentVersionProvider->allows('getCurrentMinorVersion')
             ->andReturn($currentVersion ?? $this->getTestsConfiguration()->getExpectedLastVersion());
 
-        /** @var CurrentVersionProvider $currentVersionProvider */
+        /** @var CurrentMinorVersionProvider $currentVersionProvider */
         return $currentVersionProvider;
     }
 

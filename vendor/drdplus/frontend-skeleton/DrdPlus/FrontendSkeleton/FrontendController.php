@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace DrdPlus\FrontendSkeleton;
 
 use DeviceDetector\Parser\Bot;
-use DrdPlus\FrontendSkeleton\Partials\CurrentVersionProvider;
+use DrdPlus\FrontendSkeleton\Partials\CurrentMinorVersionProvider;
 use Granam\Strict\Object\StrictObject;
 
-class FrontendController extends StrictObject implements CurrentVersionProvider
+class FrontendController extends StrictObject implements CurrentMinorVersionProvider
 {
     /** @var Configuration */
     private $configuration;
@@ -23,10 +23,6 @@ class FrontendController extends StrictObject implements CurrentVersionProvider
     private $request;
     /** @var array */
     private $bodyClasses;
-    /** @var bool */
-    private $menuPositionFixed;
-    /** @var bool */
-    private $showHomeButton;
     /** @var PageCache */
     protected $pageCache;
     /** @var Redirect|null */
@@ -39,8 +35,6 @@ class FrontendController extends StrictObject implements CurrentVersionProvider
         $this->configuration = $configuration;
         $this->htmlHelper = $htmlHelper;
         $this->bodyClasses = $bodyClasses;
-        $this->menuPositionFixed = $configuration->isMenuPositionFixed();
-        $this->showHomeButton = $configuration->isShowHomeButton();
     }
 
     /**
@@ -133,7 +127,7 @@ class FrontendController extends StrictObject implements CurrentVersionProvider
         return \ob_get_clean();
     }
 
-    public function getWebContent(): string
+    public function fetchWebContent(): string
     {
         /** @noinspection PhpUnusedLocalVariableInspection */
         $controller = $this;
@@ -191,17 +185,14 @@ class FrontendController extends StrictObject implements CurrentVersionProvider
         $this->bodyClasses[] = $class;
     }
 
-    /**
-     * @return bool
-     */
     public function isMenuPositionFixed(): bool
     {
-        return $this->menuPositionFixed;
+        return $this->getConfiguration()->isMenuPositionFixed();
     }
 
     public function isShownHomeButton(): bool
     {
-        return $this->showHomeButton;
+        return $this->getConfiguration()->isShowHomeButton();
     }
 
     public function getPageCache(): PageCache
@@ -256,8 +247,49 @@ class FrontendController extends StrictObject implements CurrentVersionProvider
         return $this->cookiesService;
     }
 
-    public function getCurrentVersion(): string
+    public function getCurrentMinorVersion(): string
     {
-        return $this->getRequest()->getValue('version') ?? $this->getConfiguration()->getWebLastStableVersion();
+        $minorVersion = $this->getRequest()->getValue(Request::VERSION);
+        if ($minorVersion && $this->getWebVersions()->hasMinorVersion($minorVersion)) {
+            return $minorVersion;
+        }
+
+        return $this->getConfiguration()->getWebLastStableMinorVersion();
+    }
+
+    protected function reloadWebVersions()
+    {
+        $this->webVersions = null;
+        $this->pageCache = null; // as uses web version
+    }
+
+    public function isRequestedWebVersionUpdate(): bool
+    {
+        return $this->getRequest()->getValue(Request::UPDATE) === 'web';
+    }
+
+    public function updateWebVersion(): int
+    {
+        $updatedVersions = 0;
+        // sadly we do not know which version has been updated, so we will update all of them
+        foreach ($this->getWebVersions()->getAllMinorVersions() as $version) {
+            $this->getWebVersions()->update($version);
+            $updatedVersions++;
+        }
+
+        return $updatedVersions;
+    }
+
+    public function persistCurrentVersion(): bool
+    {
+        return $this->getCookiesService()->setMinorVersionCookie($this->getCurrentMinorVersion());
+    }
+
+    public function getContent(): string
+    {
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $controller = $this;
+        /** @noinspection PhpIncludeInspection */
+        return require $this->getConfiguration()->getDirs()->getGenericPartsRoot() . '/content.php';
     }
 }

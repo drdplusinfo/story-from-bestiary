@@ -3,7 +3,7 @@
     <div class="container">
         <?php if ($controller->isShownHomeButton()) { ?>
           <span class="menu">
-                    <a id="homeButton" class="internal" href="https://www.drdplus.info">
+                    <a id="homeButton" class="internal-url" href="https://www.drdplus.info">
                         <img class="home" src="/images/generic/skeleton/frontend-drd-plus-dragon-menu-2x22.png">
                     </a>
                 </span>
@@ -11,14 +11,14 @@
       <div class="version">
           <?php
           $webVersions = $controller->getWebVersions();
-          $allVersions = $webVersions->getAllVersions();
+          $allVersions = $webVersions->getAllMinorVersions();
           if (\count($allVersions) > 1) {
-              $currentVersion = $webVersions->getCurrentVersion(); ?>
+              $currentVersion = $webVersions->getCurrentMinorVersion(); ?>
             <span class="current-version"><?= $webVersions->getVersionHumanName($currentVersion) ?></span>
             <ul class="other-versions">
                 <?php
                 $request = $controller->getRequest();
-                foreach ($webVersions->getAllVersions() as $webVersion) {
+                foreach ($webVersions->getAllMinorVersions() as $webVersion) {
                     if ($webVersion === $currentVersion) {
                         continue;
                     } ?>
