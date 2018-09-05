@@ -126,13 +126,15 @@ div.intermezzo::after {
     padding: 3px 0;
 }
 
-.rules-authors {
-    font-weight: bold;
-}
-
-.rules-authors .title {
+.origin .title {
     font-style: italic;
     opacity: .7;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.rules-authors {
+    font-weight: bold;
 }
 
 .rules-authors .altar {

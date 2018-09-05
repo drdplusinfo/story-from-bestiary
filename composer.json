@@ -28,19 +28,7 @@
   "prefer-stable": true,
   "scripts": {
     "pre-autoload-dump": [
-      "rm -f DrdPlus/Tests/RulesSkeleton && ln -s ../../vendor/drdplus/rules-skeleton/DrdPlus/Tests/RulesSkeleton DrdPlus/Tests/",
-      "rm -fr ./css/generic && cp -r ./vendor/drdplus/rules-skeleton/css/generic ./css/",
-      "rm -fr ./images/generic && cp -r ./vendor/drdplus/rules-skeleton/images/generic ./images/",
-      "rm -fr ./js/generic && cp -r ./vendor/drdplus/rules-skeleton/js/generic ./js/",
-      "find ./cache -mindepth 2 -type f -exec rm {} +",
-      "cp ./vendor/drdplus/rules-skeleton/google8d8724e0c2818dfc.html .",
-      "cp ./vendor/drdplus/rules-skeleton/phpunit.xml.dist ."
-    ],
-    "post-update-cmd": [
-      "php ./vendor/bin/assets --css --dir=css"
-    ],
-    "post-install-cmd": [
-      "php ./vendor/bin/assets --css --dir=css"
+      "rm -f DrdPlus/Tests/RulesSkeleton && ln -s ../../vendor/drdplus/rules-skeleton/DrdPlus/Tests/RulesSkeleton DrdPlus/Tests/"
     ]
   }
 }

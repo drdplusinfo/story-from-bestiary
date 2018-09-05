@@ -29,7 +29,13 @@ class ContactsTest extends AbstractContentTest
     {
         static $debugContactsContent;
         if ($debugContactsContent === null) {
-            $debugContactsContent = \file_get_contents($this->getVendorRoot() . '/drdplus/rules-skeleton-web/web/shared/debug_contacts.html');
+            $debugContactsFile = $this->getVendorRoot() . '/drdplus/rules-skeleton-web/web/shared/debug_contacts.html';
+            if (!\file_exists($debugContactsFile)) {
+                throw new \LogicException(
+                    "Missing file $debugContactsFile, run 'composer require --dev drdplus/rules-skeleton-web' first"
+                );
+            }
+            $debugContactsContent = \file_get_contents($debugContactsFile);
         }
 
         return $debugContactsContent;

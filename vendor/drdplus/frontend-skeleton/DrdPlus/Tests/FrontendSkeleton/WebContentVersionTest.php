@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\FrontendSkeleton;
 
+use DrdPlus\FrontendSkeleton\CookiesService;
 use DrdPlus\FrontendSkeleton\HtmlDocument;
 use DrdPlus\FrontendSkeleton\Request;
 use DrdPlus\FrontendSkeleton\WebVersions;
@@ -59,17 +60,17 @@ class WebContentVersionTest extends AbstractContentTest
      */
     public function I_can_switch_to_every_version(string $source): void
     {
-        $webVersions = new WebVersions($this->createConfiguration(), $this->createCurrentVersionProvider());
+        $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest());
         foreach ($webVersions->getAllMinorVersions() as $webVersion) {
             $post = [];
             $cookies = [];
             $url = $this->getTestsConfiguration()->getLocalUrl();
             if ($source === 'get') {
-                $url .= '?version=' . $webVersion;
+                $url .= '?' . Request::VERSION . '=' . $webVersion;
             } elseif ($source === 'post') {
-                $post = ['version' => $webVersion];
+                $post = [Request::VERSION => $webVersion];
             } elseif ($source === 'cookies') {
-                $cookies = ['version' => $webVersion];
+                $cookies = [Request::VERSION => $webVersion];
             }
             $content = $this->fetchContentFromLink($url, true, $post, $cookies)['content'];
             self::assertNotEmpty($content);
@@ -107,7 +108,7 @@ class WebContentVersionTest extends AbstractContentTest
 
             return;
         }
-        $webVersions = new WebVersions($this->createConfiguration(), $this->createCurrentVersionProvider());
+        $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest());
         $tags = $this->runCommand('git tag | grep -P "([[:digit:]]+[.]){2}[[:alnum:]]+([.][[:digit:]]+)?" --only-matching');
         self::assertNotEmpty(
             $tags,
@@ -131,11 +132,11 @@ class WebContentVersionTest extends AbstractContentTest
      */
     public function Current_version_is_written_into_cookie(): void
     {
-        unset($_COOKIE['version']);
+        unset($_COOKIE[CookiesService::VERSION]);
         $this->fetchNonCachedContent(null, false /* keep changed globals */);
-        self::assertArrayHasKey('version', $_COOKIE, "Missing 'version' in cookie");
+        self::assertArrayHasKey(CookiesService::VERSION, $_COOKIE, "Missing '" . CookiesService::VERSION . "' in cookie");
         // unstable version is forced by test, it should be stable version by default
-        self::assertSame($this->getTestsConfiguration()->getExpectedLastVersion(), $_COOKIE['version']);
+        self::assertSame($this->getTestsConfiguration()->getExpectedLastVersion(), $_COOKIE[CookiesService::VERSION]);
     }
 
     /**
@@ -148,11 +149,11 @@ class WebContentVersionTest extends AbstractContentTest
 
             return;
         }
-        $webVersions = new WebVersions($configuration = $this->createConfiguration(), $this->createCurrentVersionProvider());
+        $webVersions = new WebVersions($configuration = $this->getConfiguration(), $this->createRequest());
         $documentRoot = $configuration->getDirs()->getDocumentRoot();
         $checked = 0;
         foreach ($webVersions->getAllStableMinorVersions() as $stableVersion) {
-            $htmlDocument = $this->getHtmlDocument(['version' => $stableVersion]);
+            $htmlDocument = $this->getHtmlDocument([Request::VERSION => $stableVersion]);
             foreach ($htmlDocument->getElementsByTagName('img') as $image) {
                 $checked += $this->Asset_file_exists($image, 'src', $documentRoot);
             }
@@ -183,7 +184,7 @@ class WebContentVersionTest extends AbstractContentTest
     public function I_will_get_content_of_last_stable_version_if_requested_does_not_exists(): void
     {
         $patchVersion = $this->getHtmlDocument([Request::VERSION => '999.9'])->documentElement->getAttribute('data-content-version');
-        $webVersions = new WebVersions($this->createConfiguration(), $this->createCurrentVersionProvider());
+        $webVersions = new WebVersions($this->getConfiguration(), $this->createRequest());
         self::assertSame($webVersions->getLastStablePatchVersion(), $patchVersion);
     }
 }

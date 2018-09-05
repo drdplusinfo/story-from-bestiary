@@ -5,6 +5,9 @@ namespace DrdPlus\RulesSkeleton;
 
 class Request extends \DrdPlus\FrontendSkeleton\Request
 {
+    public const TABLES = 'tables';
+    public const TABULKY = 'tabulky';
+
     /**
      * @return array|string[]
      */
@@ -14,7 +17,7 @@ class Request extends \DrdPlus\FrontendSkeleton\Request
             function (string $id) {
                 return \trim($id);
             },
-            \explode(',', $_GET['tables'] ?? $_GET['tabulky'] ?? '')
+            \explode(',', $_GET[self::TABLES] ?? $_GET[self::TABULKY] ?? '')
         );
 
         return \array_filter(
@@ -28,5 +31,15 @@ class Request extends \DrdPlus\FrontendSkeleton\Request
     public function getPath(): string
     {
         return $_SERVER['PATH_INFO'] ?? '';
+    }
+
+    public function getValueFromPost(string $name)
+    {
+        return $_POST[$name] ?? null;
+    }
+
+    public function getValueFromGet(string $name)
+    {
+        return $_GET[$name] ?? null;
     }
 }

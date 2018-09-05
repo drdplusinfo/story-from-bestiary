@@ -3,78 +3,113 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DeviceDetector\Parser\Bot;
-use DrdPlus\FrontendSkeleton\HtmlHelper;
-use DrdPlus\FrontendSkeleton\PageCache;
-use Granam\String\StringTools;
+use DrdPlus\RulesSkeleton\Web\Content;
 
 /**
- * @method Configuration getConfiguration() : Configuration
- * @method HtmlHelper getHtmlHelper() : HtmlHelper
+ * @method ServicesContainer getServicesContainer
  */
 class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 {
-    /** @var UsagePolicy */
-    private $usagePolicy;
-    /** @var Request */
-    private $rulesSkeletonRequest;
-
-    public function __construct(Configuration $configuration, HtmlHelper $htmlHelper, array $bodyClasses = [])
+    public function __construct(ServicesContainer $servicesContainer)
     {
-        parent::__construct($configuration, $htmlHelper, $bodyClasses);
-    }
-
-    public function getPageCache(): PageCache
-    {
-        if ($this->pageCache === null) {
-            $this->pageCache = new PageCache(
-                $this->getWebVersions(),
-                $this->getConfiguration()->getDirs(),
-                $this->getHtmlHelper()->isInProduction(),
-                $this->isAccessAllowed()
-                    ? 'passed'
-                    : 'pass'
-            );
-        }
-
-        return $this->pageCache;
-    }
-
-    public function getUsagePolicy(): UsagePolicy
-    {
-        if ($this->usagePolicy === null) {
-            $this->usagePolicy = new UsagePolicy(
-                StringTools::toVariableName($this->getWebName()),
-                $this->getRequest(),
-                $this->getCookiesService()
-            );
-        }
-
-        return $this->usagePolicy;
+        parent::__construct($servicesContainer);
     }
 
     /**
-     * @return \DrdPlus\FrontendSkeleton\Request|Request
+     * @return Content|\DrdPlus\FrontendSkeleton\Web\Content
      */
-    public function getRequest(): \DrdPlus\FrontendSkeleton\Request
+    public function getContent(): \DrdPlus\FrontendSkeleton\Web\Content
     {
-        if ($this->rulesSkeletonRequest === null) {
-            $this->rulesSkeletonRequest = new Request(new Bot());
+        if ($this->content === null) {
+            if (($_SERVER['QUERY_STRING'] ?? false) === 'pdf'
+                && $this->getServicesContainer()->getPdfBody()->getPdfFile()
+            ) {
+                $this->content = new Content(
+                    $this->getServicesContainer()->getHtmlHelper(),
+                    $this->getServicesContainer()->getWebVersions(),
+                    $this->getServicesContainer()->getEmptyHead(),
+                    $this->getServicesContainer()->getEmptyMenu(),
+                    $this->getServicesContainer()->getPdfBody(),
+                    $this->getServicesContainer()->getEmptyWebCache(),
+                    Content::PDF,
+                    $this->getRedirect()
+                );
+            } elseif ($this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABLES) !== null
+                || $this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABULKY)
+            ) { // we do not require licence confirmation for tables only
+                $this->content = new Content(
+                    $this->getServicesContainer()->getHtmlHelper(),
+                    $this->getServicesContainer()->getWebVersions(),
+                    $this->getServicesContainer()->getHeadForTables(),
+                    $this->getServicesContainer()->getMenu(),
+                    $this->getServicesContainer()->getTablesBody(),
+                    $this->getServicesContainer()->getTablesWebCache(),
+                    Content::TABLES,
+                    $this->getRedirect()
+                );
+            } elseif (!$this->solveAccess()) {
+                $this->content = new Content(
+                    $this->getServicesContainer()->getHtmlHelper(),
+                    $this->getServicesContainer()->getWebVersions(),
+                    $this->getServicesContainer()->getHead(),
+                    $this->getServicesContainer()->getMenu(),
+                    $this->getServicesContainer()->getPassBody(),
+                    $this->getServicesContainer()->getPassWebCache(),
+                    Content::PASS,
+                    $this->getRedirect()
+                );
+            } else {
+                $this->content = new Content(
+                    $this->getServicesContainer()->getHtmlHelper(),
+                    $this->getServicesContainer()->getWebVersions(),
+                    $this->getServicesContainer()->getHead(),
+                    $this->getServicesContainer()->getMenu(),
+                    $this->getServicesContainer()->getBody(),
+                    $this->getServicesContainer()->getPassedWebCache(),
+                    Content::PASSED,
+                    $this->getRedirect()
+                );
+            }
         }
 
-        return $this->rulesSkeletonRequest;
+        return $this->content;
     }
 
-    public function activateTrial(\DateTime $now): bool
+    private function solveAccess(): bool
+    {
+        $visitorCanAccessContent = !$this->getServicesContainer()->getConfiguration()->hasProtectedAccess();
+        if (!$visitorCanAccessContent) {
+            $usagePolicy = $this->getServicesContainer()->getUsagePolicy();
+            $visitorCanAccessContent = $usagePolicy->isVisitorBot();
+            if (!$visitorCanAccessContent) {
+                if ($this->getServicesContainer()->getRequest()->getValueFromPost('confirm')) {
+                    $visitorCanAccessContent = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
+                }
+                if (!$visitorCanAccessContent && $this->getServicesContainer()->getRequest()->getValueFromPost('trial')) {
+                    $visitorCanAccessContent = $this->activateTrial($this->getServicesContainer()->getNow());
+                }
+                if (!$visitorCanAccessContent) {
+                    $visitorCanAccessContent = $usagePolicy->hasVisitorConfirmedOwnership();
+                    if (!$visitorCanAccessContent) {
+                        $visitorCanAccessContent = $usagePolicy->isVisitorUsingValidTrial();
+                    }
+                }
+            }
+        }
+
+        return $visitorCanAccessContent;
+    }
+
+    protected function activateTrial(\DateTime $now): bool
     {
         $trialExpiration = (clone $now)->modify('+4 minutes');
-        $visitorCanAccessContent = $this->getUsagePolicy()->activateTrial($trialExpiration);
+        $visitorCanAccessContent = $this->getServicesContainer()->getUsagePolicy()->activateTrial($trialExpiration);
         if ($visitorCanAccessContent) {
             $at = $trialExpiration->getTimestamp() + 1; // one second "insurance" overlap
             $afterSeconds = $at - $now->getTimestamp();
             $this->setRedirect(
                 new \DrdPlus\FrontendSkeleton\Redirect(
-                    "/?{$this->getUsagePolicy()->getTrialExpiredAtName()}={$at}",
+                    "/?{$this->getServicesContainer()->getUsagePolicy()->getTrialExpiredAtName()}={$at}",
                     $afterSeconds
                 )
             );
@@ -83,15 +118,20 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
         return $visitorCanAccessContent;
     }
 
-    public function isAccessAllowed(): bool
+    public function sendCustomHeaders(): void
     {
-        return $this->getConfiguration()->getDirs()->isAllowedAccessToWebFiles();
-    }
-
-    public function allowAccess(): RulesController
-    {
-        $this->getConfiguration()->getDirs()->allowAccessToWebFiles();
-
-        return $this;
+        if (\PHP_SAPI === 'cli') {
+            return;
+        }
+        if ($this->getContent()->containsTables()) {
+            // anyone can show content of this page
+            \header('Access-Control-Allow-Origin: *', true);
+        } elseif ($this->getContent()->containsPdf()) {
+            \header('Content-type: application/pdf');
+            $pdfFile = $this->getServicesContainer()->getPdfBody()->getPdfFile();
+            \header('Content-Length: ' . \filesize($pdfFile));
+            $pdfFileBasename = \basename($pdfFile);
+            \header("Content-Disposition: attachment; filename=\"$pdfFileBasename\"");
+        }
     }
 }

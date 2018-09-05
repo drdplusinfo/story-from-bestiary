@@ -8,6 +8,8 @@ use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
+use DrdPlus\RulesSkeleton\RulesController;
+use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use Granam\String\StringTools;
 use Gt\Dom\HTMLDocument;
@@ -21,6 +23,8 @@ use Gt\Dom\HTMLDocument;
  * @method static assertFalse($value, $message = '')
  * @method static assertNotSame($expected, $actual, $message = '')
  * @method static fail($message)
+ * @method RulesController createController(string $documentRoot = null, Configuration $configuration = null, HtmlHelper $htmlHelper = null)
+ * @method Configuration getConfiguration(Dirs $dirs = null)
  */
 trait AbstractContentTestTrait
 {
@@ -217,47 +221,54 @@ trait AbstractContentTestTrait
         return $this->getDocumentRoot() . '/eshop_url.txt';
     }
 
-    protected function getGenericPartsRoot(): string
-    {
-        return \file_exists($this->getDocumentRoot() . '/parts/rules-skeleton')
-            ? $this->getDocumentRoot() . '/parts/rules-skeleton'
-            : $this->getVendorRoot() . '/drdplus/rules-skeleton/parts/rules-skeleton';
-    }
-
-    protected function getVendorRoot(): string
-    {
-        return $this->getDocumentRoot() . '/vendor';
-    }
-
     /**
      * @param Dirs $dirs
      * @param bool $inDevMode
      * @param bool $inForcedProductionMode
      * @param bool $shouldHideCovered
-     * @param bool $showIntroductionOnly
      * @return HtmlHelper|\Mockery\MockInterface
      */
     protected function createHtmlHelper(
         Dirs $dirs = null,
         bool $inForcedProductionMode = false,
         bool $inDevMode = false,
-        bool $shouldHideCovered = false,
-        bool $showIntroductionOnly = false
+        bool $shouldHideCovered = false
     ): \DrdPlus\FrontendSkeleton\HtmlHelper
     {
-        return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered, $showIntroductionOnly);
+        return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered);
     }
 
     /**
-     * @param Dirs|null $dirs
-     * @return \DrdPlus\FrontendSkeleton\Configuration|Configuration
+     * @param string|null $documentRoot
+     * @param \DrdPlus\FrontendSkeleton\Configuration|null $configuration
+     * @param \DrdPlus\FrontendSkeleton\HtmlHelper|null $htmlHelper
+     * @return \DrdPlus\FrontendSkeleton\ServicesContainer|ServicesContainer
      */
-    protected function createConfiguration(Dirs $dirs = null): \DrdPlus\FrontendSkeleton\Configuration
+    protected function createServicesContainer(
+        string $documentRoot = null,
+        \DrdPlus\FrontendSkeleton\Configuration $configuration = null,
+        \DrdPlus\FrontendSkeleton\HtmlHelper $htmlHelper = null
+    ): \DrdPlus\FrontendSkeleton\ServicesContainer
     {
-        if (!$dirs || $dirs instanceof \DrdPlus\RulesSkeleton\Dirs) {
-            return Configuration::createFromYml($dirs ?? $this->createDirs());
-        }
+        $dirs = $this->createDirs($documentRoot);
 
-        return \DrdPlus\FrontendSkeleton\Configuration::createFromYml($dirs ?? $this->createDirs());
+        return new ServicesContainer(
+            $configuration ?? $this->getConfiguration(),
+            $htmlHelper ?? $this->createHtmlHelper($dirs, false, false, false, false)
+        );
     }
+
+    /**
+     * @return string|Configuration
+     */
+    protected function getConfigurationClass(): string
+    {
+        return Configuration::class;
+    }
+
+    protected function getControllerClass(): string
+    {
+        return RulesController::class;
+    }
+
 }

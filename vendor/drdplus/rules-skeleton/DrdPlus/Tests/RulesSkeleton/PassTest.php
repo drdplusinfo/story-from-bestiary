@@ -96,6 +96,11 @@ class PassTest extends AbstractContentTest
      */
     public function Crawlers_can_pass_without_licence_owning_confirmation(): void
     {
+        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasProtectedAccess()) {
+            self::assertTrue(true, 'Crawlers can access content as anyone else');
+
+            return;
+        }
         $passContent = $this->getPassContent(true /* not cached */);
         $this->passIn();
         $rulesContent = $this->fetchNonCachedContent();

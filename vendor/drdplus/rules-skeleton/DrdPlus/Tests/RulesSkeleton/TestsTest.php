@@ -14,7 +14,7 @@ class TestsTest extends TestCase
      */
     public function All_frontend_skeleton_tests_are_used(): void
     {
-        $reflectionClass = new \ReflectionClass(\DrdPlus\Tests\FrontendSkeleton\ContentTest::class);
+        $reflectionClass = new \ReflectionClass(\DrdPlus\Tests\FrontendSkeleton\WebContentTest::class);
         $frontendSkeletonDir = \dirname($reflectionClass->getFileName());
         foreach ($this->getClassesFromDir($frontendSkeletonDir) as $frontendSkeletonTestClass) {
             if (\is_a($frontendSkeletonTestClass, \Throwable::class, true)

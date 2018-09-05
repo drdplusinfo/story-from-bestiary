@@ -25,6 +25,7 @@ class SkeletonInjectorComposerPlugin extends AbstractSkeletonInjectorComposerPlu
         $this->publishSkeletonImages($documentRoot);
         $this->publishSkeletonCss($documentRoot);
         $this->publishSkeletonJs($documentRoot);
+        $this->copyProjectConfig($documentRoot);
         $this->flushCache($documentRoot);
         $this->addVersionsToAssets($documentRoot);
         $this->alreadyInjected = true;
@@ -78,7 +79,7 @@ class SkeletonInjectorComposerPlugin extends AbstractSkeletonInjectorComposerPlu
             return;
         }
         $frontendSkeletonConfigContent = \file_get_contents('vendor/drdplus/frontend-skeleton/config.distribution.yml');
-        if (\file_get_contents('config.distribution.yml') === $frontendSkeletonConfigContent) {
+        if (\file_get_contents('config.distribution.yml') !== $frontendSkeletonConfigContent) {
             return;
         }
         $this->passThrough(['cp ./vendor/drdplus/rules-skeleton/config.distribution.yml .'], $documentRoot);

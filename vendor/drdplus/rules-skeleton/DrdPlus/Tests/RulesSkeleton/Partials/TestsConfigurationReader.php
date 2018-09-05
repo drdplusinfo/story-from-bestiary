@@ -17,8 +17,6 @@ interface TestsConfigurationReader extends \DrdPlus\Tests\FrontendSkeleton\Parti
 
     public function hasDebugContacts(): bool;
 
-    public function hasIntroduction(): bool;
-
     public function hasAuthors(): bool;
 
     public function getBlockNamesToExpectedContent(): array;

@@ -15,9 +15,10 @@ $htmlHelper = $htmlHelper ?? \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobal
 if (PHP_SAPI !== 'cli') {
     \DrdPlus\FrontendSkeleton\TracyDebugger::enable($htmlHelper->isInProduction());
 }
-
 $configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
-$controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController($configuration, $htmlHelper);
+$servicesContainer = new \DrdPlus\RulesSkeleton\ServicesContainer($configuration, $htmlHelper);
+$controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController($servicesContainer);
+$controller->sendCustomHeaders();
 
 /** @noinspection PhpIncludeInspection */
 require $dirs->getVendorRoot() . '/drdplus/frontend-skeleton/index.php';

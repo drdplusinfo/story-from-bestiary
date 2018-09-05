@@ -14,8 +14,6 @@ class Dirs extends StrictObject
     /** @var string */
     protected $partsRoot;
     /** @var string */
-    protected $genericPartsRoot;
-    /** @var string */
     protected $cssRoot;
     /** @var string */
     protected $jsRoot;
@@ -34,7 +32,6 @@ class Dirs extends StrictObject
     {
         $this->vendorRoot = $documentRoot . '/vendor';
         $this->partsRoot = $documentRoot . '/parts';
-        $this->genericPartsRoot = __DIR__ . '/../../parts/frontend-skeleton';
         $this->cssRoot = $documentRoot . '/css';
         $this->jsRoot = $documentRoot . '/js';
         $this->dirForVersions = $documentRoot . '/versions';
@@ -62,22 +59,6 @@ class Dirs extends StrictObject
     public function getVendorRoot(): string
     {
         return $this->vendorRoot;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPartsRoot(): string
-    {
-        return $this->partsRoot;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGenericPartsRoot(): string
-    {
-        return $this->genericPartsRoot;
     }
 
     /**

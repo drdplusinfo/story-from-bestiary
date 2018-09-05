@@ -9,16 +9,6 @@ trait DirsForTestsTrait
 {
     use \DrdPlus\Tests\FrontendSkeleton\Partials\DirsForTestsTrait;
 
-    public function getWebRoot(): string
-    {
-        return $this->getDocumentRoot() . '/web/passed';
-    }
-
-    protected function getGenericPartsRoot(): string
-    {
-        return __DIR__ . '/../../../../parts/rules-skeleton';
-    }
-
     /**
      * @param string|null $documentRoot
      * @return \DrdPlus\FrontendSkeleton\Dirs|Dirs
@@ -26,5 +16,14 @@ trait DirsForTestsTrait
     protected function createDirs(string $documentRoot = null): \DrdPlus\FrontendSkeleton\Dirs
     {
         return new Dirs($documentRoot ?? $this->getDocumentRoot());
+    }
+
+    protected function getSkeletonDocumentRoot(): string
+    {
+        if ($this->isSkeletonChecked()) {
+            return $this->getDocumentRoot();
+        }
+
+        return $this->createDirs()->getVendorRoot() . '/drdplus/rules-skeleton';
     }
 }

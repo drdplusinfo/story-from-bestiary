@@ -89,15 +89,41 @@ class HtmlHelperTest extends AbstractContentTest
         }
         self::assertGreaterThan(0, \count($someExpectedTableIds), 'Some tables expected');
         foreach ($someExpectedTableIds as $someExpectedTableId) {
-            $lowerExpectedTableId = StringTools::toConstantLikeValue(StringTools::camelCaseToSnakeCase($someExpectedTableId));
+            $lowerExpectedTableId = StringTools::toSnakeCaseId($someExpectedTableId);
             self::assertArrayHasKey($lowerExpectedTableId, $allTables);
             $expectedTable = $allTables[$lowerExpectedTableId];
             self::assertInstanceOf(Element::class, $expectedTable);
             self::assertNotEmpty($expectedTable->innerHTML, "Table of ID $someExpectedTableId is empty");
-            $singleTable = $htmlHelper->findTablesWithIds($this->getHtmlDocument(), [$someExpectedTableId]);
-            self::assertCount(1, $singleTable);
+            // intentionally to snake case to test proper ID case conversion
+            $someCasedExpectedTableId = StringTools::toCamelCaseId($someExpectedTableId);
+            $singleTable = $htmlHelper->findTablesWithIds($this->getHtmlDocument(), [$someCasedExpectedTableId]);
+            self::assertCount(1, $singleTable, 'No table has been found by ID ' . $someCasedExpectedTableId);
             self::assertArrayHasKey($lowerExpectedTableId, $allTables, 'ID is expected to be lower-cased');
         }
+    }
+
+    /**
+     * @test
+     */
+    public function Filtering_tables_by_id_does_not_crash_on_table_without_id(): void
+    {
+        /** @var HtmlHelper $htmlHelperClass */
+        $htmlHelperClass = static::getSutClass();
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+
+        $allTables = $htmlHelper->findTablesWithIds(new HtmlDocument(<<<HTML
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <table>No ID here</table>
+</body>
+</htm>
+HTML
+        ));
+        self::assertCount(0, $allTables);
     }
 
     /**

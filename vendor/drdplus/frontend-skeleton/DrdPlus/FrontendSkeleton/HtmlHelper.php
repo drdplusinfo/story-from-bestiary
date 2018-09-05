@@ -26,6 +26,15 @@ class HtmlHelper extends StrictObject
     public const DATA_ORIGINAL_ID = 'data-original-id';
     public const EXTERNAL_URL_CLASS = 'external-url';
     public const INTERNAL_URL_CLASS = 'internal-url';
+    public const COVERED_BY_CODE_CLASS = 'covered-by-code';
+    public const QUOTE_CLASS = 'quote';
+    public const BACKGROUND_IMAGE_CLASS = 'background-image';
+    public const GENERIC_CLASS = 'generic';
+    public const NOTE_CLASS = 'note';
+    public const EXCLUDED_CLASS = 'excluded';
+    public const RULES_AUTHORS_CLASS = 'rules-authors';
+    public const HIDDEN_CLASS = 'hidden';
+    public const DELIMITER_CLASS = 'delimiter';
 
     /** @var Dirs */
     private $dirs;
@@ -35,8 +44,6 @@ class HtmlHelper extends StrictObject
     private $inForcedProductionMode;
     /** @var bool */
     private $shouldHideCovered;
-    /** @var bool */
-    private $showIntroductionOnly;
 
     public static function createFromGlobals(Dirs $dirs): HtmlHelper
     {
@@ -44,8 +51,7 @@ class HtmlHelper extends StrictObject
             $dirs,
             !empty($_GET['mode']) && \strpos(\trim($_GET['mode']), 'dev') === 0,
             !empty($_GET['mode']) && \strpos(\trim($_GET['mode']), 'prod') === 0,
-            !empty($_GET['hide']) && \strpos(\trim($_GET['hide']), 'cover') === 0,
-            !empty($_GET['show']) && \strpos(\trim($_GET['show']), 'intro') === 0
+            !empty($_GET['hide']) && \strpos(\trim($_GET['hide']), 'cover') === 0
         );
     }
 
@@ -68,15 +74,13 @@ class HtmlHelper extends StrictObject
         Dirs $dirs,
         bool $inDevMode,
         bool $inForcedProductionMode,
-        bool $shouldHideCovered,
-        bool $showIntroductionOnly
+        bool $shouldHideCovered
     )
     {
         $this->dirs = $dirs;
         $this->inDevMode = $inDevMode;
         $this->inForcedProductionMode = $inForcedProductionMode;
         $this->shouldHideCovered = $shouldHideCovered;
-        $this->showIntroductionOnly = $showIntroductionOnly;
     }
 
     /**
@@ -86,7 +90,7 @@ class HtmlHelper extends StrictObject
     {
         if (!$this->inDevMode) {
             foreach ($html->getElementsByClassName('source-code-title') as $withSourceCode) {
-                $withSourceCode->className = \str_replace('source-code-title', 'hidden', $withSourceCode->className);
+                $withSourceCode->className = \str_replace('source-code-title', static::HIDDEN_CLASS, $withSourceCode->className);
                 $withSourceCode->removeAttribute('data-source-code');
             }
         } else {
@@ -163,7 +167,7 @@ class HtmlHelper extends StrictObject
 
     private function unifyId(string $id): string
     {
-        return StringTools::toConstantLikeValue(StringTools::camelCaseToSnakeCase($id));
+        return StringTools::toSnakeCaseId($id);
     }
 
     public function replaceDiacriticsFromAnchorHashes(HtmlDocument $html): void
@@ -264,30 +268,17 @@ class HtmlHelper extends StrictObject
     public function resolveDisplayMode(HtmlDocument $html): void
     {
         if ($this->inDevMode) {
-            foreach ($html->getElementsByTagName('body') as $body) {
-                $this->removeImages($body);
-            }
+            $this->removeImages($html->body);
         } else {
-            foreach ($html->getElementsByTagName('body') as $body) {
-                $this->removeClassesAboutCodeCoverage($body);
-            }
-        }
-        if ($this->showIntroductionOnly) {
-            foreach ($html->getElementsByTagName('body') as $body) {
-                $this->removeNonIntroduction($body);
-                $this->removeFollowingImageDelimiters($body);
-            }
+            $this->removeClassesAboutCodeCoverage($html->body);
         }
         if (!$this->inDevMode || !$this->shouldHideCovered) {
             return;
         }
-        $classesToHide = ['covered-by-code', 'quote', 'generic', 'note', 'excluded', 'rules-authors'];
-        if (!$this->showIntroductionOnly) {
-            $classesToHide[] = 'introduction';
-        }
+        $classesToHide = [static::COVERED_BY_CODE_CLASS, static::QUOTE_CLASS, static::GENERIC_CLASS, static::NOTE_CLASS, static::EXCLUDED_CLASS, static::RULES_AUTHORS_CLASS];
         foreach ($classesToHide as $classToHide) {
             foreach ($html->getElementsByClassName($classToHide) as $nodeToHide) {
-                $nodeToHide->className = str_replace($classToHide, 'hidden', $nodeToHide->className);
+                $nodeToHide->className = \str_replace($classToHide, static::HIDDEN_CLASS, $nodeToHide->className);
             }
         }
     }
@@ -304,52 +295,9 @@ class HtmlHelper extends StrictObject
         } while ($somethingRemoved); // do not know why, but some nodes are simply skipped on first removal so have to remove them again
     }
 
-    private function removeNonIntroduction(Element $html): void
-    {
-        do {
-            $somethingRemoved = false;
-            /** @var \DOMNode $childNode */
-            foreach ($html->childNodes as $childNode) {
-                if ($childNode->nodeType === XML_TEXT_NODE
-                    || !($childNode instanceof \DOMElement)
-                    || ($childNode->nodeName !== 'img'
-                        && !preg_match('~\s*(introduction|quote|background-image)\s*~', (string)$childNode->getAttribute('class'))
-                    )
-                ) {
-                    $html->removeChild($childNode);
-                    $somethingRemoved = true;
-                }
-                // introduction is expected only as direct descendant of the given element (body)
-                if ($childNode instanceof Element) {
-                    $childNode->classList->remove('generic');
-                }
-            }
-        } while ($somethingRemoved); // do not know why, but some nodes are simply skipped on first removal so have to remove them again
-    }
-
-    private function removeFollowingImageDelimiters(Element $html): void
-    {
-        $followingDelimiter = false;
-        do {
-            $somethingRemoved = false;
-            /** @var Element $child */
-            foreach ($html->childNodes as $child) {
-                if ($child->nodeName === 'img' && $child->classList->contains('delimiter')) {
-                    if ($followingDelimiter) {
-                        $html->removeChild($child);
-                        $somethingRemoved = true;
-                    }
-                    $followingDelimiter = true;
-                } else {
-                    $followingDelimiter = false;
-                }
-            }
-        } while ($somethingRemoved);
-    }
-
     private function removeClassesAboutCodeCoverage(Element $html): void
     {
-        $classesToRemove = ['covered-by-code', 'generic', 'excluded'];
+        $classesToRemove = [static::COVERED_BY_CODE_CLASS, static::GENERIC_CLASS, static::EXCLUDED_CLASS];
         foreach ($html->children as $child) {
             foreach ($classesToRemove as $classToRemove) {
                 $child->classList->remove($classToRemove);
@@ -370,22 +318,22 @@ class HtmlHelper extends StrictObject
         $requiredIds = \array_unique($requiredIds);
         $lowerCasedRequiredIds = [];
         foreach ($requiredIds as $requiredId) {
-            $unifiedId = $this->unifyId($requiredId);
-            if (\array_key_exists($unifiedId, $lowerCasedRequiredIds)) {
+            $unifiedRequiredId = $this->unifyId($requiredId);
+            if (\array_key_exists($unifiedRequiredId, $lowerCasedRequiredIds)) {
                 $requiredIdsAsString = \implode(',', $requiredIds);
                 throw new Exceptions\DuplicatedRequiredTableId(
                     'IDs of tables are lower-cased and some required table IDs are same in lowercase: '
-                    . "'{$requiredId}' => '{$unifiedId}' ($requiredIdsAsString)"
+                    . "'{$requiredId}' => '{$unifiedRequiredId}' ($requiredIdsAsString)"
                 );
             }
-            $lowerCasedRequiredIds[$unifiedId] = $unifiedId;
+            $lowerCasedRequiredIds[$unifiedRequiredId] = $unifiedRequiredId;
         }
         $tablesWithIds = [];
         /** @var Element $table */
         foreach ($html->getElementsByTagName('table') as $table) {
-            $lowerId = $table->getAttribute('id');
-            if ($lowerId) {
-                $tablesWithIds[$lowerId] = $table;
+            $unifiedExistingId = $this->unifyId($table->getAttribute('id') ?? '');
+            if ($unifiedExistingId) {
+                $tablesWithIds[$unifiedExistingId] = $table;
                 continue;
             }
             $childId = $this->getChildId($table->children);
@@ -393,11 +341,8 @@ class HtmlHelper extends StrictObject
                 $tablesWithIds[$childId] = $table;
             }
         }
-        if (\count($requiredIds) === 0) {
-            return $tablesWithIds;
-        }
         if (!$requiredIds) {
-            return $tablesWithIds;
+            return $tablesWithIds; // all of them, no filter
         }
 
         return \array_intersect_key($tablesWithIds, $lowerCasedRequiredIds);
@@ -479,8 +424,7 @@ class HtmlHelper extends StrictObject
         if (\count($remoteDrdPlusLinks) === 0) {
             return $htmlDocument;
         }
-        /** @var Element $body */
-        $body = $htmlDocument->getElementsByTagName('body')[0];
+        $body = $htmlDocument->body;
         foreach ($remoteDrdPlusLinks as $remoteDrdPlusHost => $tableIds) {
             $iFrame = $htmlDocument->createElement('iframe');
             $body->appendChild($iFrame);

@@ -29,9 +29,9 @@ class UsagePolicyTest extends TestCase
         $_COOKIE = [];
         $usagePolicy = new UsagePolicy('foo', new Request(new Bot()), new CookiesService());
         self::assertNotEmpty($_COOKIE);
-        self::assertSame('confirmedOwnershipOfFoo', $_COOKIE['ownershipCookieName']);
-        self::assertSame('trialOfFoo', $_COOKIE['trialCookieName']);
-        self::assertSame('trialExpiredAt', $_COOKIE['trialExpiredAtName']);
+        self::assertSame('confirmedOwnershipOfFoo', $_COOKIE[UsagePolicy::OWNERSHIP_COOKIE_NAME]);
+        self::assertSame('trialOfFoo', $_COOKIE[UsagePolicy::TRIAL_COOKIE_NAME]);
+        self::assertSame(UsagePolicy::TRIAL_EXPIRED_AT, $_COOKIE[UsagePolicy::TRIAL_EXPIRED_AT_NAME]);
         self::assertArrayNotHasKey('confirmedOwnershipOfFoo', $_COOKIE);
         $usagePolicy->confirmOwnershipOfVisitor($expiresAt = new \DateTime());
         self::assertSame((string)$expiresAt->getTimestamp(), $_COOKIE['confirmedOwnershipOfFoo']);

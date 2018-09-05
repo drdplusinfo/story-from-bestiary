@@ -5,20 +5,19 @@ namespace DrdPlus\FrontendSkeleton;
 
 use DrdPlus\FrontendSkeleton\Exceptions\ExecutingCommandFailed;
 use DrdPlus\FrontendSkeleton\Partials\CurrentMinorVersionProvider;
+use DrdPlus\FrontendSkeleton\Partials\CurrentPatchVersionProvider;
 use Granam\Strict\Object\StrictObject;
 
 /**
  * Reader of GIT tags defining available versions of web filesF
  */
-class WebVersions extends StrictObject
+class WebVersions extends StrictObject implements CurrentMinorVersionProvider, CurrentPatchVersionProvider
 {
 
     public const LAST_UNSTABLE_VERSION = 'master';
 
     /** @var Configuration */
     private $configuration;
-    /** @var CurrentMinorVersionProvider */
-    private $currentMinorVersionProvider;
     /** @var string[] */
     private $allVersions;
     /** @var string */
@@ -39,11 +38,13 @@ class WebVersions extends StrictObject
     private $lastPatchVersionsOf = [];
     /** @var string */
     private $lastUnstableVersionRoot;
+    /** @var Request */
+    private $request;
 
-    public function __construct(Configuration $configuration, CurrentMinorVersionProvider $currentVersionProvider)
+    public function __construct(Configuration $configuration, Request $request)
     {
         $this->configuration = $configuration;
-        $this->currentMinorVersionProvider = $currentVersionProvider;
+        $this->request = $request;
     }
 
     /**
@@ -116,6 +117,9 @@ class WebVersions extends StrictObject
         if ($this->lastStableMinorVersion === null) {
             $stableMinorVersions = $this->getAllStableMinorVersions();
             $this->lastStableMinorVersion = \reset($stableMinorVersions);
+            if ($this->lastStableMinorVersion === false) {
+                $this->lastStableMinorVersion = $this->getLastUnstableVersion();
+            }
         }
 
         return $this->lastStableMinorVersion;
@@ -194,12 +198,14 @@ class WebVersions extends StrictObject
         return $this->currentPatchVersion;
     }
 
-    /**
-     * @return string
-     */
     public function getCurrentMinorVersion(): string
     {
-        return $this->currentMinorVersionProvider->getCurrentMinorVersion();
+        $minorVersion = $this->request->getValue(Request::VERSION);
+        if ($minorVersion && $this->hasMinorVersion($minorVersion)) {
+            return $minorVersion;
+        }
+
+        return $this->configuration->getWebLastStableMinorVersion();
     }
 
     /**
@@ -319,8 +325,10 @@ class WebVersions extends StrictObject
             return $this->clone($minorVersion, $toMinorVersionDir);
         }
         $toMinorVersionDirEscaped = \escapeshellarg($toMinorVersionDir);
+        $minorVersionEscaped = \escapeshellarg($minorVersion);
         $commands = [];
         $commands[] = "cd $toMinorVersionDirEscaped";
+        $commands[] = "git checkout $minorVersionEscaped";
         $commands[] = 'git pull --ff-only';
         $commands[] = 'git pull --tags';
         try {

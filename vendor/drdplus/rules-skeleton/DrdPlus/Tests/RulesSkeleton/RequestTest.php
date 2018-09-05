@@ -29,8 +29,8 @@ class RequestTest extends \DrdPlus\Tests\FrontendSkeleton\RequestTest
     public function provideTablesIdsParameterName(): array
     {
         return [
-            ['tables'],
-            ['tabulky'],
+            [Request::TABLES],
+            [Request::TABULKY],
         ];
     }
 

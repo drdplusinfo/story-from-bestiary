@@ -9,6 +9,9 @@ use Granam\Strict\Object\StrictObject;
 class UsagePolicy extends StrictObject
 {
     public const TRIAL_EXPIRED_AT = 'trialExpiredAt';
+    public const OWNERSHIP_COOKIE_NAME = 'ownershipCookieName';
+    public const TRIAL_COOKIE_NAME = 'trialCookieName';
+    public const TRIAL_EXPIRED_AT_NAME = 'trialExpiredAtName';
 
     /** @var string */
     private $articleName;
@@ -25,7 +28,11 @@ class UsagePolicy extends StrictObject
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameShouldBeValidName
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\CookieCanNotBeSet
      */
-    public function __construct(string $articleName, \DrdPlus\FrontendSkeleton\Request $request, CookiesService $cookiesService)
+    public function __construct(
+        string $articleName,
+        \DrdPlus\FrontendSkeleton\Request $request,
+        CookiesService $cookiesService
+    )
     {
         $articleName = \trim($articleName);
         if ($articleName === '') {
@@ -39,9 +46,9 @@ class UsagePolicy extends StrictObject
         $this->articleName = $articleName;
         $this->request = $request;
         $this->cookiesService = $cookiesService;
-        $this->setCookie('ownershipCookieName', $this->getOwnershipName(), null /* expire on session end*/);
-        $this->setCookie('trialCookieName', $this->getTrialName(), null /* expire on session end*/);
-        $this->setCookie('trialExpiredAtName', $this->getTrialExpiredAtName(), null /* expire on session end*/);
+        $this->setCookie(static::OWNERSHIP_COOKIE_NAME, $this->getOwnershipName(), null /* expire on session end*/);
+        $this->setCookie(static::TRIAL_COOKIE_NAME, $this->getTrialName(), null /* expire on session end*/);
+        $this->setCookie(static::TRIAL_EXPIRED_AT_NAME, $this->getTrialExpiredAtName(), null /* expire on session end*/);
     }
 
     /**
@@ -56,17 +63,11 @@ class UsagePolicy extends StrictObject
         return $this->cookiesService->setCookie($cookieName, $value, false /* accessible also via JS */, $expiresAt);
     }
 
-    /**
-     * @return bool
-     */
     public function hasVisitorConfirmedOwnership(): bool
     {
         return $this->cookiesService->getCookie($this->getOwnershipName()) !== null;
     }
 
-    /**
-     * @return string
-     */
     private function getOwnershipName(): string
     {
         return \str_replace('.', '_', 'confirmedOwnershipOf' . \ucfirst($this->articleName));
@@ -87,17 +88,11 @@ class UsagePolicy extends StrictObject
         return $this->request->isVisitorBot();
     }
 
-    /**
-     * @return bool
-     */
     public function isVisitorUsingValidTrial(): bool
     {
         return $this->cookiesService->getCookie($this->getTrialName()) !== null && !$this->trialJustExpired();
     }
 
-    /**
-     * @return string
-     */
     public function getTrialName(): string
     {
         return \str_replace('.', '_', 'trialOf' . \ucfirst($this->articleName));

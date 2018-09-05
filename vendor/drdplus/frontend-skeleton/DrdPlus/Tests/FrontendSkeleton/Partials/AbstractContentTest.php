@@ -8,7 +8,8 @@ use DrdPlus\FrontendSkeleton\Configuration;
 use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\FrontendSkeleton\FrontendController;
 use DrdPlus\FrontendSkeleton\HtmlHelper;
-use DrdPlus\FrontendSkeleton\Partials\CurrentMinorVersionProvider;
+use DrdPlus\FrontendSkeleton\Request;
+use DrdPlus\FrontendSkeleton\ServicesContainer;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 use Mockery\MockInterface;
@@ -21,6 +22,8 @@ abstract class AbstractContentTest extends SkeletonTestCase
     private static $htmlDocuments = [];
     protected $needPassIn = true;
     protected $needPassOut = false;
+    /** @var Configuration */
+    private $configuration;
 
     protected function setUp(): void
     {
@@ -151,30 +154,21 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return $titles->current()->nodeValue;
     }
 
-    protected function getDefinedPageTitle(): string
-    {
-        $dirs = $this->createDirs();
-
-        return (new FrontendController($this->createConfiguration($dirs), $this->createHtmlHelper($dirs)))->getPageTitle();
-    }
-
     /**
      * @param Dirs $dirs
      * @param bool $inDevMode
      * @param bool $inForcedProductionMode
      * @param bool $shouldHideCovered
-     * @param bool $showIntroductionOnly
      * @return HtmlHelper|\Mockery\MockInterface
      */
     protected function createHtmlHelper(
         Dirs $dirs = null,
         bool $inForcedProductionMode = false,
         bool $inDevMode = false,
-        bool $shouldHideCovered = false,
-        bool $showIntroductionOnly = false
+        bool $shouldHideCovered = false
     ): HtmlHelper
     {
-        return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered, $showIntroductionOnly);
+        return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered);
     }
 
     protected function fetchNonCachedContent(FrontendController $controller = null, bool $backupGlobals = true): string
@@ -285,19 +279,33 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return ['output' => $output, 'result' => $result];
     }
 
-    protected function createConfiguration(Dirs $dirs = null): Configuration
+    protected function getConfiguration(Dirs $dirs = null): Configuration
     {
-        return Configuration::createFromYml($dirs ?? $this->createDirs());
+        if ($this->configuration === null) {
+            $configurationClass = $this->getConfigurationClass();
+            $this->configuration = $configurationClass::createFromYml($dirs ?? $this->createDirs());
+        }
+
+        return $this->configuration;
     }
 
-    protected function createCurrentVersionProvider(string $currentVersion = null): CurrentMinorVersionProvider
+    /**
+     * @return string|Configuration
+     */
+    protected function getConfigurationClass(): string
     {
-        $currentVersionProvider = $this->mockery(CurrentMinorVersionProvider::class);
-        $currentVersionProvider->allows('getCurrentMinorVersion')
-            ->andReturn($currentVersion ?? $this->getTestsConfiguration()->getExpectedLastVersion());
+        return Configuration::class;
+    }
 
-        /** @var CurrentMinorVersionProvider $currentVersionProvider */
-        return $currentVersionProvider;
+    protected function createRequest(string $currentVersion = null): Request
+    {
+        $request = $this->mockery(Request::class);
+        $request->allows('getValue')
+            ->with(Request::VERSION)
+            ->andReturn($currentVersion);
+
+        /** @var Request $request */
+        return $request;
     }
 
     /**
@@ -306,7 +314,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
      */
     protected function createCustomConfiguration(array $customSettings): Configuration
     {
-        $originalConfiguration = $this->createConfiguration();
+        $originalConfiguration = $this->getConfiguration();
         $configurationClass = \get_class($originalConfiguration);
         $customConfiguration = new $configurationClass(
             $originalConfiguration->getDirs(),
@@ -314,5 +322,35 @@ abstract class AbstractContentTest extends SkeletonTestCase
         );
 
         return $customConfiguration;
+    }
+
+    protected function createController(
+        string $documentRoot = null,
+        Configuration $configuration = null,
+        HtmlHelper $htmlHelper = null
+    ): FrontendController
+    {
+        $controllerClass = $this->getControllerClass();
+
+        return new $controllerClass($this->createServicesContainer($documentRoot, $configuration, $htmlHelper));
+    }
+
+    protected function getControllerClass(): string
+    {
+        return FrontendController::class;
+    }
+
+    protected function createServicesContainer(
+        string $documentRoot = null,
+        Configuration $configuration = null,
+        HtmlHelper $htmlHelper = null
+    ): ServicesContainer
+    {
+        $dirs = $this->createDirs($documentRoot);
+
+        return new ServicesContainer(
+            $configuration ?? $this->getConfiguration(),
+            $htmlHelper ?? $this->createHtmlHelper($dirs, false, false, false)
+        );
     }
 }

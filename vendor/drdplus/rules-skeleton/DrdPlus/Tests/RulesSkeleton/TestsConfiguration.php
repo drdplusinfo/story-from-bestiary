@@ -30,8 +30,6 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
     /** @var bool */
     private $hasDebugContacts = true;
     /** @var bool */
-    private $hasIntroduction = true;
-    /** @var bool */
     private $hasAuthors = true;
     /** @var array|string[] */
     private $blockNamesToExpectedContent = ['just-some-block' => <<<HTML
@@ -203,24 +201,6 @@ HTML
     public function disableHasDebugContacts(): TestsConfiguration
     {
         $this->hasDebugContacts = false;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasIntroduction(): bool
-    {
-        return $this->hasIntroduction;
-    }
-
-    /**
-     * @return TestsConfiguration
-     */
-    public function disableHasIntroduction(): TestsConfiguration
-    {
-        $this->hasIntroduction = false;
 
         return $this;
     }

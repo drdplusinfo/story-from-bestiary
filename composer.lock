@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "543ca056e2ebdd68d243a980fcec0ec9",
+    "hash": "931ffc765f36da729166964c238de394",
     "content-hash": "01d49ad71b97e6031e5f1d5ea74298a0",
     "packages": [
         {
             "name": "drdplus/frontend-skeleton",
-            "version": "1.0.54",
+            "version": "1.0.78",
             "source": {
                 "type": "git",
-                "url": "https://github.com/drdplusinfo/drdplus-frontend-skeleton.git",
-                "reference": "be60cfb470abc1672add01d4cacbaa0131f7b43c"
+                "url": "https://github.com/drdplusinfo/frontend-skeleton.git",
+                "reference": "ebae63107fa5c6ab19be3a352742d4d1edbc3f4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drdplusinfo/drdplus-frontend-skeleton/zipball/be60cfb470abc1672add01d4cacbaa0131f7b43c",
-                "reference": "be60cfb470abc1672add01d4cacbaa0131f7b43c",
+                "url": "https://api.github.com/repos/drdplusinfo/frontend-skeleton/zipball/ebae63107fa5c6ab19be3a352742d4d1edbc3f4d",
+                "reference": "ebae63107fa5c6ab19be3a352742d4d1edbc3f4d",
                 "shasum": ""
             },
             "require": {
@@ -71,20 +71,20 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-08-30 10:20:41"
+            "time": "2018-09-05 11:08:22"
         },
         {
             "name": "drdplus/rules-skeleton",
-            "version": "1.0.33",
+            "version": "1.0.41",
             "source": {
                 "type": "git",
-                "url": "https://github.com/drdplusinfo/drdplus-rules-skeleton.git",
-                "reference": "9b7a3b59bc4135358486ff00f992149f1ba31031"
+                "url": "https://github.com/drdplusinfo/rules-skeleton.git",
+                "reference": "153b44cd3e0d3598eb2d7789a60dc65ddc306570"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drdplusinfo/drdplus-rules-skeleton/zipball/9b7a3b59bc4135358486ff00f992149f1ba31031",
-                "reference": "9b7a3b59bc4135358486ff00f992149f1ba31031",
+                "url": "https://api.github.com/repos/drdplusinfo/rules-skeleton/zipball/153b44cd3e0d3598eb2d7789a60dc65ddc306570",
+                "reference": "153b44cd3e0d3598eb2d7789a60dc65ddc306570",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-08-30 10:31:22"
+            "time": "2018-09-05 10:22:28"
         },
         {
             "name": "erusev/parsedown",
@@ -1603,16 +1603,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.3.2",
+            "version": "7.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8"
+                "reference": "0356331bf62896dc56e3a15030b23b73f38b2935"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
-                "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0356331bf62896dc56e3a15030b23b73f38b2935",
+                "reference": "0356331bf62896dc56e3a15030b23b73f38b2935",
                 "shasum": ""
             },
             "require": {
@@ -1683,7 +1683,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-08-22 06:39:21"
+            "time": "2018-09-05 09:58:53"
         },
         {
             "name": "roave/security-advisories",
