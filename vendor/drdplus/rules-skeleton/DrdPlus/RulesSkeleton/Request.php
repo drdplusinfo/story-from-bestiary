@@ -5,41 +5,20 @@ namespace DrdPlus\RulesSkeleton;
 
 class Request extends \DrdPlus\FrontendSkeleton\Request
 {
-    public const TABLES = 'tables';
-    public const TABULKY = 'tabulky';
+    public const PDF = 'pdf';
 
-    /**
-     * @return array|string[]
-     */
-    public function getWantedTablesIds(): array
-    {
-        $wantedTableIds = \array_map(
-            function (string $id) {
-                return \trim($id);
-            },
-            \explode(',', $_GET[self::TABLES] ?? $_GET[self::TABULKY] ?? '')
-        );
-
-        return \array_filter(
-            $wantedTableIds,
-            function (string $id) {
-                return $id !== '';
-            }
-        );
-    }
-
-    public function getPath(): string
+    public function getPathInfo(): string
     {
         return $_SERVER['PATH_INFO'] ?? '';
     }
 
-    public function getValueFromPost(string $name)
+    public function getQueryString(): string
     {
-        return $_POST[$name] ?? null;
+        return $_SERVER['QUERY_STRING'] ?? '';
     }
 
-    public function getValueFromGet(string $name)
+    public function isRequestedPdf(): bool
     {
-        return $_GET[$name] ?? null;
+        return $this->getQueryString() === self::PDF;
     }
 }

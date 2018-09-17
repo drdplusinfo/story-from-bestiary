@@ -18,13 +18,22 @@ class Head extends StrictObject
     private $cssFiles;
     /** @var JsFiles */
     private $jsFiles;
+    /** @var string */
+    private $pageTitle;
 
-    public function __construct(Configuration $configuration, HtmlHelper $htmlHelper, CssFiles $cssFiles, JsFiles $jsFiles)
+    public function __construct(
+        Configuration $configuration,
+        HtmlHelper $htmlHelper,
+        CssFiles $cssFiles,
+        JsFiles $jsFiles,
+        string $pageTitle = null
+    )
     {
         $this->configuration = $configuration;
         $this->htmlHelper = $htmlHelper;
         $this->cssFiles = $cssFiles;
         $this->jsFiles = $jsFiles;
+        $this->pageTitle = $pageTitle;
     }
 
     public function getHeadString(): string
@@ -39,14 +48,18 @@ class Head extends StrictObject
 HTML;
     }
 
-    protected function getPageTitle(): string
+    public function getPageTitle(): string
     {
-        $name = $this->getConfiguration()->getWebName();
-        $smiley = $this->getConfiguration()->getTitleSmiley();
+        if ($this->pageTitle === null) {
+            $name = $this->getConfiguration()->getWebName();
+            $smiley = $this->getConfiguration()->getTitleSmiley();
 
-        return $smiley !== ''
-            ? ($smiley . ' ' . $name)
-            : $name;
+            $this->pageTitle = $smiley !== ''
+                ? ($smiley . ' ' . $name)
+                : $name;
+        }
+
+        return $this->pageTitle;
     }
 
     protected function getConfiguration(): Configuration
@@ -56,9 +69,11 @@ HTML;
 
     protected function getRenderedJsScripts(): string
     {
+        $googleAnalyticsId = HtmlHelper::GOOGLE_ANALYTICS_ID;
         $renderedJsFiles = [<<<HTML
-<script async src="https://www.googletagmanager.com/gtag/js?id={$this->getConfiguration()->getGoogleAnalyticsId()}"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id={$this->getConfiguration()->getGoogleAnalyticsId()}" id="{$googleAnalyticsId}"></script>
 HTML
+            ,
         ];
         foreach ($this->getJsFiles() as $jsFile) {
             $renderedJsFiles[] = "<script type='text/javascript' src='/js/{$jsFile}'></script>";

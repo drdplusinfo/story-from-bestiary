@@ -33,7 +33,7 @@ function showSandGlass() {
         var sandGlass = document.createElement('span');
         sandGlass.classList.add('sand-glass');
         sandGlass.innerHTML = '⏳';
-        sandGlass.title = 'Jen jukáš';
+        sandGlass.title = 'Jen zkoušíš';
         var body = document.getElementsByTagName('body')[0];
         body.appendChild(sandGlass);
     });

@@ -12,7 +12,7 @@ return array(
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Gt\\Dom\\' => array($vendorDir . '/phpgt/dom/src'),
-    'Granam\\' => array($vendorDir . '/granam/strict-object/Granam', $vendorDir . '/granam/tools/Granam', $vendorDir . '/granam/scalar/Granam', $vendorDir . '/granam/string/Granam', $vendorDir . '/granam/exceptions-hierarchy/Granam'),
+    'Granam\\' => array($vendorDir . '/granam/strict-object/Granam', $vendorDir . '/granam/tools/Granam', $vendorDir . '/granam/scalar/Granam', $vendorDir . '/granam/exceptions-hierarchy/Granam', $vendorDir . '/granam/string/Granam'),
     'DrdPlus\\' => array($baseDir . '/DrdPlus', $vendorDir . '/drdplus/frontend-skeleton/DrdPlus', $vendorDir . '/drdplus/rules-skeleton/DrdPlus'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'DeviceDetector\\' => array($vendorDir . '/piwik/device-detector'),

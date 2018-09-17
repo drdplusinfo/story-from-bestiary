@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\FrontendSkeleton;
 
-use DeviceDetector\Parser\Bot;
 use DrdPlus\FrontendSkeleton\Web\Content;
 use Granam\Strict\Object\StrictObject;
 
@@ -11,14 +10,10 @@ class FrontendController extends StrictObject
 {
     /** @var ServicesContainer */
     private $servicesContainer;
-    /** @var Request */
-    private $request;
     /** @var array */
     private $bodyClasses;
     /** @var WebCache */
     protected $pageCache;
-    /** @var Redirect|null */
-    private $redirect;
     /** @var Content */
     protected $content;
 
@@ -33,29 +28,9 @@ class FrontendController extends StrictObject
         return $this->servicesContainer;
     }
 
-    public function setRedirect(Redirect $redirect): void
-    {
-        $this->redirect = $redirect;
-        $this->content = null; // reload content with new redirect
-    }
-
-    public function getRedirect(): ?Redirect
-    {
-        return $this->redirect;
-    }
-
     protected function getConfiguration(): Configuration
     {
         return $this->getServicesContainer()->getConfiguration();
-    }
-
-    protected function getRequest(): Request
-    {
-        if ($this->request === null) {
-            $this->request = new Request(new Bot());
-        }
-
-        return $this->request;
     }
 
     public function getBodyClasses(): array
@@ -80,7 +55,7 @@ class FrontendController extends StrictObject
 
     public function isRequestedWebVersionUpdate(): bool
     {
-        return $this->getRequest()->getValue(Request::UPDATE) === 'web';
+        return $this->getServicesContainer()->getRequest()->getValue(Request::UPDATE) === 'web';
     }
 
     public function updateWebVersion(): int
@@ -104,17 +79,33 @@ class FrontendController extends StrictObject
 
     public function getContent(): Content
     {
-        if ($this->content === null) {
-            $this->content = new Content(
-                $this->getServicesContainer()->getHtmlHelper(),
-                $this->getServicesContainer()->getWebVersions(),
-                $this->getServicesContainer()->getHead(),
-                $this->getServicesContainer()->getMenu(),
-                $this->getServicesContainer()->getBody(),
-                $this->getServicesContainer()->getWebCache(),
-                $this->getRedirect()
-            );
+        if ($this->content) {
+            return $this->content;
         }
+        $servicesContainer = $this->getServicesContainer();
+        if ($servicesContainer->getRequest()->areRequestedTables()) {
+            $this->content = new Content(
+                $servicesContainer->getHtmlHelper(),
+                $servicesContainer->getWebVersions(),
+                $servicesContainer->getHeadForTables(),
+                $servicesContainer->getMenu(),
+                $servicesContainer->getTablesBody(),
+                $servicesContainer->getTablesWebCache(),
+                Content::TABLES
+            );
+
+            return $this->content;
+        }
+
+        $this->content = new Content(
+            $servicesContainer->getHtmlHelper(),
+            $servicesContainer->getWebVersions(),
+            $servicesContainer->getHead(),
+            $servicesContainer->getMenu(),
+            $servicesContainer->getBody(),
+            $servicesContainer->getWebCache(),
+            Content::FULL
+        );
 
         return $this->content;
     }

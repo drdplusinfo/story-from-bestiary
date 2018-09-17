@@ -2,12 +2,13 @@
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\FrontendSkeleton\HtmlDocument;
-use DrdPlus\FrontendSkeleton\Redirect;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
+use DrdPlus\RulesSkeleton\Redirect;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use Mockery\MockInterface;
 
 class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendControllerTest
 {
@@ -15,11 +16,33 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
 
     /**
      * @test
+     * @throws \ReflectionException
      */
     public function I_can_activate_trial(): void
     {
         $now = new \DateTime();
         $trialExpectedExpiration = (clone $now)->modify('+4 minutes');
+        $usagePolicy = $this->createUsagePolicy($trialExpectedExpiration);
+        $controller = new RulesController($this->createServicesContainerWithUsagePolicy($usagePolicy));
+        $controllerReflection = new \ReflectionClass($controller);
+        $activateTrial = $controllerReflection->getMethod('activateTrial');
+        $activateTrial->setAccessible(true);
+        self::assertTrue($activateTrial->invoke($controller, $now));
+        $getRedirect = $controllerReflection->getMethod('getRedirect');
+        $getRedirect->setAccessible(true);
+        $redirect = $getRedirect->invoke($controller);
+        self::assertNotNull($redirect);
+        $trialExpectedExpirationTimestamp = $trialExpectedExpiration->getTimestamp() + 1; // one second "insurance" overlap
+        self::assertSame('/?bar=' . $trialExpectedExpirationTimestamp, $redirect->getTarget());
+        self::assertSame($trialExpectedExpirationTimestamp - $now->getTimestamp(), $redirect->getAfterSeconds());
+    }
+
+    /**
+     * @param \DateTime $trialExpectedExpiration
+     * @return UsagePolicy|MockInterface
+     */
+    private function createUsagePolicy(\DateTime $trialExpectedExpiration): UsagePolicy
+    {
         $usagePolicy = $this->mockery(UsagePolicy::class);
         $usagePolicy->expects('getTrialExpiredAtName')
             ->atLeast()->once()
@@ -31,27 +54,8 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
 
                 return true;
             });
-        /** @var UsagePolicy $usagePolicy */
-        $controller = $this->createControllerForTrial($usagePolicy);
-        self::assertTrue($controller->activateTrial($now));
-        $redirect = $controller->getRedirect();
-        self::assertNotNull($redirect);
-        $trialExpectedExpirationTimestamp = $trialExpectedExpiration->getTimestamp() + 1; // one second "insurance" overlap
-        self::assertSame('/?bar=' . $trialExpectedExpirationTimestamp, $redirect->getTarget());
-        self::assertSame($trialExpectedExpirationTimestamp - $now->getTimestamp(), $redirect->getAfterSeconds());
-    }
 
-    private function createControllerForTrial(UsagePolicy $usagePolicy): RulesController
-    {
-        $servicesContainer = $this->createServicesContainerWithUsagePolicy($usagePolicy);
-
-        return new class($servicesContainer) extends RulesController
-        {
-            public function activateTrial(\DateTime $now): bool
-            {
-                return parent::activateTrial($now);
-            }
-        };
+        return $usagePolicy;
     }
 
     private function createServicesContainerWithUsagePolicy(UsagePolicy $usagePolicy)
@@ -81,6 +85,7 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
     /**
      * @test
      * @backupGlobals enabled
+     * @throws \ReflectionException
      */
     public function I_will_be_redirected_via_html_meta_on_trial(): void
     {
@@ -90,11 +95,14 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         $now = \time();
         $trialExpiredAt = $now + 240 + 1;
         $trialExpiredAtSecondAfter = $trialExpiredAt++;
-        if ($this->getTestsConfiguration()->hasProtectedAccess()) {
+        if ($this->isSkeletonChecked() || $this->getTestsConfiguration()->hasProtectedAccess()) {
             $_POST['trial'] = 1; // can be solved by POST
-        } else {
+        } else { // just a little hack
             $controller = $this->createController();
-            $controller->setRedirect(new Redirect('/?' . UsagePolicy::TRIAL_EXPIRED_AT . '=' . $trialExpiredAt, 241));
+            $controllerReflection = new \ReflectionClass($controller);
+            $setRedirect = $controllerReflection->getMethod('setRedirect');
+            $setRedirect->setAccessible(true);
+            $setRedirect->invoke($controller, new Redirect('/?' . UsagePolicy::TRIAL_EXPIRED_AT . '=' . $trialExpiredAt, 241));
         }
         $trialContent = $this->fetchNonCachedContent($controller);
         $document = new HtmlDocument($trialContent);

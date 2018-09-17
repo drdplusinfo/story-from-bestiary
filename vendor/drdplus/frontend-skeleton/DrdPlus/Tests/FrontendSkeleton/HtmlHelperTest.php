@@ -74,7 +74,7 @@ class HtmlHelperTest extends AbstractContentTest
         $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
 
         $allTables = $htmlHelper->findTablesWithIds($this->getHtmlDocument());
-        if (!$this->getTestsConfiguration()->hasTables()) {
+        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasTables()) {
             self::assertCount(0, $allTables);
 
             return;
@@ -82,7 +82,7 @@ class HtmlHelperTest extends AbstractContentTest
         self::assertGreaterThan(0, \count($allTables));
         self::assertEmpty($htmlHelper->findTablesWithIds($this->getHtmlDocument(), ['nonExistingTableId']));
         $someExpectedTableIds = $this->getTestsConfiguration()->getSomeExpectedTableIds();
-        if (!$this->getTestsConfiguration()->hasTables()) {
+        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasTables()) {
             self::assertCount(0, $someExpectedTableIds, 'No tables expected');
 
             return;
@@ -131,7 +131,7 @@ HTML
      */
     public function Same_table_ids_are_filtered_on_tables_only_mode(): void
     {
-        if (!$this->getTestsConfiguration()->hasTables()) {
+        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasTables()) {
             self::assertCount(
                 0,
                 $this->getHtmlDocument()->getElementsByTagName('table'),
@@ -148,19 +148,6 @@ HTML
         $tableId = \current($someExpectedTableIds);
         $tables = $htmlHelper->findTablesWithIds($this->getHtmlDocument(), [$tableId, $tableId]);
         self::assertCount(1, $tables);
-    }
-
-    /**
-     * @test
-     * @expectedException \DrdPlus\FrontendSkeleton\Exceptions\DuplicatedRequiredTableId
-     * @expectedExceptionMessageRegExp ~IAmSoAlone~
-     */
-    public function I_can_not_request_tables_with_ids_with_same_ids_after_their_unification(): void
-    {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
-        $htmlHelper->findTablesWithIds($this->getHtmlDocument(), ['IAmSoAlone', 'iAmSóAlóne']);
     }
 
     /**

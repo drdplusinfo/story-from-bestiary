@@ -54,7 +54,7 @@ HTML;
   <form class="manifest trial" action="/" method="post">
     <div class="col">
       <button class="btn btn-light" type="submit" id="trial" name="trial" value="trial">
-        Juknu na {$this->configuration->getWebName()}
+        Zkusím {$this->configuration->getWebName()}
       </button>
     </div>
     <div class="col">

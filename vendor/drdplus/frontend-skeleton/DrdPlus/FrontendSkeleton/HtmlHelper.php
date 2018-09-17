@@ -21,6 +21,8 @@ class HtmlHelper extends StrictObject
         return \preg_replace('~https?://((?:[^.]+[.])*)drdplus\.info~', 'http://$1drdplus.loc:88', $link);
     }
 
+    public const GOOGLE_ANALYTICS_ID = 'google_analytics_id';
+    public const MENU_ID = 'menu';
     public const INVISIBLE_ID_CLASS = 'invisible-id';
     public const CALCULATION_CLASS = 'calculation';
     public const DATA_ORIGINAL_ID = 'data-original-id';
@@ -34,6 +36,7 @@ class HtmlHelper extends StrictObject
     public const EXCLUDED_CLASS = 'excluded';
     public const RULES_AUTHORS_CLASS = 'rules-authors';
     public const HIDDEN_CLASS = 'hidden';
+    public const INVISIBLE_CLASS = 'invisible';
     public const DELIMITER_CLASS = 'delimiter';
 
     /** @var Dirs */
@@ -148,7 +151,7 @@ class HtmlHelper extends StrictObject
             if (!$id) {
                 continue;
             }
-            $idWithoutDiacritics = $this->unifyId($id);
+            $idWithoutDiacritics = static::toId($id);
             if ($idWithoutDiacritics === $id) {
                 continue;
             }
@@ -163,11 +166,6 @@ class HtmlHelper extends StrictObject
     private function sanitizeId(string $id): string
     {
         return \str_replace('#', '_', $id);
-    }
-
-    private function unifyId(string $id): string
-    {
-        return StringTools::toSnakeCaseId($id);
     }
 
     public function replaceDiacriticsFromAnchorHashes(HtmlDocument $html): void
@@ -193,7 +191,7 @@ class HtmlHelper extends StrictObject
             if ($hash === '') {
                 continue;
             }
-            $hashWithoutDiacritics = $this->unifyId($hash);
+            $hashWithoutDiacritics = static::toId($hash);
             if ($hashWithoutDiacritics === $hash) {
                 continue;
             }
@@ -308,44 +306,45 @@ class HtmlHelper extends StrictObject
     }
 
     /**
-     * @param HtmlDocument $html
+     * @param HtmlDocument $htmlDocument
      * @param array|string[] $requiredIds filter of required tables by their IDs
      * @return array|Element[]
-     * @throws \DrdPlus\FrontendSkeleton\Exceptions\DuplicatedRequiredTableId
      */
-    public function findTablesWithIds(HtmlDocument $html, array $requiredIds = []): array
+    public function findTablesWithIds(HtmlDocument $htmlDocument, array $requiredIds = []): array
     {
+        $requiredIds = \array_filter($requiredIds, 'trim');
         $requiredIds = \array_unique($requiredIds);
-        $lowerCasedRequiredIds = [];
+        $unifiedRequiredIds = [];
         foreach ($requiredIds as $requiredId) {
-            $unifiedRequiredId = $this->unifyId($requiredId);
-            if (\array_key_exists($unifiedRequiredId, $lowerCasedRequiredIds)) {
-                $requiredIdsAsString = \implode(',', $requiredIds);
-                throw new Exceptions\DuplicatedRequiredTableId(
-                    'IDs of tables are lower-cased and some required table IDs are same in lowercase: '
-                    . "'{$requiredId}' => '{$unifiedRequiredId}' ($requiredIdsAsString)"
-                );
+            if ($requiredId === '') {
+                continue;
             }
-            $lowerCasedRequiredIds[$unifiedRequiredId] = $unifiedRequiredId;
+            $unifiedRequiredId = static::toId($requiredId);
+            $unifiedRequiredIds[$unifiedRequiredId] = $unifiedRequiredId;
         }
         $tablesWithIds = [];
         /** @var Element $table */
-        foreach ($html->getElementsByTagName('table') as $table) {
-            $unifiedExistingId = $this->unifyId($table->getAttribute('id') ?? '');
-            if ($unifiedExistingId) {
-                $tablesWithIds[$unifiedExistingId] = $table;
-                continue;
+        foreach ($htmlDocument->getElementsByTagName('table') as $table) {
+            $tableId = $table->getAttribute('id');
+            if (!$tableId) {
+                foreach ($table->getElementsByTagName('th') as $th) {
+                    $tableId = $th->getAttribute('id');
+                    if ($tableId) {
+                        break;
+                    }
+                }
+                if (!$tableId) {
+                    continue;
+                }
             }
-            $childId = $this->getChildId($table->children);
-            if ($childId) {
-                $tablesWithIds[$childId] = $table;
-            }
+            $unifiedTableId = static::toId($tableId);
+            $tablesWithIds[$unifiedTableId] = $table;
         }
-        if (!$requiredIds) {
+        if (!$unifiedRequiredIds) {
             return $tablesWithIds; // all of them, no filter
         }
 
-        return \array_intersect_key($tablesWithIds, $lowerCasedRequiredIds);
+        return \array_intersect_key($tablesWithIds, $unifiedRequiredIds);
     }
 
     /**

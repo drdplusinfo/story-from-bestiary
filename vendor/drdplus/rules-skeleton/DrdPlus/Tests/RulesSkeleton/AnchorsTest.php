@@ -48,46 +48,31 @@ class AnchorsTest extends \DrdPlus\Tests\FrontendSkeleton\AnchorsTest
      */
     public function I_can_go_directly_to_eshop_item_page(): void
     {
-        if (!$this->getTestsConfiguration()->canBeBoughtOnEshop()) {
-            self::assertFileNotExists(
-                $this->getEshopFileName(),
-                'Text-only and free content is accessible for anyone and can not be bought'
-            );
+        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->canBeBoughtOnEshop()) {
+            self::assertFalse(false);
 
             return;
         }
         $eshopUrl = $this->getConfiguration()->getEshopUrl();
         self::assertRegExp('~^https://obchod\.altar\.cz/[^/]+\.html$~', $eshopUrl);
-        $link = $this->getLinkToEshopFromRulesAuthorsBlock();
-
-        self::assertSame(
-            $eshopUrl,
-            $link->getAttribute('href'),
-            'Link to rules in eshop in \'rules-authors\' differs from that in ' . \basename($this->getEshopFileName())
-        );
+        self::assertSame($eshopUrl, $this->getLinkToEshopFromLinkToOrigin()->getAttribute('href'), 'Expected different link to e-shop');
     }
 
-    private function getLinkToEshopFromRulesAuthorsBlock(): Element
+    private function getLinkToEshopFromLinkToOrigin(): Element
     {
         $body = $this->getHtmlDocument()->body;
-        $rulesAuthors = $body->getElementsByClassName('rules-authors');
-        self::assertGreaterThan(
-            0,
-            $rulesAuthors->count(),
-            'Missing \'rules-authors\' HTML class in rules content ' . \var_export($body->nodeValue, true)
+        $origins = $body->getElementsByClassName(HtmlHelper::RULES_ORIGIN_CLASS);
+        self::assertCount(
+            1,
+            $origins,
+            "Expected one '" . HtmlHelper::RULES_ORIGIN_CLASS . "' class, got {$origins->count()} of them"
         );
-        /** @var Element $rulesAuthors */
-        $rulesAuthors = $rulesAuthors[0];
-        $titles = $rulesAuthors->getElementsByClassName('title');
-        self::assertNotEmpty($titles, 'Missing a \'title\' in \'rules-authors\'');
-        self::assertCount(1, $titles);
-        /** @var Element $title */
-        $title = $titles[0];
-        $rulesLinks = $title->getElementsByTagName('a');
-        self::assertNotEmpty($rulesLinks, 'Missing a link to rules in \'rules-authors\'');
+        $origin = $origins->current();
+        $rulesLinks = $origin->getElementsByTagName('a');
+        self::assertNotEmpty($rulesLinks, "Missing a link to rules in '" . HtmlHelper::RULES_ORIGIN_CLASS . "'");
         self::assertCount(1, $rulesLinks);
 
-        return $rulesLinks[0];
+        return $rulesLinks->current();
     }
 
     /**

@@ -26,7 +26,7 @@ class Router extends StrictObject
 
     public function getRequiredBlockName(): string
     {
-        $route = \ltrim($this->request->getPath(), '/');
+        $route = \ltrim($this->request->getPathInfo(), '/');
 
         return $this->routesToKnownBlocNames[$route] ?? '';
     }

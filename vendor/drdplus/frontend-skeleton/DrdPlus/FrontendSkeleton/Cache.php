@@ -7,8 +7,7 @@ use Granam\Strict\Object\StrictObject;
 
 class Cache extends StrictObject
 {
-    public const CACHE = 'cache';
-    public const DISABLE = 'disable';
+    public const TABLES = 'tables';
 
     /** @var string */
     protected $cacheRootDir;
@@ -16,6 +15,10 @@ class Cache extends StrictObject
     protected $cacheRoots;
     /** @var WebVersions */
     protected $webVersions;
+    /** @var Request */
+    private $request;
+    /** @var Git */
+    private $git;
     /** @var string */
     protected $cachePrefix;
     /** @var bool */
@@ -24,14 +27,18 @@ class Cache extends StrictObject
     /**
      * @param WebVersions $webVersions
      * @param Dirs $dirs
+     * @param Request $request
+     * @param Git $git
      * @param bool $isInProduction
      * @param string $cachePrefix
      * @throws \RuntimeException
      */
-    public function __construct(WebVersions $webVersions, Dirs $dirs, bool $isInProduction, string $cachePrefix)
+    public function __construct(WebVersions $webVersions, Dirs $dirs, Request $request, Git $git, bool $isInProduction, string $cachePrefix)
     {
-        $this->cacheRootDir = $dirs->getCacheRoot();
         $this->webVersions = $webVersions;
+        $this->cacheRootDir = $dirs->getCacheRoot();
+        $this->request = $request;
+        $this->git = $git;
         $this->isInProduction = $isInProduction;
         $this->cachePrefix = $cachePrefix;
     }
@@ -48,7 +55,7 @@ class Cache extends StrictObject
                 if (!@\mkdir($cacheRoot, 0775, true /* with parents */) && !\is_dir($cacheRoot)) {
                     throw new \RuntimeException('Can not create directory for page cache ' . $cacheRoot);
                 }
-                if (PHP_SAPI === 'cli') {
+                if ($this->request->isCliRequest()) {
                     \chgrp($cacheRoot, 'www-data');
                 }
                 \chmod($cacheRoot, 0775); // because umask could suppress it
@@ -66,7 +73,7 @@ class Cache extends StrictObject
 
     protected function getCurrentRequestHash(): string
     {
-        return \md5(\serialize($_GET));
+        return \md5(\serialize($this->request->getValuesFromGet()));
     }
 
     /**
@@ -75,7 +82,7 @@ class Cache extends StrictObject
      */
     public function isCacheValid(): bool
     {
-        return ($_GET[static::CACHE] ?? '') !== static::DISABLE && \is_readable($this->getCacheFileName());
+        return ($this->request->getValue(Request::CACHE) ?? '') !== Request::DISABLE && \is_readable($this->getCacheFileName());
     }
 
     public function getCacheId(): string
@@ -119,23 +126,15 @@ class Cache extends StrictObject
         if ($this->isInProduction()) {
             return 'production';
         }
-        // GIT status is same for any working dir, if it is a sub-dir of wanted GIT project root
-        \exec('git status', $statusRows, $return);
-        if ($return !== 0) {
-            throw new Exceptions\CanNotGetGitStatus('Can not run `git status`, got result code ' . $return);
-        }
-        \exec('git diff origin/master', $diffRows, $return);
-        if ($return !== 0) {
-            throw new Exceptions\CanNotGetGitDiff('Can not run `git diff`, got result code ' . $return);
-        }
+        $gitStatus = $this->git->getGitStatus();
+        $diffAgainstOriginMaster = $this->git->getDiffAgainstOriginMaster();
 
-        return \md5(\implode(\array_merge($statusRows, $diffRows)));
+        return \md5(\implode(\array_merge($gitStatus, $diffAgainstOriginMaster)));
     }
 
     /**
      * @return string
      * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotReadCachedContent
-     * @throws \RuntimeException
      */
     public function getCachedContent(): string
     {
@@ -149,12 +148,20 @@ class Cache extends StrictObject
 
     /**
      * @param string $content
-     * @throws \RuntimeException
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotSaveContentForDebug
+     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CanNotChangeAccessToFileWithContentForDebug
      */
     public function saveContentForDebug(string $content): void
     {
-        \file_put_contents($this->getCacheDebugFileName(), $content, \LOCK_EX);
-        \chmod($this->getCacheDebugFileName(), 0664);
+        $cacheDebugFileName = $this->getCacheDebugFileName();
+        if (!\file_put_contents($cacheDebugFileName, $content, \LOCK_EX)) {
+            throw new Exceptions\CanNotSaveContentForDebug('Can not save content for debugging purpose into ' . $cacheDebugFileName);
+        }
+        if (!@\chmod($cacheDebugFileName, 0664)) {
+            throw new Exceptions\CanNotChangeAccessToFileWithContentForDebug(
+                'Can not change access to 0644 for file with content for debug ' . $cacheDebugFileName
+            );
+        }
     }
 
     /**
@@ -182,8 +189,9 @@ class Cache extends StrictObject
      */
     public function cacheContent(string $content): void
     {
-        \file_put_contents($this->getCacheFileName(), $content, \LOCK_EX);
-        \chmod($this->getCacheFileName(), 0664);
+        $cacheFileName = $this->getCacheFileName();
+        \file_put_contents($cacheFileName, $content, \LOCK_EX);
+        \chmod($cacheFileName, 0664);
         $this->clearOldCache();
     }
 

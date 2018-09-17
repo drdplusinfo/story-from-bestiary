@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "drdplus/frontend-skeleton",
-            "version": "1.0.78",
+            "version": "1.0.96",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drdplusinfo/frontend-skeleton.git",
-                "reference": "ebae63107fa5c6ab19be3a352742d4d1edbc3f4d"
+                "reference": "f61fd5360b3e41a61f02a11355a87c3f6e7a15b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drdplusinfo/frontend-skeleton/zipball/ebae63107fa5c6ab19be3a352742d4d1edbc3f4d",
-                "reference": "ebae63107fa5c6ab19be3a352742d4d1edbc3f4d",
+                "url": "https://api.github.com/repos/drdplusinfo/frontend-skeleton/zipball/f61fd5360b3e41a61f02a11355a87c3f6e7a15b5",
+                "reference": "f61fd5360b3e41a61f02a11355a87c3f6e7a15b5",
                 "shasum": ""
             },
             "require": {
@@ -32,7 +32,7 @@
                 "ext-yaml": "*",
                 "ext-zlib": "*",
                 "granam/exceptions-hierarchy": "^4.0",
-                "granam/string": "^3.1",
+                "granam/string": "^3.2",
                 "php": ">=7.1",
                 "phpgt/dom": "~1.0",
                 "phpmailer/phpmailer": "^6.0",
@@ -71,20 +71,20 @@
                 "pages",
                 "view"
             ],
-            "time": "2018-09-05 11:08:22"
+            "time": "2018-09-14 07:16:23"
         },
         {
             "name": "drdplus/rules-skeleton",
-            "version": "1.0.41",
+            "version": "1.0.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drdplusinfo/rules-skeleton.git",
-                "reference": "153b44cd3e0d3598eb2d7789a60dc65ddc306570"
+                "reference": "95d94238b3c147db4ea2ed7ee4ee778b709b3d7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drdplusinfo/rules-skeleton/zipball/153b44cd3e0d3598eb2d7789a60dc65ddc306570",
-                "reference": "153b44cd3e0d3598eb2d7789a60dc65ddc306570",
+                "url": "https://api.github.com/repos/drdplusinfo/rules-skeleton/zipball/95d94238b3c147db4ea2ed7ee4ee778b709b3d7b",
+                "reference": "95d94238b3c147db4ea2ed7ee4ee778b709b3d7b",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 "helper",
                 "rules"
             ],
-            "time": "2018-09-05 10:22:28"
+            "time": "2018-09-16 06:15:31"
         },
         {
             "name": "erusev/parsedown",
@@ -315,19 +315,21 @@
         },
         {
             "name": "granam/string",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jaroslavtyc/granam-string.git",
-                "reference": "1cebae4311a10029e9a1a94a668d871627b94143"
+                "url": "https://github.com/granam/granam-string.git",
+                "reference": "39d5caa02260757c8c0154ecda144a8bc699255e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jaroslavtyc/granam-string/zipball/1cebae4311a10029e9a1a94a668d871627b94143",
-                "reference": "1cebae4311a10029e9a1a94a668d871627b94143",
+                "url": "https://api.github.com/repos/granam/granam-string/zipball/39d5caa02260757c8c0154ecda144a8bc699255e",
+                "reference": "39d5caa02260757c8c0154ecda144a8bc699255e",
                 "shasum": ""
             },
             "require": {
+                "ext-intl": "*",
+                "ext-mbstring": "*",
                 "granam/scalar": "^4.0",
                 "granam/strict-object": "^3.0",
                 "php": ">=7.1"
@@ -367,7 +369,7 @@
                 "php",
                 "string"
             ],
-            "time": "2018-07-31 07:12:46"
+            "time": "2018-09-08 10:07:08"
         },
         {
             "name": "granam/tools",
@@ -472,16 +474,16 @@
         },
         {
             "name": "phpgt/dom",
-            "version": "v1.0.3",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PhpGt/Dom.git",
-                "reference": "020a6dc7830dd697d4d46516667fd2ae568824fe"
+                "reference": "e2ea6dde374e3895d9b02a92d8c880d313e62611"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PhpGt/Dom/zipball/020a6dc7830dd697d4d46516667fd2ae568824fe",
-                "reference": "020a6dc7830dd697d4d46516667fd2ae568824fe",
+                "url": "https://api.github.com/repos/PhpGt/Dom/zipball/e2ea6dde374e3895d9b02a92d8c880d313e62611",
+                "reference": "e2ea6dde374e3895d9b02a92d8c880d313e62611",
                 "shasum": ""
             },
             "require": {
@@ -489,7 +491,7 @@
                 "symfony/css-selector": "3.2.*"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.4"
+                "phpunit/phpunit": "^6.4|^7.0"
             },
             "type": "library",
             "autoload": {
@@ -545,7 +547,7 @@
                 }
             ],
             "description": "The modern DOM API for PHP 7 projects.",
-            "time": "2018-04-22 23:19:29"
+            "time": "2018-09-10 08:27:47"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -1417,20 +1419,23 @@
         },
         {
             "name": "phpunit/php-file-iterator",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
-                "reference": "cecbc684605bb0cc288828eb5d65d93d5c676d3c"
+                "reference": "050bedf145a257b1ff02746c31894800e5122946"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/cecbc684605bb0cc288828eb5d65d93d5c676d3c",
-                "reference": "cecbc684605bb0cc288828eb5d65d93d5c676d3c",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/050bedf145a257b1ff02746c31894800e5122946",
+                "reference": "050bedf145a257b1ff02746c31894800e5122946",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.1"
             },
             "type": "library",
             "extra": {
@@ -1460,7 +1465,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2018-06-11 11:44:00"
+            "time": "2018-09-13 20:33:42"
         },
         {
             "name": "phpunit/php-text-template",
@@ -1603,16 +1608,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.3.4",
+            "version": "7.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0356331bf62896dc56e3a15030b23b73f38b2935"
+                "reference": "7b331efabbb628c518c408fdfcaf571156775de2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0356331bf62896dc56e3a15030b23b73f38b2935",
-                "reference": "0356331bf62896dc56e3a15030b23b73f38b2935",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7b331efabbb628c518c408fdfcaf571156775de2",
+                "reference": "7b331efabbb628c518c408fdfcaf571156775de2",
                 "shasum": ""
             },
             "require": {
@@ -1683,7 +1688,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-09-05 09:58:53"
+            "time": "2018-09-08 15:14:29"
         },
         {
             "name": "roave/security-advisories",
@@ -1691,12 +1696,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0abc14e0df387fe74b4b32e0b8647d1639256d38"
+                "reference": "7b3c6e7f1b067d8588488fb3e6d104a03512ac91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0abc14e0df387fe74b4b32e0b8647d1639256d38",
-                "reference": "0abc14e0df387fe74b4b32e0b8647d1639256d38",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/7b3c6e7f1b067d8588488fb3e6d104a03512ac91",
+                "reference": "7b3c6e7f1b067d8588488fb3e6d104a03512ac91",
                 "shasum": ""
             },
             "conflict": {
@@ -1731,6 +1736,7 @@
                 "drupal/drupal": ">=7,<7.59|>=8,<8.4.8|>=8.5,<8.5.3",
                 "erusev/parsedown": "<1.7",
                 "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.3|>=5.4,<5.4.11.3|>=2017.8,<2017.8.1.1|>=2017.12,<2017.12.2.1",
+                "ezyang/htmlpurifier": "<4.1.1",
                 "firebase/php-jwt": "<2",
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
@@ -1742,6 +1748,7 @@
                 "illuminate/cookie": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.42|>=5.6,<5.6.30",
                 "illuminate/database": ">=4,<4.0.99|>=4.1,<4.1.29",
                 "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
+                "james-heinrich/getid3": "<1.9.9",
                 "joomla/session": "<1.3.1",
                 "kreait/firebase-php": ">=3.2,<3.8.1",
                 "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.42|>=5.6,<5.6.30",
@@ -1752,6 +1759,7 @@
                 "monolog/monolog": ">=1.8,<1.12",
                 "namshi/jose": "<2.2",
                 "onelogin/php-saml": "<2.10.4",
+                "openid/php-openid": "<2.3",
                 "oro/crm": ">=1.7,<1.7.4",
                 "oro/platform": ">=1.7,<1.7.4",
                 "padraic/humbug_get_contents": "<1.1.2",
@@ -1855,7 +1863,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-08-14 15:39:17"
+            "time": "2018-09-16 19:32:36"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

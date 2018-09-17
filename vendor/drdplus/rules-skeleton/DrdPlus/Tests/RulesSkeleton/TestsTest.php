@@ -4,16 +4,24 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\Tests\FrontendSkeleton\FrontendControllerTest;
-use PHPUnit\Framework\TestCase;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTestTrait;
+use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReaderTest;
 
-class TestsTest extends TestCase
+class TestsTest extends \DrdPlus\Tests\FrontendSkeleton\TestsTest
 {
+    use AbstractContentTestTrait;
+
     /**
      * @test
      * @throws \ReflectionException
      */
     public function All_frontend_skeleton_tests_are_used(): void
     {
+        if (!$this->isSkeletonChecked()) {
+            self::assertTrue(true, 'Already tested in skeleton');
+
+            return;
+        }
         $reflectionClass = new \ReflectionClass(\DrdPlus\Tests\FrontendSkeleton\WebContentTest::class);
         $frontendSkeletonDir = \dirname($reflectionClass->getFileName());
         foreach ($this->getClassesFromDir($frontendSkeletonDir) as $frontendSkeletonTestClass) {
@@ -31,32 +39,50 @@ class TestsTest extends TestCase
             }
             $expectedRulesTestClass = \str_replace('\\FrontendSkeleton', '\\RulesSkeleton', $frontendSkeletonTestClass);
             self::assertTrue(\class_exists($expectedRulesTestClass), "Missing test class {$expectedRulesTestClass} adopted from frontend skeleton");
-            self::assertTrue(\is_a($expectedRulesTestClass, $frontendSkeletonTestClass, true), "$expectedRulesTestClass should be a child of $frontendSkeletonTestClass");
-        }
-    }
-
-    private function getClassesFromDir(string $dir): array
-    {
-        $classes = [];
-        foreach (\scandir($dir, SCANDIR_SORT_NONE) as $folder) {
-            if ($folder === '.' || $folder === '..') {
-                continue;
-            }
-            if (!\preg_match('~\.php$~', $folder)) {
-                if (\is_dir($dir . '/' . $folder)) {
-                    foreach ($this->getClassesFromDir($dir . '/' . $folder) as $class) {
-                        $classes[] = $class;
-                    }
-                }
-                continue;
-            }
-            self::assertNotEmpty(
-                \preg_match('~(?<className>DrdPlus/[^/].+)\.php~', $dir . '/' . $folder, $matches),
-                "DrdPlus class name has not been determined from $dir/$folder"
+            self::assertTrue(
+                \is_a($expectedRulesTestClass, $frontendSkeletonTestClass, true),
+                "$expectedRulesTestClass should be a child of $frontendSkeletonTestClass"
             );
-            $classes[] = \str_replace('/', '\\', $matches['className']);
+        }
+    }
+
+    protected static function getSutClass(string $sutTestClass = null, string $regexp = '~\\\Tests(.+)Test$~'): string
+    {
+        $sutClass = parent::getSutClass($sutTestClass, $regexp);
+        $frontendClass = \str_replace('RulesSkeleton', 'FrontendSkeleton', $sutClass);
+        if (\class_exists($frontendClass)) {
+            return $frontendClass;
         }
 
-        return $classes;
+        return $sutClass;
     }
+
+    protected function getNotClassesTestingTests(): array
+    {
+        return [
+            AnchorsTest::class,
+            GraphicsTest::class,
+            TestsConfigurationTest::class,
+            RulesSkeletonExceptionsHierarchyTest::class,
+            TablesTest::class,
+            GoogleTest::class,
+            WebContentVersionTest::class,
+            ComposerConfigTest::class,
+            TracyTest::class,
+            TrialTest::class,
+            WebContentTest::class,
+            StandardModeTest::class,
+            static::class,
+            \DrdPlus\Tests\FrontendSkeleton\TestsTest::class,
+            CoveredPartsCanBeHiddenTest::class,
+            PassingTest::class,
+            ContactsContentTest::class,
+            DevModeTest::class,
+            CalculationsTest::class,
+            SourceCodeLinksTest::class,
+            TestsConfigurationReaderTest::class,
+            TableOfContentTest::class,
+        ];
+    }
+
 }

@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\FrontendSkeleton\Partials;
 
-use DrdPlus\FrontendSkeleton\Cache;
 use DrdPlus\FrontendSkeleton\Configuration;
+use DrdPlus\FrontendSkeleton\CookiesService;
 use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\FrontendSkeleton\FrontendController;
+use DrdPlus\FrontendSkeleton\Git;
 use DrdPlus\FrontendSkeleton\HtmlHelper;
 use DrdPlus\FrontendSkeleton\Request;
 use DrdPlus\FrontendSkeleton\ServicesContainer;
@@ -17,6 +18,7 @@ use Mockery\MockInterface;
 abstract class AbstractContentTest extends SkeletonTestCase
 {
     use DirsForTestsTrait;
+    use ClassesTrait;
 
     private static $contents = [];
     private static $htmlDocuments = [];
@@ -24,6 +26,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
     protected $needPassOut = false;
     /** @var Configuration */
     private $configuration;
+    private $frontendSkeletonChecked;
 
     protected function setUp(): void
     {
@@ -54,13 +57,14 @@ abstract class AbstractContentTest extends SkeletonTestCase
             if ($cookies) {
                 $_COOKIE = \array_merge($_COOKIE, $cookies);
             }
+            if (empty($_GET[Request::VERSION]) && empty($_COOKIE[CookiesService::VERSION])) {
+                $_GET[Request::VERSION] = $this->getTestsConfiguration()->getExpectedLastUnstableVersion();
+            }
             if ($this->needPassIn()) {
                 $this->passIn();
             } elseif ($this->needPassOut()) {
                 $this->passOut();
             }
-            /** @noinspection PhpUnusedLocalVariableInspection */
-            $latestVersion = $this->getTestsConfiguration()->getExpectedLastUnstableVersion();
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
@@ -133,10 +137,14 @@ abstract class AbstractContentTest extends SkeletonTestCase
 
     protected function isFrontendSkeletonChecked(): bool
     {
-        $documentRootRealPath = \realpath($this->getDocumentRoot());
-        $frontendSkeletonRealPath = \realpath(__DIR__ . '/../../../..');
+        if ($this->frontendSkeletonChecked === null) {
+            $documentRootRealPath = \realpath($this->getDocumentRoot());
+            $frontendSkeletonRealPath = \realpath(__DIR__ . '/../../../..');
 
-        return $documentRootRealPath === $frontendSkeletonRealPath;
+            $this->frontendSkeletonChecked = $documentRootRealPath === $frontendSkeletonRealPath;
+        }
+
+        return $this->frontendSkeletonChecked;
     }
 
     protected function getCurrentPageTitle(HTMLDocument $document = null): string
@@ -178,7 +186,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
         $originalCookies = $_COOKIE;
         /** @noinspection PhpUnusedLocalVariableInspection */
         $controller = $controller ?? null;
-        $_GET[Cache::CACHE] = Cache::DISABLE;
+        $_GET[Request::CACHE] = Request::DISABLE;
         \ob_start();
         /** @noinspection PhpIncludeInspection */
         include $this->getDocumentRoot() . '/index.php';
@@ -289,23 +297,21 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return $this->configuration;
     }
 
-    /**
-     * @return string|Configuration
-     */
-    protected function getConfigurationClass(): string
-    {
-        return Configuration::class;
-    }
-
     protected function createRequest(string $currentVersion = null): Request
     {
-        $request = $this->mockery(Request::class);
+        $request = $this->mockery($this->getRequestClass());
         $request->allows('getValue')
             ->with(Request::VERSION)
             ->andReturn($currentVersion);
+        $request->makePartial();
 
         /** @var Request $request */
         return $request;
+    }
+
+    protected function createGit(): Git
+    {
+        return new Git();
     }
 
     /**
@@ -333,11 +339,6 @@ abstract class AbstractContentTest extends SkeletonTestCase
         $controllerClass = $this->getControllerClass();
 
         return new $controllerClass($this->createServicesContainer($documentRoot, $configuration, $htmlHelper));
-    }
-
-    protected function getControllerClass(): string
-    {
-        return FrontendController::class;
     }
 
     protected function createServicesContainer(

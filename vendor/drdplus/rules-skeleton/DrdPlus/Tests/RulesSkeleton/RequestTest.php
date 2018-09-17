@@ -11,37 +11,26 @@ class RequestTest extends \DrdPlus\Tests\FrontendSkeleton\RequestTest
     /**
      * @test
      * @backupGlobals enabled
-     * @dataProvider provideTablesIdsParameterName
-     * @param string $parameterName
      */
-    public function I_can_get_wanted_tables_ids(string $parameterName): void
+    public function I_can_get_path_info(): void
     {
-        self::assertSame([], (new Request(new Bot()))->getWantedTablesIds());
-        $_GET[$parameterName] = '    ';
-        self::assertSame([], (new Request(new Bot()))->getWantedTablesIds());
-        $_GET[$parameterName] = 'foo';
-        self::assertSame(['foo'], (new Request(new Bot()))->getWantedTablesIds());
-        $_GET[$parameterName] .= ',bar,baz';
-        self::assertSame(['foo', 'bar', 'baz'], (new Request(new Bot()))->getWantedTablesIds());
-        unset($_GET[$parameterName]); // to avoid using this in next iteration as @backupGlobals does not work
-    }
-
-    public function provideTablesIdsParameterName(): array
-    {
-        return [
-            [Request::TABLES],
-            [Request::TABULKY],
-        ];
+        $_SERVER['PATH_INFO'] = null;
+        $request = new Request(new Bot());
+        self::assertSame('', $request->getPathInfo());
+        $_SERVER['PATH_INFO'] = 'foo/bar';
+        self::assertSame('foo/bar', $request->getPathInfo());
     }
 
     /**
      * @test
      * @backupGlobals enabled
      */
-    public function I_can_get_current_request_path(): void
+    public function I_can_get_query_string(): void
     {
-        self::assertSame('', (new Request(new Bot()))->getPath());
-        $_SERVER['PATH_INFO'] = '/foo/bar/baz-qux';
-        self::assertSame('/foo/bar/baz-qux', (new Request(new Bot()))->getPath());
+        $_SERVER['QUERY_STRING'] = null;
+        $request = new Request(new Bot());
+        self::assertSame('', $request->getQueryString());
+        $_SERVER['QUERY_STRING'] = 'foo=bar';
+        self::assertSame('foo=bar', $request->getQueryString());
     }
 }

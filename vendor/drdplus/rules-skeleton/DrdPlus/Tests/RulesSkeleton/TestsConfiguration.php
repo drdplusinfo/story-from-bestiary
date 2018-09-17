@@ -45,6 +45,7 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
     Last part of some block
 </div>
 HTML
+        ,
     ];
     /** @var string */
     private $expectedLicence = '*by access*';
@@ -54,6 +55,8 @@ HTML
     private $tooShortSuccessNames = ['všiml si'];
     /** @var array|string[] */
     private $tooShortResultNames = ['Bonus', 'Postih'];
+    /** @var bool */
+    private $hasTableOfContents = true;
 
     /**
      * @param string $publicUrl
@@ -76,7 +79,6 @@ HTML
         if (!$this->isLocalLinkAccessible($localUrl)) {
             throw new Exceptions\InvalidLocalUrl("Given local URL can not be reached or is not local: '$localUrl'");
         }
-        parent::__construct($localUrl);
         parent::__construct($localUrl);
     }
 
@@ -347,6 +349,18 @@ HTML
         if (!\in_array($tooShortResultName, $this->tooShortResultNames, true)) {
             $this->tooShortResultNames[] = $tooShortResultName;
         }
+
+        return $this;
+    }
+
+    public function hasTableOfContents(): bool
+    {
+        return $this->hasTableOfContents;
+    }
+
+    public function disableHasTableOfContents(): TestsConfiguration
+    {
+        $this->hasTableOfContents = false;
 
         return $this;
     }

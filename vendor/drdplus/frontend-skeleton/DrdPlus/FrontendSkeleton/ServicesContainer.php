@@ -8,6 +8,7 @@ use DrdPlus\FrontendSkeleton\Web\Body;
 use DrdPlus\FrontendSkeleton\Web\Head;
 use DrdPlus\FrontendSkeleton\Web\JsFiles;
 use DrdPlus\FrontendSkeleton\Web\Menu;
+use DrdPlus\FrontendSkeleton\Web\TablesBody;
 use DrdPlus\FrontendSkeleton\Web\WebFiles;
 use Granam\Strict\Object\StrictObject;
 
@@ -16,6 +17,8 @@ class ServicesContainer extends StrictObject
 
     /** @var WebVersions */
     protected $webVersions;
+    /** @var Git */
+    protected $git;
     /** @var Configuration */
     protected $configuration;
     /** @var HtmlHelper */
@@ -28,6 +31,10 @@ class ServicesContainer extends StrictObject
     protected $menu;
     /** @var Body */
     protected $body;
+    /** @var TablesBody */
+    protected $tablesBody;
+    /** @var Cache */
+    private $tablesWebCache;
     /** @var CssFiles */
     protected $cssFiles;
     /** @var JsFiles */
@@ -55,7 +62,7 @@ class ServicesContainer extends StrictObject
     public function getWebVersions(): WebVersions
     {
         if ($this->webVersions === null) {
-            $this->webVersions = new WebVersions($this->getConfiguration(), $this->getRequest());
+            $this->webVersions = new WebVersions($this->getConfiguration(), $this->getRequest(), $this->getGit());
         }
 
         return $this->webVersions;
@@ -68,6 +75,15 @@ class ServicesContainer extends StrictObject
         }
 
         return $this->request;
+    }
+
+    public function getGit(): Git
+    {
+        if ($this->git === null) {
+            $this->git = new Git();
+        }
+
+        return $this->git;
     }
 
     public function getBotParser(): BotParser
@@ -90,6 +106,8 @@ class ServicesContainer extends StrictObject
             $this->webCache = new WebCache(
                 $this->getWebVersions(),
                 $this->getConfiguration()->getDirs(),
+                $this->getRequest(),
+                $this->getGit(),
                 $this->getHtmlHelper()->isInProduction()
             );
         }
@@ -122,6 +140,42 @@ class ServicesContainer extends StrictObject
         }
 
         return $this->body;
+    }
+
+    public function getHeadForTables(): Head
+    {
+        return new Head(
+            $this->getConfiguration(),
+            $this->getHtmlHelper(),
+            $this->getCssFiles(),
+            $this->getJsFiles(),
+            'Tabulky pro ' . $this->getHead()->getPageTitle()
+        );
+    }
+
+    public function getTablesBody(): TablesBody
+    {
+        if ($this->tablesBody === null) {
+            $this->tablesBody = new TablesBody($this->getWebFiles(), $this->getHtmlHelper(), $this->getRequest());
+        }
+
+        return $this->tablesBody;
+    }
+
+    public function getTablesWebCache(): Cache
+    {
+        if ($this->tablesWebCache === null) {
+            $this->tablesWebCache = new Cache(
+                $this->getWebVersions(),
+                $this->getDirs(),
+                $this->getRequest(),
+                $this->getGit(),
+                $this->getHtmlHelper()->isInProduction(),
+                Cache::TABLES
+            );
+        }
+
+        return $this->tablesWebCache;
     }
 
     public function getCssFiles(): CssFiles
@@ -165,4 +219,8 @@ class ServicesContainer extends StrictObject
         return $this->cookiesService;
     }
 
+    public function getNow(): \DateTime
+    {
+        return new \DateTime();
+    }
 }

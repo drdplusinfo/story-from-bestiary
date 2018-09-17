@@ -29,7 +29,7 @@ class RouterTest extends TestWithMockery
     private function getRequest(string $path): Request
     {
         $request = $this->mockery(Request::class);
-        $request->expects('getPath')
+        $request->expects('getPathInfo')
             ->andReturn($path);
 
         return $request;

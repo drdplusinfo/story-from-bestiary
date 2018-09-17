@@ -10,6 +10,11 @@ use DrdPlus\RulesSkeleton\Web\Content;
  */
 class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
 {
+    /** @var Redirect */
+    private $redirect;
+    /** @var bool */
+    private $canPassIn;
+
     public function __construct(ServicesContainer $servicesContainer)
     {
         parent::__construct($servicesContainer);
@@ -20,84 +25,97 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
      */
     public function getContent(): \DrdPlus\FrontendSkeleton\Web\Content
     {
-        if ($this->content === null) {
-            if (($_SERVER['QUERY_STRING'] ?? false) === 'pdf'
-                && $this->getServicesContainer()->getPdfBody()->getPdfFile()
-            ) {
-                $this->content = new Content(
-                    $this->getServicesContainer()->getHtmlHelper(),
-                    $this->getServicesContainer()->getWebVersions(),
-                    $this->getServicesContainer()->getEmptyHead(),
-                    $this->getServicesContainer()->getEmptyMenu(),
-                    $this->getServicesContainer()->getPdfBody(),
-                    $this->getServicesContainer()->getEmptyWebCache(),
-                    Content::PDF,
-                    $this->getRedirect()
-                );
-            } elseif ($this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABLES) !== null
-                || $this->getServicesContainer()->getRequest()->getValueFromGet(Request::TABULKY)
-            ) { // we do not require licence confirmation for tables only
-                $this->content = new Content(
-                    $this->getServicesContainer()->getHtmlHelper(),
-                    $this->getServicesContainer()->getWebVersions(),
-                    $this->getServicesContainer()->getHeadForTables(),
-                    $this->getServicesContainer()->getMenu(),
-                    $this->getServicesContainer()->getTablesBody(),
-                    $this->getServicesContainer()->getTablesWebCache(),
-                    Content::TABLES,
-                    $this->getRedirect()
-                );
-            } elseif (!$this->solveAccess()) {
-                $this->content = new Content(
-                    $this->getServicesContainer()->getHtmlHelper(),
-                    $this->getServicesContainer()->getWebVersions(),
-                    $this->getServicesContainer()->getHead(),
-                    $this->getServicesContainer()->getMenu(),
-                    $this->getServicesContainer()->getPassBody(),
-                    $this->getServicesContainer()->getPassWebCache(),
-                    Content::PASS,
-                    $this->getRedirect()
-                );
-            } else {
-                $this->content = new Content(
-                    $this->getServicesContainer()->getHtmlHelper(),
-                    $this->getServicesContainer()->getWebVersions(),
-                    $this->getServicesContainer()->getHead(),
-                    $this->getServicesContainer()->getMenu(),
-                    $this->getServicesContainer()->getBody(),
-                    $this->getServicesContainer()->getPassedWebCache(),
-                    Content::PASSED,
-                    $this->getRedirect()
-                );
-            }
+        if ($this->content) {
+            return $this->content;
         }
+        $servicesContainer = $this->getServicesContainer();
+        if ($servicesContainer->getRequest()->areRequestedTables()) {
+            $this->content = new Content(
+                $servicesContainer->getHtmlHelper(),
+                $servicesContainer->getWebVersions(),
+                $servicesContainer->getHeadForTables(),
+                $servicesContainer->getMenu(),
+                $servicesContainer->getTablesBody(),
+                $servicesContainer->getTablesWebCache(),
+                Content::TABLES,
+                $this->getRedirect()
+            );
+
+            return $this->content;
+        }
+        if ($servicesContainer->getRequest()->isRequestedPdf() && $servicesContainer->getPdfBody()->getPdfFile()) {
+            $this->content = new Content(
+                $servicesContainer->getHtmlHelper(),
+                $servicesContainer->getWebVersions(),
+                $servicesContainer->getEmptyHead(),
+                $servicesContainer->getEmptyMenu(),
+                $servicesContainer->getPdfBody(),
+                $servicesContainer->getEmptyWebCache(),
+                Content::PDF,
+                $this->getRedirect()
+            );
+
+            return $this->content;
+        }
+        if (!$this->canPassIn()) {
+            $this->content = new Content(
+                $servicesContainer->getHtmlHelper(),
+                $servicesContainer->getWebVersions(),
+                $servicesContainer->getHead(),
+                $servicesContainer->getMenu(),
+                $servicesContainer->getPassBody(),
+                $servicesContainer->getPassWebCache(),
+                Content::PASS,
+                $this->getRedirect()
+            );
+
+            return $this->content;
+        }
+        $this->content = new Content(
+            $servicesContainer->getHtmlHelper(),
+            $servicesContainer->getWebVersions(),
+            $servicesContainer->getHead(),
+            $servicesContainer->getMenu(),
+            $servicesContainer->getBody(),
+            $servicesContainer->getWebCache(),
+            Content::FULL,
+            $this->getRedirect()
+        );
 
         return $this->content;
     }
 
-    private function solveAccess(): bool
+    private function getRedirect(): ?Redirect
     {
-        $visitorCanAccessContent = !$this->getServicesContainer()->getConfiguration()->hasProtectedAccess();
-        if (!$visitorCanAccessContent) {
+        return $this->redirect;
+    }
+
+    private function canPassIn(): bool
+    {
+        if ($this->canPassIn !== null) {
+            return $this->canPassIn;
+        }
+        $canPassIn = !$this->getServicesContainer()->getConfiguration()->hasProtectedAccess();
+        if (!$canPassIn) {
             $usagePolicy = $this->getServicesContainer()->getUsagePolicy();
-            $visitorCanAccessContent = $usagePolicy->isVisitorBot();
-            if (!$visitorCanAccessContent) {
+            $canPassIn = $usagePolicy->isVisitorBot();
+            if (!$canPassIn) {
                 if ($this->getServicesContainer()->getRequest()->getValueFromPost('confirm')) {
-                    $visitorCanAccessContent = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
+                    $canPassIn = $usagePolicy->confirmOwnershipOfVisitor(new \DateTime('+1 year'));
                 }
-                if (!$visitorCanAccessContent && $this->getServicesContainer()->getRequest()->getValueFromPost('trial')) {
-                    $visitorCanAccessContent = $this->activateTrial($this->getServicesContainer()->getNow());
+                if (!$canPassIn && $this->getServicesContainer()->getRequest()->getValueFromPost('trial')) {
+                    $canPassIn = $this->activateTrial($this->getServicesContainer()->getNow());
                 }
-                if (!$visitorCanAccessContent) {
-                    $visitorCanAccessContent = $usagePolicy->hasVisitorConfirmedOwnership();
-                    if (!$visitorCanAccessContent) {
-                        $visitorCanAccessContent = $usagePolicy->isVisitorUsingValidTrial();
+                if (!$canPassIn) {
+                    $canPassIn = $usagePolicy->hasVisitorConfirmedOwnership();
+                    if (!$canPassIn) {
+                        $canPassIn = $usagePolicy->isVisitorUsingValidTrial();
                     }
                 }
             }
         }
 
-        return $visitorCanAccessContent;
+        return $this->canPassIn = $canPassIn;
     }
 
     protected function activateTrial(\DateTime $now): bool
@@ -108,29 +126,35 @@ class RulesController extends \DrdPlus\FrontendSkeleton\FrontendController
             $at = $trialExpiration->getTimestamp() + 1; // one second "insurance" overlap
             $afterSeconds = $at - $now->getTimestamp();
             $this->setRedirect(
-                new \DrdPlus\FrontendSkeleton\Redirect(
-                    "/?{$this->getServicesContainer()->getUsagePolicy()->getTrialExpiredAtName()}={$at}",
-                    $afterSeconds
-                )
+                new Redirect("/?{$this->getServicesContainer()->getUsagePolicy()->getTrialExpiredAtName()}={$at}", $afterSeconds)
             );
         }
 
         return $visitorCanAccessContent;
     }
 
+    private function setRedirect(Redirect $redirect): void
+    {
+        $this->redirect = $redirect;
+        $this->content = null; // unset Content to re-create it with new redirect
+    }
+
     public function sendCustomHeaders(): void
     {
-        if (\PHP_SAPI === 'cli') {
-            return;
-        }
         if ($this->getContent()->containsTables()) {
+            if (\PHP_SAPI === 'cli') {
+                return;
+            }
             // anyone can show content of this page
             \header('Access-Control-Allow-Origin: *', true);
         } elseif ($this->getContent()->containsPdf()) {
-            \header('Content-type: application/pdf');
             $pdfFile = $this->getServicesContainer()->getPdfBody()->getPdfFile();
-            \header('Content-Length: ' . \filesize($pdfFile));
             $pdfFileBasename = \basename($pdfFile);
+            if (\PHP_SAPI === 'cli') {
+                return;
+            }
+            \header('Content-type: application/pdf');
+            \header('Content-Length: ' . \filesize($pdfFile));
             \header("Content-Disposition: attachment; filename=\"$pdfFileBasename\"");
         }
     }

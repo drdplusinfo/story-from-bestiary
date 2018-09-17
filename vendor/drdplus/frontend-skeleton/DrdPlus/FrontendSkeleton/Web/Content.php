@@ -6,12 +6,14 @@ namespace DrdPlus\FrontendSkeleton\Web;
 use DrdPlus\FrontendSkeleton\Cache;
 use DrdPlus\FrontendSkeleton\HtmlDocument;
 use DrdPlus\FrontendSkeleton\HtmlHelper;
-use DrdPlus\FrontendSkeleton\Redirect;
 use DrdPlus\FrontendSkeleton\WebVersions;
 use Granam\Strict\Object\StrictObject;
 
 class Content extends StrictObject
 {
+    public const TABLES = 'tables';
+    public const FULL = ' full';
+
     /** @var HtmlHelper */
     private $htmlHelper;
     /** @var WebVersions */
@@ -24,8 +26,8 @@ class Content extends StrictObject
     private $body;
     /** @var Cache */
     private $cache;
-    /** @var Redirect|null */
-    private $redirect;
+    /** @var string */
+    private $contentType;
 
     public function __construct(
         HtmlHelper $htmlHelper,
@@ -34,7 +36,7 @@ class Content extends StrictObject
         Menu $menu,
         Body $body,
         Cache $cache,
-        ?Redirect $redirect
+        string $contentType
     )
     {
         $this->htmlHelper = $htmlHelper;
@@ -43,7 +45,7 @@ class Content extends StrictObject
         $this->menu = $menu;
         $this->body = $body;
         $this->cache = $cache;
-        $this->redirect = $redirect;
+        $this->contentType = $contentType;
     }
 
     public function __toString()
@@ -55,19 +57,20 @@ class Content extends StrictObject
     {
         $cachedContent = $this->getCachedContent();
         if ($cachedContent !== null) {
-            return $this->injectRedirectIfAny($cachedContent); // redirect is NOT cached and has to be injected again and again
+            return $cachedContent;
         }
 
         $previousMemoryLimit = \ini_set('memory_limit', '1G');
 
         $content = $this->composeContent();
-        $this->getCache()->saveContentForDebug($content); // for debugging purpose
+        try {
+            $this->getCache()->saveContentForDebug($content);
+        } catch (\RuntimeException $runtimeException) {
+            \trigger_error($runtimeException->getMessage() . "\n" . $runtimeException->getTraceAsString(), \E_USER_WARNING);
+        }
         $htmlDocument = $this->buildHtmlDocument($content);
         $updatedContent = $htmlDocument->saveHTML();
         $this->getCache()->cacheContent($updatedContent);
-        // has to be AFTER cache as we do not want to cache it
-        $updatedContent = $this->injectRedirectIfAny($updatedContent);
-
         if ($previousMemoryLimit !== false) {
             \ini_set('memory_limit', $previousMemoryLimit);
         }
@@ -162,23 +165,19 @@ HTML;
         return $this->cache;
     }
 
-    protected function injectRedirectIfAny(string $content): string
+    public function containsTables(): bool
     {
-        if (!$this->getRedirect()) {
-            return $content;
-        }
-        $cachedDocument = new HtmlDocument($content);
-        $meta = $cachedDocument->createElement('meta');
-        $meta->setAttribute('http-equiv', 'Refresh');
-        $meta->setAttribute('content', $this->getRedirect()->getAfterSeconds() . '; url=' . $this->getRedirect()->getTarget());
-        $meta->setAttribute('id', 'meta_redirect');
-        $cachedDocument->head->appendChild($meta);
-
-        return $cachedDocument->saveHTML();
+        return $this->contentType === self::TABLES;
     }
 
-    protected function getRedirect(): ?Redirect
+    public function containsFull(): bool
     {
-        return $this->redirect;
+        return $this->contentType === self::FULL;
     }
+
+    protected function getContentType(): string
+    {
+        return $this->contentType;
+    }
+
 }

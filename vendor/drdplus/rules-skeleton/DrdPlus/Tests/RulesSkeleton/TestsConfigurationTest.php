@@ -153,4 +153,14 @@ class TestsConfigurationTest extends \DrdPlus\Tests\FrontendSkeleton\TestsConfig
         self::assertSame(['foo', 'bar'], $testsConfiguration->getTooShortResultNames());
     }
 
+    /**
+     * @test
+     */
+    public function I_can_disable_test_of_table_of_contents(): void
+    {
+        $testsConfiguration = $this->createSut();
+        self::assertTrue($testsConfiguration->hasTableOfContents(), 'Table of contents should be expected to test by default');
+        $testsConfiguration->disableHasTableOfContents();
+        self::assertFalse($testsConfiguration->hasTableOfContents(), 'Test of table of contents should be disabled now');
+    }
 }

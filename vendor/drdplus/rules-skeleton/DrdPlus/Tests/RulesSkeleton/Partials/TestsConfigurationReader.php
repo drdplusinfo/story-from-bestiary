@@ -28,4 +28,6 @@ interface TestsConfigurationReader extends \DrdPlus\Tests\FrontendSkeleton\Parti
     public function getTooShortSuccessNames(): array;
 
     public function getTooShortResultNames(): array;
+
+    public function hasTableOfContents(): bool;
 }

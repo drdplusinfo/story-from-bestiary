@@ -4,46 +4,56 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\FrontendSkeleton;
 
 use DrdPlus\FrontendSkeleton\Cache;
-use DrdPlus\FrontendSkeleton\Dirs;
 use DrdPlus\FrontendSkeleton\WebVersions;
-use DrdPlus\Tests\FrontendSkeleton\Partials\DirsForTestsTrait;
-use Granam\Tests\Tools\TestWithMockery;
-use Mockery\MockInterface;
+use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
+use Granam\String\StringTools;
 
-class CacheTest extends TestWithMockery
+class CacheTest extends AbstractContentTest
 {
-    use DirsForTestsTrait;
+    /** @var string */
+    protected $temporaryRootDir;
 
-    /**
-     * @test
-     * @throws \ReflectionException
-     */
-    public function I_will_get_cache_dir_depending_on_current_version(): void
+    protected function tearDown(): void
     {
-        $webVersions = $this->mockery(WebVersions::class);
-        $webVersions->shouldReceive('getCurrentMinorVersion')
-            ->andReturnValues(['master', '9.8.7']); // sequential, returns different value for first and second call
-        $dirs = $this->createDirs();
-        /** @var WebVersions $webVersions */
-        $cache = $this->createSut($webVersions, $dirs);
-        self::assertSame($dirs->getCacheRoot() . '/master', $cache->getCacheDir());
-        self::assertSame($dirs->getCacheRoot() . '/9.8.7', $cache->getCacheDir());
+        parent::tearDown();
+        if ($this->temporaryRootDir) {
+            \exec('rm -fr ' . \escapeshellarg($this->temporaryRootDir));
+        }
     }
 
     /**
-     * @param WebVersions $webVersions
-     * @param Dirs $dirs
-     * @return Cache|MockInterface
-     * @throws \ReflectionException
+     * @test
+     * @dataProvider provideVersions
+     * @param string $version
      */
-    private function createSut(WebVersions $webVersions, Dirs $dirs): Cache
+    public function I_will_get_cache_dir_depending_on_current_version(string $version): void
     {
-        $cache = $this->mockery(static::getSutClass());
-        $cacheReflection = new \ReflectionClass(static::getSutClass());
-        $constructor = $cacheReflection->getMethod('__construct');
-        $constructor->invoke($cache, $webVersions, $dirs, false, 'foo');
-        $cache->makePartial();
+        $webVersions = $this->mockery($this->getWebVersionsClass());
+        $webVersions->shouldReceive('getCurrentMinorVersion')
+            ->andReturn($version);
+        // using temporary NON-existing dir to use more code
+        $dirs = $this->createDirs($this->getTemporaryRootDir());
+        /** @var WebVersions $webVersions */
+        $cacheClass = $this->getCacheClass();
+        /** @var Cache $cache */
+        $cache = new $cacheClass($webVersions, $dirs, $this->createRequest(), $this->createGit(), false, 'foo');
+        self::assertSame($dirs->getCacheRoot() . '/' . $version, $cache->getCacheDir());
+    }
 
-        return $cache;
+    protected function getTemporaryRootDir(): string
+    {
+        if ($this->temporaryRootDir === null) {
+            $this->temporaryRootDir = \sys_get_temp_dir() . '/' . \uniqid(StringTools::getClassBaseName(static::class), true);
+        }
+
+        return $this->temporaryRootDir;
+    }
+
+    public function provideVersions(): array
+    {
+        return [
+            ['master'],
+            ['9.8.7'],
+        ];
     }
 }
