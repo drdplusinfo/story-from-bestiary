@@ -9,9 +9,11 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
 /**
  * The most general base class from which all objects in a Document inherit.
  *
+ * @property-read Attr[] $attributes
  * @property string $className Gets and sets the value of the class attribute
  * @property-read TokenList $classList Returns a live TokenList collection of
  * the class attributes of the element
+ * @property bool $checked Indicates whether the element is checked or not
  * @property string $value Gets or sets the value of the element according to
  * its element type
  * @property string $id Gets or sets the value of the id attribute
@@ -21,12 +23,15 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
  * element and its descendants. It can be set to replace the element with nodes
  * parsed from the given string
  * @property string $innerText
+ * @property-read StringMap $dataset
  */
 class Element extends DOMElement {
 	use LiveProperty, NonDocumentTypeChildNode, ChildNode, ParentNode;
 
 	/** @var  TokenList */
-	private $liveProperty_classList;
+	protected $liveProperty_classList;
+	/** @var StringMap */
+	protected $liveProperty_dataset;
 
 	/**
 	 * returns true if the element would be selected by the specified selector
@@ -183,6 +188,44 @@ class Element extends DOMElement {
 		return $this->textContent;
 	}
 
+	public function prop_get_dataset():StringMap {
+		if(empty($this->liveProperty_dataset)) {
+			$this->liveProperty_dataset = $this->createDataset();
+		}
+
+		return $this->liveProperty_dataset;
+	}
+
+	public function prop_get_checked():bool {
+		return $this->hasAttribute("checked");
+	}
+
+	public function prop_set_checked(bool $checked):bool {
+		if ($checked) {
+			if ($this->getAttribute("type") === "radio") {
+// TODO: Use `form` attribute when implemented: https://github.com/PhpGt/Dom/issues/161
+				$parentForm = $this->closest("form");
+				if (!is_null($parentForm)) {
+					self::formRemoveCheckedAttributeFromElementsWithName($parentForm, $this->getAttribute("name"));
+				}
+			}
+
+			$this->setAttribute("checked", "checked");
+		}
+		else {
+			$this->removeAttribute("checked");
+		}
+
+		return $this->checked;
+	}
+
+	protected function createDataset():StringMap {
+		return new StringMap(
+			$this,
+			$this->attributes
+		);
+	}
+
 	protected function getRootDocument():DOMDocument {
 		return $this->ownerDocument;
 	}
@@ -240,5 +283,11 @@ class Element extends DOMElement {
 
 	static public function isSelectOptionSelected(Element $option) {
 		return $option->hasAttribute('selected') && $option->getAttribute('selected');
+	}
+
+	static public function formRemoveCheckedAttributeFromElementsWithName(Element $form, string $name):void {
+		foreach($form->querySelectorAll('[name="' . $name . '"]') as $element) {
+			$element->removeAttribute('checked');
+		}
 	}
 }

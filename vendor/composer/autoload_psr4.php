@@ -6,14 +6,13 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-docblock/src'),
+    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
-    'Tests\\' => array($vendorDir . '/drdplus/frontend-skeleton/Tests'),
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Gt\\Dom\\' => array($vendorDir . '/phpgt/dom/src'),
-    'Granam\\' => array($vendorDir . '/granam/strict-object/Granam', $vendorDir . '/granam/tools/Granam', $vendorDir . '/granam/scalar/Granam', $vendorDir . '/granam/exceptions-hierarchy/Granam', $vendorDir . '/granam/string/Granam'),
-    'DrdPlus\\' => array($baseDir . '/DrdPlus', $vendorDir . '/drdplus/frontend-skeleton/DrdPlus', $vendorDir . '/drdplus/rules-skeleton/DrdPlus'),
+    'Granam\\' => array($vendorDir . '/granam/exceptions-hierarchy/Granam', $vendorDir . '/granam/scalar/Granam', $vendorDir . '/granam/strict-object/Granam', $vendorDir . '/granam/string/Granam', $vendorDir . '/granam/tools/Granam'),
+    'DrdPlus\\' => array($baseDir . '/DrdPlus', $vendorDir . '/drdplus/rules-skeleton/DrdPlus'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'DeviceDetector\\' => array($vendorDir . '/piwik/device-detector'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),

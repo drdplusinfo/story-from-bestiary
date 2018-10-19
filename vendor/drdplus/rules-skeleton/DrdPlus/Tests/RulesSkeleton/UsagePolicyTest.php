@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
-use DrdPlus\FrontendSkeleton\CookiesService;
+use DrdPlus\RulesSkeleton\CookiesService;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use PHPUnit\Framework\TestCase;

@@ -1,12 +1,25 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-/**
- * @method TestsConfiguration getTestsConfiguration
- */
-class GraphicsTest extends \DrdPlus\Tests\FrontendSkeleton\GraphicsTest
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+
+class GraphicsTest extends AbstractContentTest
 {
-    use Partials\AbstractContentTestTrait;
+    /**
+     * @test
+     */
+    public function Main_page_has_monochrome_background_image(): void
+    {
+        self::assertFileExists($this->getDocumentRoot() . '/images/main-background.png');
+    }
+
+    /**
+     * @test
+     */
+    public function Main_page_uses_generic_image_for_background(): void
+    {
+        self::assertFileExists($this->getDocumentRoot() . '/images/generic/skeleton/rules-background.png');
+    }
 
     /**
      * @test

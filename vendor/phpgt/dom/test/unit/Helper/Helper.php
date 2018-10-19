@@ -39,7 +39,7 @@ HTML;
 	<p>This is so we can test different traversal methods.</p>
 	<p class="plug">This package is a part of the phpgt webengine.</p>
 	<h2 id="who" class="h-who m-before-p m-test">Who made this?</h2>
-	<p class="link-to-twitter">
+	<p class="link-to-twitter" data-social="twitter" data-social-username="g105b">
 		<a href="https://twitter.com/g105b">Greg Bowler</a> started this project
 		to bring modern DOM techniques to the server side.
 	</p>
@@ -229,6 +229,37 @@ HTML;
 	<h1>ITEM NAME</h1>
 	<h2>£0.00</h2>
 </a>
+HTML;
+
+// Ethnic groups taken from UK Government census data:
+// https://en.wikipedia.org/wiki/Classification_of_ethnicity_in_the_United_Kingdom
+const HTML_FORM_WITH_RADIOS = <<<HTML
+<!doctype>
+<form>
+	<p>What is your ethnic group?</p>
+	<label>
+		<span>White</span>
+		<input type="radio" name="ethnic-group" value="white" />
+	</label>
+	<label>
+		<span>Mixed / multiple ethnic groups</span>
+		<input type="radio" name="ethnic-group" value="mixed" />
+	</label>
+	<label>
+		<span>Asian / Asian British</span>
+		<input type="radio" name="ethnic-group" value="asian" />
+	</label>
+	<label>
+		<span>Black / African / Caribbean / Black British</span>
+		<input type="radio" name="ethnic-group" value="black" />
+	</label>
+	<label>
+		<span>Other ethnic group</span>
+		<input type="radio" name="ethnic-group" value="other" />
+	</label>
+	
+	<button name="do" value="submit-ethnicity">Submit</button>
+</form>
 HTML;
 
 }

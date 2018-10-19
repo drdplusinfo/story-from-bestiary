@@ -4,15 +4,12 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
-use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTestTrait;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLCollection;
 
 class CalculationsTest extends AbstractContentTest
 {
-    use AbstractContentTestTrait;
-
     /**
      * @test
      */

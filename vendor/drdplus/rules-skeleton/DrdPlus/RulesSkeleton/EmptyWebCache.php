@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DrdPlus\FrontendSkeleton\Cache;
-
 class EmptyWebCache extends Cache
 {
     public function isCacheValid(): bool

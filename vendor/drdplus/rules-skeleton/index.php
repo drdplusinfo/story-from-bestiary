@@ -12,13 +12,20 @@ require_once $documentRoot . '/vendor/autoload.php';
 
 $dirs = new \DrdPlus\RulesSkeleton\Dirs($documentRoot);
 $htmlHelper = $htmlHelper ?? \DrdPlus\RulesSkeleton\HtmlHelper::createFromGlobals($dirs);
-if (PHP_SAPI !== 'cli') {
-    \DrdPlus\FrontendSkeleton\TracyDebugger::enable($htmlHelper->isInProduction());
+if (\PHP_SAPI !== 'cli') {
+    \DrdPlus\RulesSkeleton\TracyDebugger::enable($htmlHelper->isInProduction());
 }
 $configuration = \DrdPlus\RulesSkeleton\Configuration::createFromYml($dirs);
 $servicesContainer = new \DrdPlus\RulesSkeleton\ServicesContainer($configuration, $htmlHelper);
+
 $controller = $controller ?? new \DrdPlus\RulesSkeleton\RulesController($servicesContainer);
 $controller->sendCustomHeaders();
 
-/** @noinspection PhpIncludeInspection */
-require $dirs->getVendorRoot() . '/drdplus/frontend-skeleton/index.php';
+if ($controller->isRequestedWebVersionUpdate()) {
+    $controller->updateWebVersion();
+    echo 'OK';
+
+    return;
+}
+$controller->persistCurrentVersion();
+echo $controller->getContent()->getStringContent();

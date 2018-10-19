@@ -1,18 +1,106 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\FrontendSkeleton\HtmlDocument;
+use DrdPlus\RulesSkeleton\HtmlDocument;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Redirect;
+use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use Gt\Dom\Element;
+use Gt\Dom\TokenList;
 use Mockery\MockInterface;
 
-class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendControllerTest
+class RulesControllerTest extends AbstractContentTest
 {
-    use Partials\AbstractContentTestTrait;
+    /**
+     * @test
+     */
+    public function I_can_add_body_class(): void
+    {
+        $controller = $this->createController();
+        self::assertSame([], $controller->getBodyClasses());
+        $controller->addBodyClass('rumbling');
+        $controller->addBodyClass('cracking');
+        self::assertSame(['rumbling', 'cracking'], $controller->getBodyClasses());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_ask_if_menu_is_fixed(): void
+    {
+        $configurationWithoutFixedMenu = $this->createCustomConfiguration([Configuration::WEB => [Configuration::MENU_POSITION_FIXED => false]]);
+        self::assertFalse($configurationWithoutFixedMenu->isMenuPositionFixed(), 'Expected configuration with menu position not fixed');
+        $controller = $this->createController(null, $configurationWithoutFixedMenu);
+        self::assertFalse($controller->isMenuPositionFixed(), 'Contacts are expected to be simply on top by default');
+        if ($this->isSkeletonChecked()) {
+            /** @var Element $menu */
+            $menu = $this->getHtmlDocument()->getElementById('menu');
+            self::assertNotEmpty($menu, 'Contacts are missing');
+            self::assertTrue($menu->classList->contains('top'), 'Contacts should be positioned on top');
+            self::assertFalse($menu->classList->contains('fixed'), 'Contacts should not be fixed as controller does not say so');
+        }
+        $configurationWithFixedMenu = $this->createCustomConfiguration([Configuration::WEB => [Configuration::MENU_POSITION_FIXED => true]]);
+        self::assertTrue($configurationWithFixedMenu->isMenuPositionFixed(), 'Expected configuration with menu position fixed');
+        $controller = $this->createController(null, $configurationWithFixedMenu);
+        self::assertTrue($controller->isMenuPositionFixed(), 'Menu should be fixed');
+        if ($this->isSkeletonChecked()) {
+            $content = $this->fetchNonCachedContent($controller);
+            $htmlDocument = new HtmlDocument($content);
+            $menu = $htmlDocument->getElementById('menu');
+            self::assertNotEmpty($menu, 'Contacts are missing');
+            self::assertTrue($menu->classList->contains('top'), 'Contacts should be positioned on top');
+            self::assertTrue(
+                $menu->classList->contains('fixed'),
+                'Contacts should be fixed as controller says so;'
+                . ' current classes are ' . \implode(',', $this->tokenListToArray($menu->classList))
+            );
+        }
+    }
+
+    private function tokenListToArray(TokenList $tokenList): array
+    {
+        $array = [];
+        for ($index = 0; $index < $tokenList->length; $index++) {
+            $array[] = $tokenList->item($index);
+        }
+
+        return $array;
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_hide_home_button(): void
+    {
+        $configurationWithShownHomeButton = $this->createCustomConfiguration([Configuration::WEB => [Configuration::SHOW_HOME_BUTTON => true]]);
+        self::assertTrue($configurationWithShownHomeButton->isShowHomeButton(), 'Expected configuration with shown home button');
+        $controller = $this->createController(null, $configurationWithShownHomeButton);
+        self::assertTrue($controller->isShownHomeButton(), 'Home button should be set as shown');
+        if ($this->isSkeletonChecked()) {
+            /** @var Element $homeButton */
+            $homeButton = $this->getHtmlDocument()->getElementById('home_button');
+            self::assertNotEmpty($homeButton, 'Home button is missing');
+            self::assertSame(
+                HtmlHelper::turnToLocalLink('https://www.drdplus.info'),
+                $homeButton->getAttribute('href'), 'Link of home button should lead to home'
+            );
+        }
+        $configurationWithHiddenHomeButton = $this->createCustomConfiguration([Configuration::WEB => [Configuration::SHOW_HOME_BUTTON => false]]);
+        self::assertFalse($configurationWithHiddenHomeButton->isShowHomeButton(), 'Expected configuration with hidden home button');
+        $controller = $this->createController(null, $configurationWithHiddenHomeButton);
+        self::assertFalse($controller->isShownHomeButton(), 'Home button should be hidden');
+        if ($this->isSkeletonChecked()) {
+            $content = $this->fetchNonCachedContent($controller);
+            $htmlDocument = new HtmlDocument($content);
+            $homeButton = $htmlDocument->getElementById('home_button');
+            self::assertEmpty($homeButton, 'Home button should not be used at all');
+        }
+    }
 
     /**
      * @test
@@ -84,10 +172,12 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
 
     /**
      * @test
+     * @dataProvider provideRequestType
      * @backupGlobals enabled
+     * @param string $requestType
      * @throws \ReflectionException
      */
-    public function I_will_be_redirected_via_html_meta_on_trial(): void
+    public function I_will_be_redirected_via_html_meta_on_trial(string $requestType): void
     {
         self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected so far');
         $this->passOut();
@@ -96,7 +186,17 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
         $trialExpiredAt = $now + 240 + 1;
         $trialExpiredAtSecondAfter = $trialExpiredAt++;
         if ($this->isSkeletonChecked() || $this->getTestsConfiguration()->hasProtectedAccess()) {
-            $_POST['trial'] = 1; // can be solved by POST
+            self::assertNull(
+                $_GET[Request::TRIAL] ?? $_POST[Request::TRIAL] ?? $_COOKIE[Request::TRIAL] ?? null,
+                'Globals have not been reset'
+            );
+            if ($requestType === 'get') {
+                $_GET[Request::TRIAL] = '1';
+            } elseif ($requestType === 'post') {
+                $_POST[Request::TRIAL] = '1';
+            } else {
+                $_COOKIE[Request::TRIAL] = '1';
+            }
         } else { // just a little hack
             $controller = $this->createController();
             $controllerReflection = new \ReflectionClass($controller);
@@ -114,4 +214,31 @@ class RulesControllerTest extends \DrdPlus\Tests\FrontendSkeleton\FrontendContro
             $metaRefresh->getAttribute('content')
         );
     }
+
+    public function provideRequestType(): array
+    {
+        return [
+            ['get'],
+            ['post'],
+            ['cookie'],
+        ];
+    }
+
+    /**
+     * @test
+     * @backupGlobals enabled
+     */
+    public function I_will_not_be_redirected_as_owner_via_html_meta_even_on_trial(): void
+    {
+        self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected');
+        $this->passOut();
+        self::assertNull($_POST[Request::TRIAL] ?? null, 'Globals have not been reset');
+        $this->createServicesContainer()->getUsagePolicy()->activateTrial(new \DateTime('+1 year'));
+        $_POST[Request::TRIAL] = '1';
+        $content = $this->fetchNonCachedContent();
+        $document = new HtmlDocument($content);
+        $metaRefreshes = $this->getMetaRefreshes($document);
+        self::assertCount(0, $metaRefreshes, 'No meta tag with refresh meaning expected as we are owners');
+    }
+
 }

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-use DrdPlus\FrontendSkeleton\Web\Body;
-use DrdPlus\FrontendSkeleton\Web\WebFiles;
 use DrdPlus\RulesSkeleton\Dirs;
 
 class PdfBody extends Body

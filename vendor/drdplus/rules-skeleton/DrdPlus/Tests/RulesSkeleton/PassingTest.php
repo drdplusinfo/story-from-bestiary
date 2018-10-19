@@ -3,19 +3,12 @@ namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\UsagePolicy;
-use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
-use DrdPlus\Tests\FrontendSkeleton\RequestTest;
-use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 use Gt\Dom\HTMLDocument;
 
-/**
- * @method TestsConfigurationReader getTestsConfiguration
- */
 class PassingTest extends AbstractContentTest
 {
-
-    use Partials\AbstractContentTestTrait;
 
     /**
      * @test

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use DrdPlus\FrontendSkeleton\CookiesService;
 use Granam\Strict\Object\StrictObject;
 
 class UsagePolicy extends StrictObject
@@ -22,17 +21,13 @@ class UsagePolicy extends StrictObject
 
     /**
      * @param string $articleName
-     * @param \DrdPlus\FrontendSkeleton\Request $request
+     * @param \DrdPlus\RulesSkeleton\Request $request
      * @param CookiesService $cookiesService
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameCanNotBeEmptyForUsagePolicy
      * @throws \DrdPlus\RulesSkeleton\Exceptions\ArticleNameShouldBeValidName
-     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CookieCanNotBeSet
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
      */
-    public function __construct(
-        string $articleName,
-        \DrdPlus\FrontendSkeleton\Request $request,
-        CookiesService $cookiesService
-    )
+    public function __construct(string $articleName, Request $request, CookiesService $cookiesService)
     {
         $articleName = \trim($articleName);
         if ($articleName === '') {
@@ -56,7 +51,7 @@ class UsagePolicy extends StrictObject
      * @param string $value
      * @param \DateTime|null $expiresAt
      * @return bool
-     * @throws \DrdPlus\FrontendSkeleton\Exceptions\CookieCanNotBeSet
+     * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
      */
     private function setCookie(string $cookieName, string $value, ?\DateTime $expiresAt): bool
     {

@@ -1,12 +1,10 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
 class DevModeTest extends AbstractContentTest
 {
-
-    use Partials\AbstractContentTestTrait;
 
     /**
      * @test

@@ -1,13 +1,28 @@
 <?php
+declare(strict_types=1);
+
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\FrontendSkeleton\CookiesService;
+use DrdPlus\RulesSkeleton\CookiesService;
+use Granam\Tests\Tools\TestWithMockery;
 
-class CookiesServiceTest extends \DrdPlus\Tests\FrontendSkeleton\CookiesServiceTest
+class CookiesServiceTest extends TestWithMockery
 {
-    protected static function getSutClass(string $sutTestClass = null, string $regexp = '~\\\Tests(.+)Test$~'): string
+    /**
+     * @test
+     * @backupGlobals enabled
+     */
+    public function I_can_set_get_and_delete_cookie(): void
     {
-        return CookiesService::class;
+        $cookiesServiceClass = static::getSutClass();
+        /** @var CookiesService $cookiesService */
+        $cookiesService = new $cookiesServiceClass();
+        self::assertNull($cookiesService->getCookie('foo'));
+        self::assertTrue($cookiesService->setCookie('foo', 'bar'));
+        self::assertSame('bar', $cookiesService->getCookie('foo'));
+        self::assertSame('bar', $_COOKIE['foo'] ?? false);
+        self::assertTrue($cookiesService->deleteCookie('foo'));
+        self::assertNull($cookiesService->getCookie('foo'));
+        self::assertFalse(\array_key_exists('foo', $_COOKIE), 'Cookie should be removed from global array as well');
     }
-
 }

@@ -3,18 +3,15 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\FrontendSkeleton\HtmlDocument;
+use DrdPlus\RulesSkeleton\HtmlDocument;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Redirect;
 use DrdPlus\RulesSkeleton\RulesController;
-use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
-use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTestTrait;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 
 class TrialTest extends AbstractContentTest
 {
-    use AbstractContentTestTrait;
-
     /**
      * @test
      * @throws \ReflectionException

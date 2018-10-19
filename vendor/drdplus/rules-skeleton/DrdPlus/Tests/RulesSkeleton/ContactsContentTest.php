@@ -3,16 +3,11 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 
-/**
- * @method TestsConfiguration getTestsConfiguration
- */
 class ContactsContentTest extends AbstractContentTest
 {
-    use Partials\AbstractContentTestTrait;
-
     /**
      * @test
      */

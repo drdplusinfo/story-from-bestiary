@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\Tests\FrontendSkeleton\Exceptions\InvalidUrl;
+use DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidUrl;
 use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
+use Granam\Scalar\Tools\ToString;
+use Granam\Strict\Object\StrictObject;
 
-class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfiguration implements TestsConfigurationReader
+class TestsConfiguration extends StrictObject implements TestsConfigurationReader
 {
     public const LICENCE_BY_ACCESS = '*by access*';
     public const LICENCE_MIT = 'MIT';
@@ -15,6 +17,42 @@ class TestsConfiguration extends \DrdPlus\Tests\FrontendSkeleton\TestsConfigurat
 
     // every setting SHOULD be strict (expecting instead of ignoring)
 
+    private const DEFAULT_ALLOWED_CALCULATION_ID_PREFIXES = ['Hod proti', 'Hod na', 'Výpočet'];
+
+    /** @var string */
+    private $localUrl;
+    /** @var bool */
+    private $hasTables = true;
+    /** @var array|string[] */
+    private $someExpectedTableIds = [];
+    /** @var bool */
+    private $hasExternalAnchorsWithHashes = true;
+    /** @var bool */
+    private $hasMoreVersions = true;
+    /** @var bool */
+    private $hasCustomBodyContent = true;
+    /** @var bool */
+    private $hasNotes = true;
+    /** @var bool */
+    private $hasIds = true;
+    /** @var bool */
+    private $hasLocalLinks = true;
+    /** @var bool */
+    private $hasLinksToAltar = true;
+    /** @var string */
+    private $expectedWebName = 'HTML kostra pro DrD+ webový obsah';
+    /** @var string */
+    private $expectedPageTitle = '🔱 HTML kostra pro DrD+ webový obsah';
+    /** @var string */
+    private $expectedGoogleAnalyticsId = 'UA-121206931-1';
+    /** @var array|string[] */
+    private $allowedCalculationIdPrefixes = self::DEFAULT_ALLOWED_CALCULATION_ID_PREFIXES;
+    /** @var string */
+    private $expectedLastVersion = '1.0';
+    /** @var string */
+    private $expectedLastUnstableVersion = 'master';
+    /** @var bool */
+    private $hasHeadings = true;
     /** @var string */
     private $publicUrl;
     /** @var bool */
@@ -79,10 +117,343 @@ HTML
         if (!$this->isLocalLinkAccessible($localUrl)) {
             throw new Exceptions\InvalidLocalUrl("Given local URL can not be reached or is not local: '$localUrl'");
         }
-        parent::__construct($localUrl);
+        $localUrl = $this->addPortToLocalUrl($localUrl);
+        $this->guardValidUrl($localUrl);
+        $this->localUrl = $localUrl;
     }
 
-    protected function isLocalLinkAccessible(string $localUrl): bool
+    private function addPortToLocalUrl(string $localUrl)
+    {
+        if (\preg_match('~:\d+$~', $localUrl)) {
+            return $localUrl; // already with port
+        }
+
+        return $localUrl . ':88';
+    }
+
+    /**
+     * @param string $url
+     * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\InvalidUrl
+     */
+    private function guardValidUrl(string $url): void
+    {
+        if (!\filter_var($url, \FILTER_VALIDATE_URL)) {
+            throw new Exceptions\InvalidUrl("Given URL is not valid: '$url'");
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocalUrl(): string
+    {
+        return $this->localUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasTables(): bool
+    {
+        return $this->hasTables;
+    }
+
+    /**
+     * @return TestsConfiguration
+     */
+    public function disableHasTables(): TestsConfiguration
+    {
+        $this->hasTables = false;
+
+        return $this;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getSomeExpectedTableIds(): array
+    {
+        return $this->someExpectedTableIds;
+    }
+
+    /**
+     * @param array|string[] $someExpectedTableIds
+     * @return TestsConfiguration
+     */
+    public function setSomeExpectedTableIds(array $someExpectedTableIds): TestsConfiguration
+    {
+        $this->someExpectedTableIds = [];
+        foreach ($someExpectedTableIds as $someExpectedTableId) {
+            $this->someExpectedTableIds[] = ToString::toString($someExpectedTableId);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasExternalAnchorsWithHashes(): bool
+    {
+        return $this->hasExternalAnchorsWithHashes;
+    }
+
+    /**
+     * @return TestsConfiguration
+     */
+    public function disableHasExternalAnchorsWithHashes(): TestsConfiguration
+    {
+        $this->hasExternalAnchorsWithHashes = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMoreVersions(): bool
+    {
+        return $this->hasMoreVersions;
+    }
+
+    /**
+     * @return TestsConfiguration
+     */
+    public function disableHasMoreVersions(): TestsConfiguration
+    {
+        $this->hasMoreVersions = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCustomBodyContent(): bool
+    {
+        return $this->hasCustomBodyContent;
+    }
+
+    /**
+     * @return TestsConfiguration
+     */
+    public function disableHasCustomBodyContent(): TestsConfiguration
+    {
+        $this->hasCustomBodyContent = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasNotes(): bool
+    {
+        return $this->hasNotes;
+    }
+
+    /**
+     * @return TestsConfiguration
+     */
+    public function disableHasNotes(): TestsConfiguration
+    {
+        $this->hasNotes = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasIds(): bool
+    {
+        return $this->hasIds;
+    }
+
+    /**
+     * @return TestsConfiguration
+     */
+    public function disableHasIds(): TestsConfiguration
+    {
+        $this->hasIds = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLocalLinks(): bool
+    {
+        return $this->hasLocalLinks;
+    }
+
+    /**
+     * @return TestsConfiguration
+     */
+    public function disableHasLocalLinks(): TestsConfiguration
+    {
+        $this->hasLocalLinks = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLinksToAltar(): bool
+    {
+        return $this->hasLinksToAltar;
+    }
+
+    /**
+     * @return TestsConfiguration
+     */
+    public function disableHasLinksToAltar(): TestsConfiguration
+    {
+        $this->hasLinksToAltar = false;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedWebName(): string
+    {
+        return $this->expectedWebName;
+    }
+
+    /**
+     * @param string $expectedWebName
+     * @return TestsConfiguration
+     */
+    public function setExpectedWebName(string $expectedWebName): TestsConfiguration
+    {
+        $this->expectedWebName = $expectedWebName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedPageTitle(): string
+    {
+        return $this->expectedPageTitle;
+    }
+
+    /**
+     * @param string $expectedPageTitle
+     * @return TestsConfiguration
+     */
+    public function setExpectedPageTitle(string $expectedPageTitle): TestsConfiguration
+    {
+        $this->expectedPageTitle = $expectedPageTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedGoogleAnalyticsId(): string
+    {
+        return $this->expectedGoogleAnalyticsId;
+    }
+
+    /**
+     * @param string $expectedGoogleAnalyticsId
+     * @return TestsConfiguration
+     */
+    public function setExpectedGoogleAnalyticsId(string $expectedGoogleAnalyticsId): TestsConfiguration
+    {
+        $this->expectedGoogleAnalyticsId = $expectedGoogleAnalyticsId;
+
+        return $this;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getAllowedCalculationIdPrefixes(): array
+    {
+        return $this->allowedCalculationIdPrefixes;
+    }
+
+    /**
+     * @param array|string[] $allowedCalculationIdPrefixes
+     * @return TestsConfiguration
+     * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\AllowedCalculationPrefixShouldStartByUpperLetter
+     */
+    public function setAllowedCalculationIdPrefixes(array $allowedCalculationIdPrefixes): TestsConfiguration
+    {
+        $this->allowedCalculationIdPrefixes = [];
+        foreach ($allowedCalculationIdPrefixes as $allowedCalculationIdPrefix) {
+            $this->addAllowedCalculationIdPrefix($allowedCalculationIdPrefix);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $allowedCalculationIdPrefix
+     * @return TestsConfiguration
+     * @throws \DrdPlus\Tests\RulesSkeleton\Exceptions\AllowedCalculationPrefixShouldStartByUpperLetter
+     */
+    public function addAllowedCalculationIdPrefix(string $allowedCalculationIdPrefix): TestsConfiguration
+    {
+        if (!\preg_match('~^[[:upper:]]~u', $allowedCalculationIdPrefix)) {
+            throw new Exceptions\AllowedCalculationPrefixShouldStartByUpperLetter(
+                "First letter of allowed calculation prefix should be uppercase, got '$allowedCalculationIdPrefix'"
+            );
+        }
+        $this->allowedCalculationIdPrefixes[] = $allowedCalculationIdPrefix;
+
+        return $this;
+    }
+
+    /**
+     * Latest stable version if available, master if not
+     * @return string
+     */
+    public function getExpectedLastVersion(): string
+    {
+        return $this->expectedLastVersion;
+    }
+
+    public function setExpectedLastVersion(string $expectedLastVersion): TestsConfiguration
+    {
+        $this->expectedLastVersion = $expectedLastVersion;
+
+        return $this;
+    }
+
+    public function getExpectedLastUnstableVersion(): string
+    {
+        return $this->expectedLastUnstableVersion;
+    }
+
+    public function setExpectedLastUnstableVersion(string $expectedLastUnstableVersion): TestsConfiguration
+    {
+        $this->expectedLastUnstableVersion = $expectedLastUnstableVersion;
+
+        return $this;
+    }
+
+    public function hasHeadings(): bool
+    {
+        return $this->hasHeadings;
+    }
+
+    public function disableHasHeadings(): TestsConfiguration
+    {
+        $this->hasHeadings = false;
+
+        return $this;
+    }
+
+    private function isLocalLinkAccessible(string $localUrl): bool
     {
         $host = \parse_url($localUrl, \PHP_URL_HOST);
 

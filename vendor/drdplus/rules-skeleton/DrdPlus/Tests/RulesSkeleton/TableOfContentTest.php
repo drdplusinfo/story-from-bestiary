@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
-use DrdPlus\Tests\FrontendSkeleton\Partials\AbstractContentTest;
+use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 
 class TableOfContentTest extends AbstractContentTest
 {
