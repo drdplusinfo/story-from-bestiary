@@ -10,7 +10,7 @@ use Granam\Strict\Object\StrictObject;
 /**
  * Gives files to serve on frontend (html, php or md)
  */
-class   WebFiles extends StrictObject implements \IteratorAggregate
+class WebFiles extends StrictObject implements \IteratorAggregate
 {
     /** @var Dirs */
     private $dirs;

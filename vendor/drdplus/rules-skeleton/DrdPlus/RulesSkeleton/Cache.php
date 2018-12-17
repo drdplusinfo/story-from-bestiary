@@ -55,9 +55,6 @@ class Cache extends StrictObject
                 if (!@\mkdir($cacheRoot, 0775, true /* with parents */) && !\is_dir($cacheRoot)) {
                     throw new \RuntimeException('Can not create directory for page cache ' . $cacheRoot);
                 }
-                if ($this->request->isCliRequest()) {
-                    \chgrp($cacheRoot, 'www-data');
-                }
                 \chmod($cacheRoot, 0775); // because umask could suppress it
             }
             $this->cacheRoots[$currentVersion] = $cacheRoot;

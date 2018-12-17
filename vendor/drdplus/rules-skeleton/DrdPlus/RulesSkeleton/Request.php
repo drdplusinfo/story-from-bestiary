@@ -70,6 +70,10 @@ class Request extends StrictObject
         return '?' . \http_build_query($queryParameters);
     }
 
+    /**
+     * @param string $name
+     * @return null|string|array
+     */
     public function getValue(string $name)
     {
         return $_POST[$name] ?? $_GET[$name] ?? $_COOKIE[$name] ?? null;

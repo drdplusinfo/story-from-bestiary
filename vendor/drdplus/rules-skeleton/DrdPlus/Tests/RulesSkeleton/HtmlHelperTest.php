@@ -13,7 +13,7 @@ class HtmlHelperTest extends AbstractContentTest
 {
     /**
      * @test
-     * @dataProvider providePublicAndLocalLinks
+     * @dataProvider providePublicToLocalLinks
      * @param string $publicLink
      * @param string $expectedLocalLink
      */
@@ -22,11 +22,12 @@ class HtmlHelperTest extends AbstractContentTest
         self::assertSame($expectedLocalLink, HtmlHelper::turnToLocalLink($publicLink));
     }
 
-    public function providePublicAndLocalLinks(): array
+    public function providePublicToLocalLinks(): array
     {
         return [
-            ['https://www.drdplus.info', 'http://www.drdplus.loc:88'],
-            ['https://hranicar.drdplus.info', 'http://hranicar.drdplus.loc:88'],
+            ['https://www.drdplus.info', 'http://www.drdplus.loc'],
+            ['https://hranicar.drdplus.info', 'http://hranicar.drdplus.loc'],
+            ['https://bestiar.ppj.drdplus.info', 'http://bestiar.ppj.drdplus.loc'],
         ];
     }
 
@@ -240,11 +241,11 @@ HTML
         $htmlHelper->makeExternalDrdPlusLinksLocal($htmlDocument);
         $localizedLink = $htmlDocument->getElementById('single_link');
         self::assertNotEmpty($localizedLink, 'No element found by ID single_link');
-        self::assertSame('http://foo-bar.baz.drdplus.loc:88', $localizedLink->getAttribute('href'));
+        self::assertSame('http://foo-bar.baz.drdplus.loc', $localizedLink->getAttribute('href'));
         /** @var Element $localizedLocalLikeLink */
         $localizedLocalLikeLink = $htmlDocument->getElementById('marked_as_local');
         self::assertNotEmpty($localizedLocalLikeLink, 'No element found by ID marked_as_local');
-        self::assertSame('http://qux.drdplus.loc:88', $localizedLocalLikeLink->getAttribute('href'));
+        self::assertSame('http://qux.drdplus.loc', $localizedLocalLikeLink->getAttribute('href'));
     }
 
     /**

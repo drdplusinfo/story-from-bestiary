@@ -117,18 +117,8 @@ HTML
         if (!$this->isLocalLinkAccessible($localUrl)) {
             throw new Exceptions\InvalidLocalUrl("Given local URL can not be reached or is not local: '$localUrl'");
         }
-        $localUrl = $this->addPortToLocalUrl($localUrl);
         $this->guardValidUrl($localUrl);
         $this->localUrl = $localUrl;
-    }
-
-    private function addPortToLocalUrl(string $localUrl)
-    {
-        if (\preg_match('~:\d+$~', $localUrl)) {
-            return $localUrl; // already with port
-        }
-
-        return $localUrl . ':88';
     }
 
     /**

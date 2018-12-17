@@ -59,8 +59,7 @@ class SourceCodeLinksTest extends AbstractContentTest
     }
 
     /**
-     * @param string $link like
-     *     https://github.com/jaroslavtyc/drdplus-professions/blob/master/DrdPlus/Professions/Priest.php
+     * @param string $link like https://github.com/jaroslavtyc/drdplus-professions/blob/master/DrdPlus/Professions/Priest.php
      * @return string
      */
     private function toLocalPath(string $link): string
@@ -70,7 +69,7 @@ class SourceCodeLinksTest extends AbstractContentTest
         $withLocalSubDirs = \preg_replace('~^granam-~', '/granam/', $withoutGithubSpecifics);
         $withLocalSubDirs = \preg_replace('~^drdplus-~', '/drdplus/', $withLocalSubDirs);
         $localProjectsRootDir = '/home/jaroslav/projects';
-        $localPath = $localProjectsRootDir . '/' . $withLocalSubDirs;
+        $localPath = $localProjectsRootDir . '/' . \ltrim($withLocalSubDirs, '/');
         if (\file_exists($localPath) && \preg_match('~(?<type>blob|tree)/master/~', $withoutWebRoot, $matches)) {
             if (\is_file($localPath)) {
                 self::assertSame('blob', $matches['type'], "File $localPath should be linked as blob, not " . $matches['type']);
