@@ -1,7 +1,6 @@
 <?php
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\HtmlDocument;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Redirect;
@@ -10,6 +9,7 @@ use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
 use Gt\Dom\TokenList;
 use Mockery\MockInterface;
@@ -35,23 +35,23 @@ class RulesControllerTest extends AbstractContentTest
     {
         $configurationWithoutFixedMenu = $this->createCustomConfiguration([Configuration::WEB => [Configuration::MENU_POSITION_FIXED => false]]);
         self::assertFalse($configurationWithoutFixedMenu->isMenuPositionFixed(), 'Expected configuration with menu position not fixed');
-        $controller = $this->createController(null, $configurationWithoutFixedMenu);
+        $controller = $this->createController($configurationWithoutFixedMenu);
         self::assertFalse($controller->isMenuPositionFixed(), 'Contacts are expected to be simply on top by default');
         if ($this->isSkeletonChecked()) {
             /** @var Element $menu */
-            $menu = $this->getHtmlDocument()->getElementById('menu');
+            $menu = $this->getHtmlDocument()->getElementById(HtmlHelper::ID_MENU);
             self::assertNotEmpty($menu, 'Contacts are missing');
             self::assertTrue($menu->classList->contains('top'), 'Contacts should be positioned on top');
             self::assertFalse($menu->classList->contains('fixed'), 'Contacts should not be fixed as controller does not say so');
         }
         $configurationWithFixedMenu = $this->createCustomConfiguration([Configuration::WEB => [Configuration::MENU_POSITION_FIXED => true]]);
         self::assertTrue($configurationWithFixedMenu->isMenuPositionFixed(), 'Expected configuration with menu position fixed');
-        $controller = $this->createController(null, $configurationWithFixedMenu);
+        $controller = $this->createController($configurationWithFixedMenu);
         self::assertTrue($controller->isMenuPositionFixed(), 'Menu should be fixed');
         if ($this->isSkeletonChecked()) {
             $content = $this->fetchNonCachedContent($controller);
             $htmlDocument = new HtmlDocument($content);
-            $menu = $htmlDocument->getElementById('menu');
+            $menu = $htmlDocument->getElementById(HtmlHelper::ID_MENU);
             self::assertNotEmpty($menu, 'Contacts are missing');
             self::assertTrue($menu->classList->contains('top'), 'Contacts should be positioned on top');
             self::assertTrue(
@@ -74,42 +74,13 @@ class RulesControllerTest extends AbstractContentTest
 
     /**
      * @test
-     */
-    public function I_can_hide_home_button(): void
-    {
-        $configurationWithShownHomeButton = $this->createCustomConfiguration([Configuration::WEB => [Configuration::SHOW_HOME_BUTTON => true]]);
-        self::assertTrue($configurationWithShownHomeButton->isShowHomeButton(), 'Expected configuration with shown home button');
-        $controller = $this->createController(null, $configurationWithShownHomeButton);
-        self::assertTrue($controller->isShownHomeButton(), 'Home button should be set as shown');
-        if ($this->isSkeletonChecked()) {
-            /** @var Element $homeButton */
-            $homeButton = $this->getHtmlDocument()->getElementById('home_button');
-            self::assertNotEmpty($homeButton, 'Home button is missing');
-            self::assertSame(
-                HtmlHelper::turnToLocalLink('https://www.drdplus.info'),
-                $homeButton->getAttribute('href'), 'Link of home button should lead to home'
-            );
-        }
-        $configurationWithHiddenHomeButton = $this->createCustomConfiguration([Configuration::WEB => [Configuration::SHOW_HOME_BUTTON => false]]);
-        self::assertFalse($configurationWithHiddenHomeButton->isShowHomeButton(), 'Expected configuration with hidden home button');
-        $controller = $this->createController(null, $configurationWithHiddenHomeButton);
-        self::assertFalse($controller->isShownHomeButton(), 'Home button should be hidden');
-        if ($this->isSkeletonChecked()) {
-            $content = $this->fetchNonCachedContent($controller);
-            $htmlDocument = new HtmlDocument($content);
-            $homeButton = $htmlDocument->getElementById('home_button');
-            self::assertEmpty($homeButton, 'Home button should not be used at all');
-        }
-    }
-
-    /**
-     * @test
      * @throws \ReflectionException
      */
     public function I_can_activate_trial(): void
     {
-        $now = new \DateTime();
-        $trialExpectedExpiration = (clone $now)->modify('+4 minutes');
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $now = new \DateTimeImmutable();
+        $trialExpectedExpiration = $now->modify('+4 minutes');
         $usagePolicy = $this->createUsagePolicy($trialExpectedExpiration);
         $controller = new RulesController($this->createServicesContainerWithUsagePolicy($usagePolicy));
         $controllerReflection = new \ReflectionClass($controller);
@@ -126,18 +97,18 @@ class RulesControllerTest extends AbstractContentTest
     }
 
     /**
-     * @param \DateTime $trialExpectedExpiration
+     * @param \DateTimeInterface $trialExpectedExpiration
      * @return UsagePolicy|MockInterface
      */
-    private function createUsagePolicy(\DateTime $trialExpectedExpiration): UsagePolicy
+    private function createUsagePolicy(\DateTimeInterface $trialExpectedExpiration): UsagePolicy
     {
         $usagePolicy = $this->mockery(UsagePolicy::class);
         $usagePolicy->expects('getTrialExpiredAtName')
             ->atLeast()->once()
             ->andReturn('bar');
         $usagePolicy->expects('activateTrial')
-            ->with($this->type(\DateTime::class))
-            ->andReturnUsing(function (\DateTime $expiresAt) use ($trialExpectedExpiration) {
+            ->with($this->type(\DateTimeInterface::class))
+            ->andReturnUsing(function (\DateTimeInterface $expiresAt) use ($trialExpectedExpiration) {
                 self::assertEquals($trialExpectedExpiration, $expiresAt);
 
                 return true;
@@ -233,7 +204,8 @@ class RulesControllerTest extends AbstractContentTest
         self::assertCount(0, $this->getMetaRefreshes($this->getHtmlDocument()), 'No meta tag with refresh meaning expected');
         $this->passOut();
         self::assertNull($_POST[Request::TRIAL] ?? null, 'Globals have not been reset');
-        $this->createServicesContainer()->getUsagePolicy()->activateTrial(new \DateTime('+1 year'));
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->createServicesContainer()->getUsagePolicy()->activateTrial(new \DateTimeImmutable('+1 year'));
         $_POST[Request::TRIAL] = '1';
         $content = $this->fetchNonCachedContent();
         $document = new HtmlDocument($content);

@@ -5,7 +5,7 @@ namespace DrdPlus\RulesSkeleton\Web;
 
 class EmptyMenu extends Menu
 {
-    public function getMenuString(): string
+    public function getValue(): string
     {
         return '';
     }

@@ -159,29 +159,6 @@
     cursor: pointer;
 }
 
-.other-versions {
-    display: none;
-    position: absolute;
-    left: -0.1em;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    z-index: 1040;
-    background-color: #958c7f;
-}
-
-.other-versions a {
-    display: inline-block;
-    width: 100%;
-    padding: 0 1em;
-}
-
-.other-versions a:hover {
-    text-decoration: none;
-    text-shadow: 0 1px 1px #c5c5c5, 2px 2px 7px #dddddd;
-    color: navajowhite;
-}
-
 .contacts .fa-dice-six {
     transform: rotate(45deg);
     font-size: smaller;

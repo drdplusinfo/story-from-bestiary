@@ -10,14 +10,14 @@ class GoogleTest extends AbstractContentTest
      */
     public function Site_can_be_verified_for_google_search_console(): void
     {
-        $googleSearchConsoleVerificationFile = $this->getDocumentRoot() . '/google8d8724e0c2818dfc.html';
+        $googleSearchConsoleVerificationFile = $this->getProjectRoot() . '/google8d8724e0c2818dfc.html';
         self::assertFileExists($googleSearchConsoleVerificationFile);
         $verificationContent = \file_get_contents($googleSearchConsoleVerificationFile);
         self::assertSame(
             'google-site-verification: google8d8724e0c2818dfc.html',
             $verificationContent,
             'Expected different content in Google Search console verification file '
-            . \basename($this->getDocumentRoot()) . '/google8d8724e0c2818dfc.html'
+            . \basename($this->getProjectRoot()) . '/google8d8724e0c2818dfc.html'
         );
     }
 
@@ -50,7 +50,7 @@ class GoogleTest extends AbstractContentTest
             );
         }
         $googleAnalyticsScriptRelativeFile = \parse_url($googleAnalyticsScript->getAttribute('src'), \PHP_URL_PATH);
-        $googleAnalyticsScriptFile = $this->getDocumentRoot() . '/' . \ltrim($googleAnalyticsScriptRelativeFile, '/');
+        $googleAnalyticsScriptFile = $this->getProjectRoot() . '/' . \ltrim($googleAnalyticsScriptRelativeFile, '/');
         self::assertFileExists($googleAnalyticsScriptFile, 'Can not find Google analytics script on expected path');
         $googleAnalyticsScriptContent = \file_get_contents($googleAnalyticsScriptFile);
         self::assertNotEmpty($googleAnalyticsScriptContent, "Google analytics script file is empty: $googleAnalyticsScriptFile");

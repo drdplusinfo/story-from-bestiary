@@ -11,8 +11,6 @@ interface TestsConfigurationReader
 
     public function hasExternalAnchorsWithHashes(): bool;
 
-    public function hasMoreVersions(): bool;
-
     public function hasCustomBodyContent(): bool;
 
     public function hasNotes(): bool;
@@ -31,10 +29,6 @@ interface TestsConfigurationReader
 
     public function getAllowedCalculationIdPrefixes(): array;
 
-    public function getExpectedLastVersion(): string;
-
-    public function getExpectedLastUnstableVersion(): string;
-
     public function hasHeadings(): bool;
 
     public function getPublicUrl(): string;
@@ -52,8 +46,6 @@ interface TestsConfigurationReader
     public function hasDebugContacts(): bool;
 
     public function hasAuthors(): bool;
-
-    public function getBlockNamesToExpectedContent(): array;
 
     public function getExpectedLicence(): string;
 

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
+use DrdPlus\RulesSkeleton\HtmlHelper;
+use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Gt\Dom\Element;
 
@@ -11,12 +13,12 @@ class ContactsContentTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Proper_email_is_used_in_debug_contacts(): void
+    public function Proper_facebook_link_is_used_in_debug_contacts(): void
     {
-        self::assertRegExp(
-            '~[^[:alnum:]]info@drdplus[.]info[^[:alnum:]]~',
+        self::assertContains(
+            '"https://www.facebook.com/drdplus.info"',
             $this->getDebugContactsContent(),
-            'Email to info@drdplus.info has not been found in debug contacts template'
+            'Link to facebook.com/drdplus.info has not been found in debug contacts template'
         );
     }
 
@@ -24,28 +26,21 @@ class ContactsContentTest extends AbstractContentTest
     {
         static $debugContactsContent;
         if ($debugContactsContent === null) {
-            $debugContactsFile = $this->getVendorRoot() . '/drdplus/rules-skeleton-web/web/shared/debug_contacts.html';
-            if (!\file_exists($debugContactsFile)) {
-                throw new \LogicException(
-                    "Missing file $debugContactsFile, run 'composer require --dev drdplus/rules-skeleton-web' first"
-                );
-            }
-            $debugContactsContent = \file_get_contents($debugContactsFile);
+            $debugContactsBodyClass = $this->getDebugContactsBodyClass();
+            /** @var DebugContactsBody $debugContactsBody */
+            $debugContactsBody = new $debugContactsBodyClass();
+            $debugContactsContent = $debugContactsBody->getValue();
         }
 
         return $debugContactsContent;
     }
 
     /**
-     * @test
+     * @return string|DebugContactsBody
      */
-    public function Proper_facebook_link_is_used_in_debug_contacts(): void
+    protected function getDebugContactsBodyClass(): string
     {
-        self::assertRegExp(
-            '~[^[:alnum:]]https://www[.]facebook[.]com/drdplus[.]info[^[:alnum:]]~',
-            $this->getDebugContactsContent(),
-            'Link to facebook.com/drdplus.info has not been found in debug contacts template'
-        );
+        return DebugContactsBody::class;
     }
 
     /**
@@ -53,8 +48,8 @@ class ContactsContentTest extends AbstractContentTest
      */
     public function Proper_rpg_forum_link_is_used_in_debug_contacts(): void
     {
-        self::assertRegExp(
-            '~[^[:alnum:]]https://rpgforum[.]cz/forum/viewtopic[.]php[?]f=238&t=14870[^[:alnum:]]~',
+        self::assertContains(
+            '"https://rpgforum.cz/forum/viewtopic.php?f=238&t=14870"',
             $this->getDebugContactsContent(),
             'Link to RPG forum has not been found in debug contacts template'
         );
@@ -63,7 +58,7 @@ class ContactsContentTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_use_link_to_drdplus_info_email(): void
+    public function I_can_use_mail_to_link_to_drdplus_info_email(): void
     {
         $debugContactsElement = $this->getDebugContactsElement();
         if (!$this->getTestsConfiguration()->hasDebugContacts()) {
@@ -88,7 +83,8 @@ class ContactsContentTest extends AbstractContentTest
 
     private function getDebugContactsElement(): ?Element
     {
-        return $this->getHtmlDocument()->getElementById('debug_contacts');
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->getHtmlDocument()->getElementById(HtmlHelper::ID_DEBUG_CONTACTS);
     }
 
     private function guardDebugContactsAreNotEmpty(?Element $debugContactsElement): void

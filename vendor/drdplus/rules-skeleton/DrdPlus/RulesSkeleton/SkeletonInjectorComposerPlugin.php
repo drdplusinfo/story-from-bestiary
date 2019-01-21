@@ -89,7 +89,8 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->passThrough(
             [
                 'rm -fr ./images/generic/skeleton/',
-                'cp -r ./vendor/drdplus/rules-skeleton/images/generic ./images/',
+                'mkdir -p ./images/generic/skeleton/',
+                'cp -r ./vendor/drdplus/rules-skeleton/images/generic/skeleton/* ./images/generic/skeleton/',
             ],
             $documentRoot
         );
@@ -149,7 +150,8 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->passThrough(
             [
                 'rm -fr ./css/generic/skeleton/',
-                'cp -r ./vendor/drdplus/rules-skeleton/css/generic ./css/',
+                'mkdir -p ./css/generic/skeleton/',
+                'cp -r ./vendor/drdplus/rules-skeleton/css/generic/skeleton/* ./css/generic/skeleton/',
             ],
             $documentRoot
         );
@@ -160,7 +162,8 @@ class SkeletonInjectorComposerPlugin extends StrictObject implements PluginInter
         $this->passThrough(
             [
                 'rm -fr ./js/generic/skeleton/',
-                'cp -r ./vendor/drdplus/rules-skeleton/js/generic ./js/',
+                'mkdir -p ./js/generic/skeleton/',
+                'cp -r ./vendor/drdplus/rules-skeleton/js/generic/skeleton/* ./js/generic/skeleton/',
             ],
             $documentRoot
         );

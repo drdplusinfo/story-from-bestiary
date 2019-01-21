@@ -10,7 +10,7 @@ class GraphicsTest extends AbstractContentTest
      */
     public function Main_page_has_monochrome_background_image(): void
     {
-        self::assertFileExists($this->getDocumentRoot() . '/images/main-background.png');
+        self::assertFileExists($this->getProjectRoot() . '/images/main-background.png');
     }
 
     /**
@@ -18,7 +18,7 @@ class GraphicsTest extends AbstractContentTest
      */
     public function Main_page_uses_generic_image_for_background(): void
     {
-        self::assertFileExists($this->getDocumentRoot() . '/images/generic/skeleton/rules-background.png');
+        self::assertFileExists($this->getProjectRoot() . '/images/generic/skeleton/rules-background.png');
     }
 
     /**
@@ -31,6 +31,6 @@ class GraphicsTest extends AbstractContentTest
 
             return;
         }
-        self::assertFileExists($this->getDocumentRoot() . '/images/licence-background.png');
+        self::assertFileExists($this->getProjectRoot() . '/images/licence-background.png');
     }
 }

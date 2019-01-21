@@ -6,27 +6,30 @@ namespace DrdPlus\Tests\RulesSkeleton\Partials;
 use DeviceDetector\Parser\Bot;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\CookiesService;
+use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Dirs;
-use DrdPlus\RulesSkeleton\Git;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
+use DrdPlus\WebVersions\WebVersions;
+use Granam\Git\Git;
 use Granam\String\StringTools;
+use Granam\Tests\Tools\TestWithMockery;
+use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
-use Gt\Dom\HTMLDocument;
 use Mockery\MockInterface;
 
-abstract class AbstractContentTest extends SkeletonTestCase
+abstract class AbstractContentTest extends TestWithMockery
 {
     use ClassesTrait;
 
-    private static $contents = [];
-    private static $htmlDocuments = [];
-    private static $rulesContentForDev = [];
-    private static $rulesForDevHtmlDocument = [];
-    private static $rulesSkeletonChecked;
+    /** @var Dirs */
+    private $dirs;
+    /** @var TestsConfiguration */
+    private $testsConfiguration;
     protected $needPassIn = true;
     protected $needPassOut = false;
     /** @var Configuration */
@@ -41,6 +44,16 @@ abstract class AbstractContentTest extends SkeletonTestCase
         if ($this->getTestsConfiguration()->hasProtectedAccess()) {
             $this->passIn();
         }
+    }
+
+    protected function getTestsConfiguration(): TestsConfiguration
+    {
+        static $testsConfiguration;
+        if ($testsConfiguration === null) {
+            $testsConfiguration = TestsConfiguration::createFromYaml(\DRD_PLUS_TESTS_ROOT . '/tests_configuration.yml');
+        }
+
+        return $testsConfiguration;
     }
 
     protected function passIn(): bool
@@ -79,8 +92,9 @@ abstract class AbstractContentTest extends SkeletonTestCase
      */
     protected function getContent(array $get = [], array $post = [], array $cookies = []): string
     {
+        static $contents = [];
         $key = $this->createKey($get, $post, $cookies);
-        if ((self::$contents[$key] ?? null) === null) {
+        if (($contents[$key] ?? null) === null) {
             $originalGet = $_GET;
             $originalPost = $_POST;
             $originalCookies = $_COOKIE;
@@ -93,9 +107,6 @@ abstract class AbstractContentTest extends SkeletonTestCase
             if ($cookies) {
                 $_COOKIE = \array_merge($_COOKIE, $cookies);
             }
-            if (empty($_GET[Request::VERSION]) && empty($_COOKIE[CookiesService::VERSION])) {
-                $_GET[Request::VERSION] = $this->getTestsConfiguration()->getExpectedLastUnstableVersion();
-            }
             if ($this->needPassIn()) {
                 $this->passIn();
             } elseif ($this->needPassOut()) {
@@ -104,19 +115,19 @@ abstract class AbstractContentTest extends SkeletonTestCase
             \ob_start();
             /** @noinspection PhpIncludeInspection */
             include DRD_PLUS_INDEX_FILE_NAME_TO_TEST;
-            self::$contents[$key] = \ob_get_clean();
+            $contents[$key] = \ob_get_clean();
             $_POST = $originalPost;
             $_GET = $originalGet;
             $_COOKIE = $originalCookies;
             self::assertNotEmpty(
-                self::$contents[$key],
+                $contents[$key],
                 'Nothing has been fetched with GET ' . \var_export($get, true) . ', POST ' . \var_export($post, true)
                 . ' and COOKIE ' . \var_export($cookies, true)
                 . ' from ' . DRD_PLUS_INDEX_FILE_NAME_TO_TEST
             );
         }
 
-        return self::$contents[$key];
+        return $contents[$key];
     }
 
     protected function createKey(array $get, array $post, array $cookies): string
@@ -138,16 +149,25 @@ abstract class AbstractContentTest extends SkeletonTestCase
      * @param array $get
      * @param array $post
      * @param array $cookies
-     * @return \DrdPlus\RulesSkeleton\HtmlDocument
+     * @return HtmlDocument
      */
-    protected function getHtmlDocument(array $get = [], array $post = [], array $cookies = []): \DrdPlus\RulesSkeleton\HtmlDocument
+    protected function getHtmlDocument(array $get = [], array $post = [], array $cookies = []): HtmlDocument
     {
+        static $htmlDocuments = [];
         $key = $this->createKey($get, $post, $cookies);
-        if (empty(self::$htmlDocuments[$key])) {
-            self::$htmlDocuments[$key] = new \DrdPlus\RulesSkeleton\HtmlDocument($this->getContent($get, $post, $cookies));
+        if (($htmlDocuments[$key] ?? null) === null) {
+            $htmlDocuments[$key] = new HtmlDocument($this->getContent($get, $post, $cookies));
         }
 
-        return self::$htmlDocuments[$key];
+        return $htmlDocuments[$key];
+    }
+
+    protected function fetchHtmlDocumentFromLocalUrl(): HtmlDocument
+    {
+        $content = $this->fetchContentFromLink($this->getTestsConfiguration()->getLocalUrl(), true)['content'];
+        self::assertNotEmpty($content);
+
+        return new HtmlDocument($content);
     }
 
     protected function getCurrentPageTitle(HTMLDocument $document = null): string
@@ -179,7 +199,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
         bool $shouldHideCovered = false
     ): HtmlHelper
     {
-        return new HtmlHelper($dirs ?? $this->createDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered);
+        return new HtmlHelper($dirs ?? $this->getDirs(), $inDevMode, $inForcedProductionMode, $shouldHideCovered);
     }
 
     protected function fetchNonCachedContent(RulesController $controller = null, bool $backupGlobals = true): string
@@ -192,7 +212,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
         $_GET[Request::CACHE] = Request::DISABLE;
         \ob_start();
         /** @noinspection PhpIncludeInspection */
-        include $this->getDocumentRoot() . '/index.php';
+        include $this->getProjectRoot() . '/index.php';
         $content = \ob_get_clean();
         if ($backupGlobals) {
             $_GET = $originalGet;
@@ -205,40 +225,45 @@ abstract class AbstractContentTest extends SkeletonTestCase
 
     protected function fetchContentFromLink(string $link, bool $withBody, array $post = [], array $cookies = [], array $headers = []): array
     {
-        $curl = \curl_init($link);
-        \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, 1);
-        \curl_setopt($curl, \CURLOPT_CONNECTTIMEOUT, 7);
-        if (!$withBody) {
-            // to get headers only
-            \curl_setopt($curl, \CURLOPT_HEADER, 1);
-            \curl_setopt($curl, \CURLOPT_NOBODY, 1);
-        }
-        \curl_setopt($curl, \CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'); // to get headers only
-        if ($post) {
-            \curl_setopt($curl, \CURLOPT_POSTFIELDS, $post);
-        }
-        if ($cookies) {
-            $cookieData = [];
-            foreach ($cookies as $name => $value) {
-                $cookieData[] = "$name=$value";
+        static $cachedContent = [];
+        $key = $link . ($withBody ? '1' : '0') . $this->createKey($headers, $post, $cookies);
+        if (($cachedContent[$key] ?? null) === null) {
+            $curl = \curl_init($link);
+            \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, 1);
+            \curl_setopt($curl, \CURLOPT_CONNECTTIMEOUT, 7);
+            if (!$withBody) {
+                // to get headers only
+                \curl_setopt($curl, \CURLOPT_HEADER, 1);
+                \curl_setopt($curl, \CURLOPT_NOBODY, 1);
             }
-            \curl_setopt($curl, \CURLOPT_COOKIE, \implode('; ', $cookieData));
+            \curl_setopt($curl, \CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'); // to get headers only
+            if ($post) {
+                \curl_setopt($curl, \CURLOPT_POSTFIELDS, $post);
+            }
+            if ($cookies) {
+                $cookieData = [];
+                foreach ($cookies as $name => $value) {
+                    $cookieData[] = "$name=$value";
+                }
+                \curl_setopt($curl, \CURLOPT_COOKIE, \implode('; ', $cookieData));
+            }
+            foreach ($headers as $headerName => $headerValue) {
+                \curl_setopt($curl, \CURLOPT_HEADER, "$headerName=$headerValue");
+            }
+            $content = \curl_exec($curl);
+            $responseHttpCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE);
+            $redirectUrl = \curl_getinfo($curl, \CURLINFO_REDIRECT_URL);
+            $curlError = \curl_error($curl);
+            \curl_close($curl);
+            $cachedContent[$key] = [
+                'responseHttpCode' => $responseHttpCode,
+                'redirectUrl' => $redirectUrl,
+                'content' => $content,
+                'error' => $curlError,
+            ];
         }
-        foreach ($headers as $headerName => $headerValue) {
-            \curl_setopt($curl, \CURLOPT_HEADER, "$headerName=$headerValue");
-        }
-        $content = \curl_exec($curl);
-        $responseHttpCode = \curl_getinfo($curl, \CURLINFO_HTTP_CODE);
-        $redirectUrl = \curl_getinfo($curl, \CURLINFO_REDIRECT_URL);
-        $curlError = \curl_error($curl);
-        \curl_close($curl);
 
-        return [
-            'responseHttpCode' => $responseHttpCode,
-            'redirectUrl' => $redirectUrl,
-            'content' => $content,
-            'error' => $curlError,
-        ];
+        return $cachedContent[$key];
     }
 
     protected function runCommand(string $command): array
@@ -275,7 +300,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
 
     protected function getGitFolderIgnoring(string $dirToCheck): array
     {
-        $documentRootEscaped = \escapeshellarg($this->getDocumentRoot());
+        $documentRootEscaped = \escapeshellarg($this->getProjectRoot());
         $dirToCheckEscaped = \escapeshellarg($dirToCheck);
         $command = "git -C $documentRootEscaped check-ignore $dirToCheckEscaped 2>&1";
         \exec($command, $output, $result);
@@ -294,18 +319,18 @@ abstract class AbstractContentTest extends SkeletonTestCase
     {
         if ($this->configuration === null) {
             $configurationClass = $this->getConfigurationClass();
-            $this->configuration = $configurationClass::createFromYml($dirs ?? $this->createDirs());
+            $this->configuration = $configurationClass::createFromYml($dirs ?? $this->getDirs());
         }
 
         return $this->configuration;
     }
 
-    protected function createRequest(string $currentVersion = null): Request
+    protected function createRequest(string $requestedVersion = null): Request
     {
         $request = $this->mockery($this->getRequestClass());
         $request->allows('getValue')
             ->with(Request::VERSION)
-            ->andReturn($currentVersion);
+            ->andReturn($requestedVersion);
         $request->makePartial();
 
         /** @var Request $request */
@@ -334,28 +359,49 @@ abstract class AbstractContentTest extends SkeletonTestCase
     }
 
     protected function createController(
-        string $documentRoot = null,
         Configuration $configuration = null,
         HtmlHelper $htmlHelper = null
     ): RulesController
     {
         $controllerClass = $this->getControllerClass();
 
-        return new $controllerClass($this->createServicesContainer($documentRoot, $configuration, $htmlHelper));
+        return new $controllerClass($this->createServicesContainer($configuration, $htmlHelper));
     }
 
     protected function createServicesContainer(
-        string $documentRoot = null,
         Configuration $configuration = null,
         HtmlHelper $htmlHelper = null
     ): ServicesContainer
     {
-        $dirs = $this->createDirs($documentRoot);
 
         return new ServicesContainer(
             $configuration ?? $this->getConfiguration(),
-            $htmlHelper ?? $this->createHtmlHelper($dirs, false, false, false)
+            $htmlHelper ?? $this->createHtmlHelper($this->getDirs())
         );
+    }
+
+    /**
+     * @return Dirs|\Granam\WebContentBuilder\Dirs
+     */
+    protected function getDirs(): \Granam\WebContentBuilder\Dirs
+    {
+        if ($this->dirs === null) {
+            $this->dirs = $this->createDirs($this->getProjectRoot());
+        }
+
+        return $this->dirs;
+    }
+
+    protected function createDirs(string $projectRoot): Dirs
+    {
+        $dirsClass = $this->getDirsClass();
+
+        return new $dirsClass($projectRoot);
+    }
+
+    protected function getDirsClass(): string
+    {
+        return Dirs::class;
     }
 
     /**
@@ -368,28 +414,28 @@ abstract class AbstractContentTest extends SkeletonTestCase
 
     protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
     {
-        if (self::$rulesSkeletonChecked === null) {
-            $documentRootRealPath = \realpath($this->getDocumentRoot());
-            self::assertNotEmpty($documentRootRealPath, 'Can not find out real path of document root ' . \var_export($this->getDocumentRoot(), true));
+        static $rulesSkeletonChecked;
+        if ($rulesSkeletonChecked === null) {
+            $projectRootRealPath = \realpath($this->getProjectRoot());
+            self::assertNotEmpty($projectRootRealPath, 'Can not find out real path of project root ' . \var_export($this->getProjectRoot(), true));
             $skeletonRootRealPath = \realpath($skeletonDocumentRoot ?? __DIR__ . '/../../../..');
             self::assertNotEmpty($skeletonRootRealPath, 'Can not find out real path of skeleton root ' . \var_export($skeletonRootRealPath, true));
-            self::assertSame('rules.skeleton', \basename($skeletonRootRealPath), 'Expected different trailing dir of skeleton document root');
-
-            self::$rulesSkeletonChecked = $documentRootRealPath === $skeletonRootRealPath;
+            self::assertRegExp('~^rules[.-]skeleton$~', \basename($skeletonRootRealPath), 'Expected different trailing dir of skeleton project root');
+            $rulesSkeletonChecked = $projectRootRealPath === $skeletonRootRealPath;
         }
 
-        return self::$rulesSkeletonChecked;
+        return $rulesSkeletonChecked;
     }
 
-    protected function getPassDocument(bool $notCached = false): \DrdPlus\RulesSkeleton\HtmlDocument
+    protected function getPassDocument(bool $notCached = false): HtmlDocument
     {
         if ($notCached) {
-            return new \DrdPlus\RulesSkeleton\HtmlDocument($this->getPassContent($notCached));
+            return new HtmlDocument($this->getPassContent($notCached));
         }
         static $passDocument;
         if ($passDocument === null) {
             $this->removeOwnerShipConfirmation();
-            $passDocument = new \DrdPlus\RulesSkeleton\HtmlDocument($this->getPassContent($notCached));
+            $passDocument = new HtmlDocument($this->getPassContent($notCached));
         }
 
         return $passDocument;
@@ -427,42 +473,27 @@ abstract class AbstractContentTest extends SkeletonTestCase
 
     protected function getNameForOwnershipConfirmation(): string
     {
-        $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
-        try {
-            $usagePolicyReflection = new \ReflectionClass(UsagePolicy::class);
-        } catch (\ReflectionException $reflectionException) {
-            self::fail($reflectionException->getMessage());
-            exit;
+        static $nameOfOwnershipConfirmation;
+        if ($nameOfOwnershipConfirmation === null) {
+            $usagePolicy = new UsagePolicy($this->getVariablePartOfNameForPass(), new Request(new Bot()), new CookiesService());
+            try {
+                $usagePolicyReflection = new \ReflectionClass(UsagePolicy::class);
+            } catch (\ReflectionException $reflectionException) {
+                self::fail($reflectionException->getMessage());
+                exit;
+            }
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $getName = $usagePolicyReflection->getMethod('getOwnershipName');
+            $getName->setAccessible(true);
+            $nameOfOwnershipConfirmation = $getName->invoke($usagePolicy);
         }
-        $getName = $usagePolicyReflection->getMethod('getOwnershipName');
-        $getName->setAccessible(true);
 
-        return $getName->invoke($usagePolicy);
+        return $nameOfOwnershipConfirmation;
     }
 
     protected function getVariablePartOfNameForPass(): string
     {
         return StringTools::toVariableName($this->getTestsConfiguration()->getExpectedWebName());
-    }
-
-    private function getDirName(string $fileName): string
-    {
-        $dirName = $fileName;
-        $upLevels = 0;
-        while (\basename($dirName) === '.' || \basename($dirName) === '..' || !\is_dir($dirName)) {
-            if (\basename($dirName) === '..') {
-                $upLevels++;
-            }
-            $dirName = \dirname($dirName);
-            if ($dirName === '/') {
-                throw new \RuntimeException("Could not find name of dir by $fileName");
-            }
-        }
-        for ($upLevel = 1; $upLevel <= $upLevels; $upLevel++) {
-            $dirName = $this->getDirName(\dirname($dirName) /* up by a single level */);
-        }
-
-        return $dirName;
     }
 
     private function removeOwnerShipConfirmation(): void
@@ -477,7 +508,8 @@ abstract class AbstractContentTest extends SkeletonTestCase
      */
     protected function getRulesContentForDev(string $show = '', string $hide = ''): string
     {
-        if (empty(self::$rulesContentForDev[$show][$hide])) {
+        static $rulesContentForDev = [];
+        if (($rulesContentForDev[$show][$hide] ?? null) === null) {
             $get['mode'] = 'dev';
             if ($show !== '') {
                 $get['show'] = $show;
@@ -486,20 +518,21 @@ abstract class AbstractContentTest extends SkeletonTestCase
                 $get['hide'] = $hide;
             }
             $content = $this->getContent($get);
-            self::$rulesContentForDev[$show][$hide] = $content;
-            self::assertNotSame($this->getPassContent(), self::$rulesContentForDev[$show]);
+            $rulesContentForDev[$show][$hide] = $content;
+            self::assertNotSame($this->getPassContent(), $rulesContentForDev[$show]);
         }
 
-        return self::$rulesContentForDev[$show][$hide];
+        return $rulesContentForDev[$show][$hide];
     }
 
     protected function getRulesForDevHtmlDocument(string $show = '', string $hide = ''): HTMLDocument
     {
-        if (empty(self::$rulesForDevHtmlDocument[$show][$hide])) {
-            self::$rulesForDevHtmlDocument[$show][$hide] = new HTMLDocument($this->getRulesContentForDev($show, $hide));
+        static $rulesForDevHtmlDocument = [];
+        if (($rulesForDevHtmlDocument[$show][$hide] ?? null) === null) {
+            $rulesForDevHtmlDocument[$show][$hide] = new HTMLDocument($this->getRulesContentForDev($show, $hide));
         }
 
-        return self::$rulesForDevHtmlDocument[$show][$hide];
+        return $rulesForDevHtmlDocument[$show][$hide];
     }
 
     /**
@@ -508,11 +541,6 @@ abstract class AbstractContentTest extends SkeletonTestCase
     protected function getRulesContentForDevWithHiddenCovered(): string
     {
         return $this->getRulesContentForDev('', 'covered');
-    }
-
-    protected function getEshopFileName(): string
-    {
-        return $this->getDocumentRoot() . '/eshop_url.txt';
     }
 
     /**
@@ -528,35 +556,10 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return RulesController::class;
     }
 
-    protected function createDirs(string $documentRoot = null): Dirs
-    {
-        return new Dirs($documentRoot ?? $this->getDocumentRoot());
-    }
-
-    protected function getDocumentRoot(): string
-    {
-        static $masterDocumentRoot;
-        if ($masterDocumentRoot === null) {
-            $masterDocumentRoot = \dirname(\DRD_PLUS_INDEX_FILE_NAME_TO_TEST);
-        }
-
-        return $masterDocumentRoot;
-    }
-
-    protected function getDirForVersions(): string
-    {
-        return $this->getDocumentRoot() . '/versions';
-    }
-
-    protected function getVendorRoot(): string
-    {
-        return $this->getDocumentRoot() . '/vendor';
-    }
-
     protected function unifyPath(string $path): string
     {
         $path = \str_replace('\\', '/', $path);
-        $path = \preg_replace('~/\.(?:/|$)~', '/', $path);
+        $path = \preg_replace('~/[.](?:/|$)~', '/', $path);
 
         return $this->squashTwoDots($path);
     }
@@ -564,7 +567,7 @@ abstract class AbstractContentTest extends SkeletonTestCase
     private function squashTwoDots(string $path): string
     {
         $originalPath = $path;
-        $path = \preg_replace('~/[^/.]+/\.\.~', '', $path);
+        $path = \preg_replace('~/[^/.]+/[.]{2}~', '', $path);
         if ($originalPath === $path) {
             return $originalPath; // nothing has been squashed
         }
@@ -572,12 +575,49 @@ abstract class AbstractContentTest extends SkeletonTestCase
         return $this->squashTwoDots($path);
     }
 
-    protected function getSkeletonDocumentRoot(): string
+    protected function getSkeletonProjectRoot(): string
     {
         if ($this->isSkeletonChecked()) {
-            return $this->getDocumentRoot();
+            return $this->getProjectRoot();
         }
 
-        return $this->createDirs()->getVendorRoot() . '/drdplus/rules-skeleton';
+        return $this->getDirs()->getVendorRoot() . '/drdplus/rules-skeleton';
+    }
+
+    protected function getVendorRoot(): string
+    {
+        return $this->getDirs()->getVendorRoot();
+    }
+
+    protected function createWebVersions(Git $git = null, string $repositoryDir = null): WebVersions
+    {
+        return new WebVersions($git ?? $this->createGit(), $repositoryDir ?? $this->getDirs()->getProjectRoot());
+    }
+
+    protected function createCurrentWebVersion(
+        Dirs $dirs = null,
+        Git $git = null,
+        WebVersions $webVersions = null
+    ): CurrentWebVersion
+    {
+        /** @var CurrentWebVersion $currentWebVersionClass */
+        $currentWebVersionClass = $this->getCurrentWebVersionClass();
+
+        return new $currentWebVersionClass(
+            $dirs ?? $this->getDirs(),
+            $git ?? $this->createGit(),
+            $webVersions ?? $this->createWebVersions($git)
+        );
+    }
+
+    protected function getProjectRoot(): string
+    {
+        static $projectRoot;
+        if ($projectRoot === null) {
+            self::assertDirectoryExists(\DRD_PLUS_PROJECT_ROOT, 'Project root has not been found');
+            $projectRoot = \DRD_PLUS_PROJECT_ROOT;
+        }
+
+        return $projectRoot;
     }
 }

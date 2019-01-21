@@ -54,7 +54,7 @@ class GitTest extends AbstractContentTest
      */
     public function Cache_dir_is_ignored(): void
     {
-        $cacheBaseRoot = \dirname($this->createDirs()->getCacheRoot()); // cache/cli => cache
+        $cacheBaseRoot = \dirname($this->getDirs()->getCacheRoot()); // cache/cli => cache
         $cacheGitIgnore = $cacheBaseRoot . '/.gitignore';
         self::assertFileExists($cacheGitIgnore, 'Expected .gitignore in cache dir');
         self::assertSame(<<<TEXT

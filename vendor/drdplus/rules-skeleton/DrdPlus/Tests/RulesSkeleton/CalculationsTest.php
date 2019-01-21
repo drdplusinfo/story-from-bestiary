@@ -48,7 +48,7 @@ class CalculationsTest extends AbstractContentTest
         static $calculations;
         if ($calculations === null) {
             $document = $this->getHtmlDocument();
-            $calculations = $document->getElementsByClassName(HtmlHelper::CALCULATION_CLASS);
+            $calculations = $document->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
             if (\count($calculations) === 0 && !$this->isSkeletonChecked()) {
                 self::assertFalse(false, 'No calculations in current document');
             } else {
@@ -77,7 +77,7 @@ class CalculationsTest extends AbstractContentTest
         $tooShortSuccessNamesRegexp = $this->implodeForRegexpOr($tooShortSuccessNames);
         $contents = [];
         foreach ($this->getCalculations() as $calculation) {
-            foreach ($calculation->getElementsByClassName(HtmlHelper::CONTENT_CLASS) as $contentsFromCalculation) {
+            foreach ($calculation->getElementsByClassName(HtmlHelper::CLASS_CONTENT) as $contentsFromCalculation) {
                 $contents[] = $contentsFromCalculation;
             }
         }

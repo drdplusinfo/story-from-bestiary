@@ -16,12 +16,10 @@ class DirsTest extends AbstractContentTest
         $dirsClass = static::getSutClass();
         /** @var Dirs $dirs */
         $dirs = new $dirsClass('foo');
-        self::assertSame('foo', $dirs->getDocumentRoot());
+        self::assertSame('foo', $dirs->getProjectRoot());
         self::assertSame('foo/vendor', $dirs->getVendorRoot());
-        self::assertSame('foo/versions', $dirs->getDirForVersions());
         self::assertSame('foo/cache/' . \PHP_SAPI, $dirs->getCacheRoot());
-        self::assertSame('foo/versions/1.2', $dirs->getVersionRoot('1.2'));
-        self::assertSame('foo/versions/1.2/web', $dirs->getVersionWebRoot('1.2'));
+        self::assertSame('foo/web', $dirs->getWebRoot());
     }
 
     /**
@@ -29,8 +27,8 @@ class DirsTest extends AbstractContentTest
      */
     public function I_will_get_current_skeleton_root_as_default_document_root(): void
     {
-        $expectedDocumentRoot = \realpath($this->getDocumentRoot());
-        self::assertFileExists($expectedDocumentRoot, 'No real path found from document root ' . $this->getDocumentRoot());
-        self::assertSame($expectedDocumentRoot, \realpath($this->createDirs()->getDocumentRoot()));
+        $expectedDocumentRoot = \realpath($this->getProjectRoot());
+        self::assertFileExists($expectedDocumentRoot, 'No real path found from document root ' . $this->getProjectRoot());
+        self::assertSame($expectedDocumentRoot, \realpath($this->getDirs()->getProjectRoot()));
     }
 }

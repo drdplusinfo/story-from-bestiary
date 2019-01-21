@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
-use Granam\Scalar\Tools\ToString;
 use Granam\Strict\Object\StrictObject;
 
 class CookiesService extends StrictObject
@@ -15,20 +14,15 @@ class CookiesService extends StrictObject
         return $this->setCookie(static::VERSION, $version, true /* not accessible from JS */, new \DateTime('+ 1 year'));
     }
 
-    public function getVersionCookie(string $version): ?string
-    {
-        return ToString::toStringOrNull($this->getCookie($version));
-    }
-
     /**
      * @param string $cookieName
      * @param $value
      * @param bool $httpOnly forbidden for JS ?
-     * @param \DateTime|null $expiresAt null for at end of browser sessions
+     * @param \DateTimeInterface|null $expiresAt null for at end of browser sessions
      * @return bool
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
      */
-    public function setCookie(string $cookieName, string $value, bool $httpOnly = true, \DateTime $expiresAt = null): bool
+    public function setCookie(string $cookieName, string $value, bool $httpOnly = true, \DateTimeInterface $expiresAt = null): bool
     {
         if (PHP_SAPI !== 'cli') {
             $cookieSet = \setcookie(

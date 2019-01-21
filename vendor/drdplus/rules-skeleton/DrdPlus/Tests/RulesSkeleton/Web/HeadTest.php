@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton\Web;
 
-use DrdPlus\RulesSkeleton\HtmlDocument;
 use DrdPlus\RulesSkeleton\Web\Head;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use Granam\WebContentBuilder\HtmlDocument;
 
 class HeadTest extends AbstractContentTest
 {
@@ -18,24 +18,26 @@ class HeadTest extends AbstractContentTest
         $headClass = static::getSutClass();
         $servicesContainer = $this->createServicesContainer();
         /** @var Head $head */
-        $head = new $headClass($servicesContainer->getConfiguration(),
+        $head = new $headClass(
+            $servicesContainer->getConfiguration(),
             $servicesContainer->getHtmlHelper(),
             $servicesContainer->getCssFiles(),
             $servicesContainer->getJsFiles()
         );
-        $headString = $head->getHeadString();
+        $headString = $head->getValue();
         $htmlDocument = new HtmlDocument(<<<HTML
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<title>Foo</title>
 {$headString}
 </head>
 </html>
 HTML
         );
         /** @var \DOMElement $googleAnalytics */
-        $googleAnalytics = $htmlDocument->getElementById('google_analytics_id');
-        self::assertNotEmpty($googleAnalytics);
+        $googleAnalytics = $htmlDocument->getElementById('googleAnalyticsId');
+        self::assertNotEmpty($googleAnalytics, 'Missing Google analytics ID');
         $src = $googleAnalytics->getAttribute('src');
         self::assertNotEmpty($src);
         $parsed = \parse_url($src);
@@ -46,7 +48,7 @@ HTML
     /**
      * @test
      */
-    public function I_can_set_own_page_title(): void
+    public function I_can_set_own_page_name(): void
     {
         /** @var Head $headClass */
         $headClass = static::getSutClass();
@@ -56,9 +58,10 @@ HTML
             $servicesContainer->getHtmlHelper(),
             $servicesContainer->getCssFiles(),
             $servicesContainer->getJsFiles(),
-            'foo BAR'
+            $pageName = 'foo BAR'
         );
-        self::assertSame('foo BAR', $head->getPageTitle());
-        self::assertContains('<title>foo BAR</title>', $head->getHeadString());
+        $expectedPageTitle = \trim($this->getConfiguration()->getTitleSmiley() . ' ' . $pageName);
+        self::assertSame($expectedPageTitle, $head->getPageTitle());
+        self::assertContains("<title>$expectedPageTitle</title>", $head->getValue());
     }
 }

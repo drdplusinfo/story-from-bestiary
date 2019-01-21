@@ -14,8 +14,15 @@
       "DrdPlus\\": "DrdPlus/"
     }
   },
-  "bin": [
-    "bin/assets"
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/projects/drdplus/web-versions"
+    },
+    {
+      "type": "vcs",
+      "url": "/home/jaroslav/projects/granam/git"
+    }
   ],
   "require": {
     "php": ">=7.1",
@@ -27,21 +34,24 @@
     "ext-yaml": "*",
     "ext-zlib": "*",
     "composer-plugin-api": "^1.0",
+    "drdplus/web-versions": "^1.0",
+    "erusev/parsedown": "^1.7",
+    "granam/exceptions-hierarchy": "^4.0",
     "granam/strict-object": "^3.0",
     "granam/string": "^3.2",
     "granam/tools": "^3.0",
-    "phpgt/dom": "~1.0",
+    "granam/web-content-builder": "^1.0",
+    "granam/yaml-reader": "^1.0",
+    "phpgt/dom": "~1.1",
     "phpmailer/phpmailer": "^6.0",
     "piwik/device-detector": "^3.9",
-    "tracy/tracy": "^2.4",
-    "granam/exceptions-hierarchy": "^4.0",
-    "mockery/mockery": "^1.1",
-    "phpunit/phpunit": "~7.0"
+    "tracy/tracy": "^2.4"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master",
     "composer/composer": "^1.7",
-    "drdplus/rules-skeleton-web": "dev-master"
+    "mockery/mockery": "^1.2",
+    "phpunit/phpunit": "^7.5",
+    "roave/security-advisories": "dev-master"
   },
   "config": {
     "sort-packages": true
@@ -51,10 +61,10 @@
   },
   "scripts": {
     "post-update-cmd": [
-      "php bin/assets --css --dir=css"
+      "php vendor/bin/assets --css --dir=css"
     ],
     "post-install-cmd": [
-      "php bin/assets --css --dir=css"
+      "php vendor/bin/assets --css --dir=css"
     ]
   }
 }

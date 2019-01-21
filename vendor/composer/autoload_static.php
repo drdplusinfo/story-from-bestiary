@@ -8,6 +8,7 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
 {
     public static $files = array (
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '7745382c92b7799bf1294b1f43023ba2' => __DIR__ . '/..' . '/tracy/tracy/src/shortcuts.php',
     );
@@ -23,6 +24,7 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\CssSelector\\' => 30,
         ),
         'P' => 
@@ -54,6 +56,10 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
         'Symfony\\Component\\CssSelector\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/css-selector',
@@ -69,15 +75,19 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         'Granam\\' => 
         array (
             0 => __DIR__ . '/..' . '/granam/exceptions-hierarchy/Granam',
-            1 => __DIR__ . '/..' . '/granam/scalar/Granam',
-            2 => __DIR__ . '/..' . '/granam/strict-object/Granam',
-            3 => __DIR__ . '/..' . '/granam/string/Granam',
-            4 => __DIR__ . '/..' . '/granam/tools/Granam',
+            1 => __DIR__ . '/..' . '/granam/git/Granam',
+            2 => __DIR__ . '/..' . '/granam/scalar/Granam',
+            3 => __DIR__ . '/..' . '/granam/strict-object/Granam',
+            4 => __DIR__ . '/..' . '/granam/string/Granam',
+            5 => __DIR__ . '/..' . '/granam/tools/Granam',
+            6 => __DIR__ . '/..' . '/granam/web-content-builder/Granam',
+            7 => __DIR__ . '/..' . '/granam/yaml-reader/Granam',
         ),
         'DrdPlus\\' => 
         array (
             0 => __DIR__ . '/../..' . '/DrdPlus',
             1 => __DIR__ . '/..' . '/drdplus/rules-skeleton/DrdPlus',
+            2 => __DIR__ . '/..' . '/drdplus/web-versions/DrdPlus',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
@@ -99,6 +109,10 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
             'Prophecy\\' => 
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
+            ),
+            'Parsedown' => 
+            array (
+                0 => __DIR__ . '/..' . '/erusev/parsedown',
             ),
         ),
         'M' => 

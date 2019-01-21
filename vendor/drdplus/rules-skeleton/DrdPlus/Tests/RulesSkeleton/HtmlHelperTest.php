@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\HtmlDocument;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
+use Granam\WebContentBuilder\HtmlDocument;
 use Gt\Dom\Element;
 
 class HtmlHelperTest extends AbstractContentTest
@@ -44,23 +44,12 @@ class HtmlHelperTest extends AbstractContentTest
 
     /**
      * @test
-     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\NameToCreateHtmlIdFromIsEmpty
-     */
-    public function I_can_not_create_id_from_empty_name(): void
-    {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelperClass::toId('');
-    }
-
-    /**
-     * @test
      */
     public function I_can_find_out_if_I_am_in_production(): void
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        self::assertFalse($htmlHelperClass::createFromGlobals($this->createDirs())->isInProduction());
+        self::assertFalse($htmlHelperClass::createFromGlobals($this->getDirs())->isInProduction());
         // there is no way how to change PHP_SAPI constant value
     }
 
@@ -71,7 +60,7 @@ class HtmlHelperTest extends AbstractContentTest
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
 
         $allTables = $htmlHelper->findTablesWithIds($this->getHtmlDocument());
         if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasTables()) {
@@ -109,12 +98,13 @@ class HtmlHelperTest extends AbstractContentTest
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
 
         $allTables = $htmlHelper->findTablesWithIds(new HtmlDocument(<<<HTML
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <title>Just a test</title>
   <meta charset="utf-8">
 </head>
 <body>
@@ -142,7 +132,7 @@ HTML
         }
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
         $someExpectedTableIds = $this->getTestsConfiguration()->getSomeExpectedTableIds();
         self::assertGreaterThan(0, \count($someExpectedTableIds), 'Some tables expected according to tests config');
         $tableId = \current($someExpectedTableIds);
@@ -157,9 +147,9 @@ HTML
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
         $content = '<!DOCTYPE html>
-<html><body><a href="" id="someId">Foo</a></body></html>';
+<html lang="en"><body><a href="" id="someId">Foo</a></body></html>';
         $htmlDocument = new HtmlDocument($content);
         $htmlHelper->addAnchorsToIds($htmlDocument);
         self::assertSame($content, \trim($htmlDocument->saveHTML()));
@@ -172,12 +162,13 @@ HTML
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
         $originalId = 'Příliš # žluťoučký # kůň # úpěl # ďábelské # ódy';
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html>
-<html lang="cs-CZ">
+<html lang="cs">
 <head>
+  <title>Just a test</title>
   <meta charset="utf-8">
 </head>
 <body>
@@ -207,7 +198,7 @@ HTML
 
     private function Original_id_can_be_used_as_anchor_via_inner_invisible_element(Element $elementWithId, string $expectedOriginalId): void
     {
-        $invisibleIdElements = $elementWithId->getElementsByClassName(HtmlHelper::INVISIBLE_ID_CLASS);
+        $invisibleIdElements = $elementWithId->getElementsByClassName(HtmlHelper::CLASS_INVISIBLE_ID);
         self::assertCount(1, $invisibleIdElements);
         $invisibleIdElement = $invisibleIdElements[0];
         $invisibleId = $invisibleIdElement->id;
@@ -222,11 +213,12 @@ HTML
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
         $htmlDocument = new HtmlDocument(<<<HTML
-        <!DOCTYPE html>
-<html lang="cs-CZ">
+        <!DOCTYPE html> 
+<html lang="cs">
 <head>
+  <title>Just a test</title>
   <meta charset="utf-8">
 </head>
 <body>
@@ -255,11 +247,12 @@ HTML
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html>
-<html lang="cs-CZ">
+<html lang="cs">
 <head>
+  <title>Just a test</title>
   <meta charset="utf-8">
 </head>
 <body>
@@ -286,28 +279,17 @@ HTML
 
     /**
      * @test
-     * @expectedException \DrdPlus\RulesSkeleton\Exceptions\ExternalUrlsHaveToBeMarkedFirst
-     */
-    public function I_can_not_inject_iframe_with_remote_tables_without_previous_mark_of_external_urls(): void
-    {
-        /** @var HtmlHelper $htmlHelperClass */
-        $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
-        $htmlHelper->injectIframesWithRemoteTables(new HtmlDocument());
-    }
-
-    /**
-     * @test
      */
     public function I_can_mark_external_links_by_class(): void
     {
         /** @var HtmlHelper $htmlHelperClass */
         $htmlHelperClass = static::getSutClass();
-        $htmlHelper = $htmlHelperClass::createFromGlobals($this->createDirs());
+        $htmlHelper = $htmlHelperClass::createFromGlobals($this->getDirs());
         $htmlDocument = new HtmlDocument(<<<HTML
         <!DOCTYPE html>
-<html lang="cs-CZ">
+<html lang="cs">
 <head>
+  <title>Just a test</title>
   <meta charset="utf-8">
 </head>
 <body>
@@ -316,28 +298,11 @@ HTML
 </htm>
 HTML
         );
-        self::assertNull($htmlDocument->body->getAttribute('data-has-marked-external-urls'));
+        self::assertNull($htmlDocument->body->getAttribute(HtmlHelper::DATA_HAS_MARKED_EXTERNAL_URLS));
         $htmlHelper->markExternalLinksByClass($htmlDocument);
-        self::assertSame('1', $htmlDocument->body->getAttribute('data-has-marked-external-urls'));
+        self::assertSame('1', $htmlDocument->body->getAttribute(HtmlHelper::DATA_HAS_MARKED_EXTERNAL_URLS));
         /** @var Element $linkWithoutAnchor */
         $linkWithoutAnchor = $htmlDocument->getElementById('link_without_anchor');
-        self::assertFalse($linkWithoutAnchor->classList->contains(HtmlHelper::EXTERNAL_URL_CLASS));
-    }
-
-    /**
-     * @test
-     */
-    public function I_can_get_html_document_with_block(): void
-    {
-        $blockNamesToExpectedContent = $this->getTestsConfiguration()->getBlockNamesToExpectedContent();
-        if (!$blockNamesToExpectedContent) {
-            self::assertEmpty($blockNamesToExpectedContent, 'No blocks to test');
-        }
-        $document = $this->getHtmlDocument();
-        $htmlHelper = HtmlHelper::createFromGlobals($this->createDirs());
-        foreach ($blockNamesToExpectedContent as $blockName => $expectedContent) {
-            $documentWithBlock = $htmlHelper->getDocumentWithBlock($blockName, $document);
-            self::assertSame($expectedContent, $documentWithBlock->body->innerHTML);
-        }
+        self::assertFalse($linkWithoutAnchor->classList->contains(HtmlHelper::CLASS_EXTERNAL_URL));
     }
 }

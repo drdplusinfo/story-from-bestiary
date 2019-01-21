@@ -4,25 +4,31 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\Dirs;
+use Granam\Strict\Object\StrictObject;
+use Granam\WebContentBuilder\Web\BodyInterface;
 
-class PdfBody extends Body
+class PdfBody extends StrictObject implements BodyInterface
 {
     /** @var Dirs */
     private $dirs;
     /** @var string|bool */
     private $pdfFile;
 
-    public function __construct(WebFiles $webFiles, Dirs $dirs)
+    public function __construct(Dirs $dirs)
     {
-        parent::__construct($webFiles);
         $this->dirs = $dirs;
+    }
+
+    public function __toString()
+    {
+        return $this->getValue();
     }
 
     /**
      * @return string
      * @throws \DrdPlus\RulesSkeleton\Web\Exceptions\CanNotReadPdfFile
      */
-    public function getBodyString(): string
+    public function getValue(): string
     {
         $pdfFile = $this->getPdfFile();
         if (!$pdfFile) {

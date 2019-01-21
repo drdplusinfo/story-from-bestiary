@@ -107,7 +107,7 @@ class Request extends StrictObject
     /**
      * @return array|string[]
      */
-    public function getWantedTablesIds(): array
+    public function getRequestedTablesIds(): array
     {
         $wantedTableIds = \array_map(
             function (string $id) {

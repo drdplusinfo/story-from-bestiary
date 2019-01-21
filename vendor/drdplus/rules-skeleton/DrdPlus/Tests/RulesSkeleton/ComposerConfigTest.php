@@ -16,7 +16,7 @@ class ComposerConfigTest extends AbstractContentTest
     {
         parent::setUp();
         if (static::$composerConfig === null) {
-            $composerFilePath = $this->getDocumentRoot() . '/composer.json';
+            $composerFilePath = $this->getProjectRoot() . '/composer.json';
             self::assertFileExists($composerFilePath, 'composer.json has not been found in document root');
             $content = \file_get_contents($composerFilePath);
             self::assertNotEmpty($content, "Nothing has been fetched from $composerFilePath, is readable?");
@@ -52,16 +52,16 @@ class ComposerConfigTest extends AbstractContentTest
         $postInstallScripts = static::$composerConfig['scripts']['post-install-cmd'] ?? [];
         self::assertNotEmpty(
             $postInstallScripts,
-            'Missing post-install-cmd scripts, expected at least "php bin/assets --css --dir=css"'
+            'Missing post-install-cmd scripts, expected at least "php vendor/bin/assets --css --dir=css"'
         );
         $postUpdateScripts = static::$composerConfig['scripts']['post-update-cmd'] ?? [];
         self::assertNotEmpty(
             $postUpdateScripts,
-            'Missing post-update-cmd scripts, expected at least "php bin/assets --css --dir=css"'
+            'Missing post-update-cmd scripts, expected at least "php vendor/bin/assets --css --dir=css"'
         );
         foreach ([$postInstallScripts, $postUpdateScripts] as $postChangeScripts) {
             self::assertContains(
-                'php bin/assets --css --dir=css',
+                'php vendor/bin/assets --css --dir=css',
                 $postChangeScripts,
                 'Missing script to compile assets, there are only scripts '
                 . \preg_replace('~^Array\n\((.+)\)~', '$1', \var_export($postChangeScripts, true))

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
+use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
 
 class Cache extends StrictObject
@@ -10,11 +11,13 @@ class Cache extends StrictObject
     public const TABLES = 'tables';
 
     /** @var string */
+    protected $projectRootDir;
+    /** @var string */
     protected $cacheRootDir;
     /** @var array|string[] */
     protected $cacheRoots;
-    /** @var WebVersions */
-    protected $webVersions;
+    /** @var CurrentWebVersion */
+    protected $currentWebVersion;
     /** @var Request */
     private $request;
     /** @var Git */
@@ -25,7 +28,7 @@ class Cache extends StrictObject
     protected $isInProduction;
 
     /**
-     * @param WebVersions $webVersions
+     * @param CurrentWebVersion $currentWebVersion
      * @param Dirs $dirs
      * @param Request $request
      * @param Git $git
@@ -33,9 +36,10 @@ class Cache extends StrictObject
      * @param string $cachePrefix
      * @throws \RuntimeException
      */
-    public function __construct(WebVersions $webVersions, Dirs $dirs, Request $request, Git $git, bool $isInProduction, string $cachePrefix)
+    public function __construct(CurrentWebVersion $currentWebVersion, Dirs $dirs, Request $request, Git $git, bool $isInProduction, string $cachePrefix)
     {
-        $this->webVersions = $webVersions;
+        $this->currentWebVersion = $currentWebVersion;
+        $this->projectRootDir = $dirs->getProjectRoot();
         $this->cacheRootDir = $dirs->getCacheRoot();
         $this->request = $request;
         $this->git = $git;
@@ -48,7 +52,7 @@ class Cache extends StrictObject
      */
     public function getCacheDir(): string
     {
-        $currentVersion = $this->webVersions->getCurrentMinorVersion();
+        $currentVersion = $this->currentWebVersion->getCurrentMinorVersion();
         if (($this->cacheRoots[$currentVersion] ?? null) === null) {
             $cacheRoot = $this->cacheRootDir . '/' . $currentVersion;
             if (!\file_exists($cacheRoot)) {
@@ -87,26 +91,16 @@ class Cache extends StrictObject
         return $this->getCacheFileBaseNamePartWithoutRequest() . '_' . $this->getCurrentRequestHash();
     }
 
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
     private function getCacheFileName(): string
     {
         return $this->getCacheDir() . "/{$this->getCacheId()}.html";
     }
 
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
     private function getCacheFileBaseNamePartWithoutRequest(): string
     {
         $prefix = \md5($this->getCachePrefix() . $this->getGitStamp());
 
-        return "{$this->webVersions->getCurrentPatchVersion()}_{$prefix}_{$this->webVersions->getCurrentCommitHash()}";
+        return "{$this->currentWebVersion->getCurrentPatchVersion()}_{$prefix}_{$this->currentWebVersion->getCurrentCommitHash()}";
     }
 
     protected function getCachePrefix(): string
@@ -114,17 +108,13 @@ class Cache extends StrictObject
         return $this->cachePrefix;
     }
 
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
-     */
     private function getGitStamp(): string
     {
         if ($this->isInProduction()) {
             return 'production';
         }
-        $gitStatus = $this->git->getGitStatus();
-        $diffAgainstOriginMaster = $this->git->getDiffAgainstOriginMaster();
+        $gitStatus = $this->git->getGitStatus($this->projectRootDir);
+        $diffAgainstOriginMaster = $this->git->getDiffAgainstOriginMaster($this->projectRootDir);
 
         return \md5(\implode(\array_merge($gitStatus, $diffAgainstOriginMaster)));
     }
@@ -170,11 +160,6 @@ class Cache extends StrictObject
         return $this->getCacheDir() . "/{$this->geCacheDebugFileBaseNamePartWithoutGet()}_{$this->getCurrentRequestHash()}.html";
     }
 
-    /**
-     * @return string
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\CanNotGetGitStatus
-     * @throws \DrdPlus\RulesSkeleton\Exceptions\ExecutingCommandFailed
-     */
     private function geCacheDebugFileBaseNamePartWithoutGet(): string
     {
         return 'debug_' . $this->getCacheFileBaseNamePartWithoutRequest();
@@ -198,8 +183,8 @@ class Cache extends StrictObject
     private function clearOldCache(): void
     {
         $foldersToSkip = ['.', '..', '.gitignore'];
-        $currentCacheStamp = $this->webVersions->getCurrentCommitHash();
-        $currentVersion = $this->webVersions->getCurrentMinorVersion();
+        $currentCacheStamp = $this->currentWebVersion->getCurrentCommitHash();
+        $currentVersion = $this->currentWebVersion->getCurrentMinorVersion();
         $cacheRoot = $this->cacheRoots[$currentVersion];
         foreach (\scandir($cacheRoot, \SCANDIR_SORT_NONE) as $folder) {
             if (\in_array($folder, $foldersToSkip, true)) {

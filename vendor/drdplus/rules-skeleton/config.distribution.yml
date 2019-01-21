@@ -1,11 +1,9 @@
 web:
-  last_stable_version: '1.0'
-  repository_url: git@bitbucket.org:drdplusinfo/rules-skeleton-web.git
   protected_access: true
-  eshop_url: https://obchod.altar.cz/draci-doupe-a-jine-rpg-hry-draci-doupe-plus-c-1_7.html
+  eshop_url: 'https://obchod.altar.cz/draci-doupe-a-jine-rpg-hry-draci-doupe-plus-c-1_7.html'
   menu_position_fixed: false
   show_home_button: true
-  name: HTML kostra pro DrDPlus, jakoby pravidla čaroděje
-  title_smiley: ☠️
+  name: 'HTML kostra pro DrDPlus, jakoby pravidla čaroděje'
+  title_smiley: '☠️'
 google:
-  analytics_id: UA-121206931-1
+  analytics_id: 'UA-121206931-1'

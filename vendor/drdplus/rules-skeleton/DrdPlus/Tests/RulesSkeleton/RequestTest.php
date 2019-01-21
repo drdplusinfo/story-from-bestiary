@@ -173,15 +173,15 @@ class RequestTest extends TestWithMockery
      * @dataProvider provideTablesIdsParameterName
      * @param string $parameterName
      */
-    public function I_can_get_wanted_tables_ids(string $parameterName): void
+    public function I_can_get_requested_tables_ids(string $parameterName): void
     {
-        self::assertSame([], (new Request(new Bot()))->getWantedTablesIds());
+        self::assertSame([], (new Request(new Bot()))->getRequestedTablesIds());
         $_GET[$parameterName] = '    ';
-        self::assertSame([], (new Request(new Bot()))->getWantedTablesIds());
+        self::assertSame([], (new Request(new Bot()))->getRequestedTablesIds());
         $_GET[$parameterName] = 'foo';
-        self::assertSame(['foo'], (new Request(new Bot()))->getWantedTablesIds());
+        self::assertSame(['foo'], (new Request(new Bot()))->getRequestedTablesIds());
         $_GET[$parameterName] .= ',bar,baz';
-        self::assertSame(['foo', 'bar', 'baz'], (new Request(new Bot()))->getWantedTablesIds());
+        self::assertSame(['foo', 'bar', 'baz'], (new Request(new Bot()))->getRequestedTablesIds());
         unset($_GET[$parameterName]); // to avoid using this in next iteration as @backupGlobals does not work
     }
 

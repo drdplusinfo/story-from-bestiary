@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
-use DrdPlus\RulesSkeleton\HtmlDocument;
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
+use Granam\WebContentBuilder\HtmlDocument;
 
 class TablesTest extends AbstractContentTest
 {
@@ -27,19 +27,19 @@ class TablesTest extends AbstractContentTest
 
     protected function There_is_no_other_content_than_tables(HtmlDocument $htmlDocument): void
     {
-        $menu = $htmlDocument->getElementById(HtmlHelper::MENU_ID);
-        $menu->remove();
-        foreach ($htmlDocument->getElementsByClassName(HtmlHelper::INVISIBLE_ID_CLASS) as $invisible) {
+        $menuWrapper = $htmlDocument->getElementById(HtmlHelper::ID_MENU_WRAPPER);
+        $menuWrapper->remove();
+        foreach ($htmlDocument->getElementsByClassName(HtmlHelper::CLASS_INVISIBLE_ID) as $invisible) {
             $invisible->remove();
         }
-        foreach ($htmlDocument->getElementsByClassName(HtmlHelper::INVISIBLE_CLASS) as $invisible) {
+        foreach ($htmlDocument->getElementsByClassName(HtmlHelper::CLASS_INVISIBLE) as $invisible) {
             $invisible->remove();
         }
         foreach ($htmlDocument->body->children as $child) {
             self::assertSame(
                 'table',
                 $child->tagName,
-                'Expected only tables, seems tables content filter does not work at all'
+                'Expected only tables, got ' . $child->outerHTML
             );
         }
     }
@@ -57,7 +57,14 @@ class TablesTest extends AbstractContentTest
         $implodedTables = \implode(',', $this->getTestsConfiguration()->getSomeExpectedTableIds());
         $htmlDocument = $this->getHtmlDocument([Request::TABLES => $implodedTables]);
         $tables = $htmlDocument->body->getElementsByTagName('table');
-        self::assertNotEmpty($tables, 'No tables have been fetched, when required IDs ' . $implodedTables);
+        self::assertNotEmpty(
+            $tables,
+            \sprintf(
+                'No tables have been fetched from %s, when required IDs %s',
+                $this->getTestsConfiguration()->getLocalUrl() . '?' . Request::TABLES . '=' . \urlencode($implodedTables),
+                $implodedTables
+            )
+        );
         foreach ($this->getTestsConfiguration()->getSomeExpectedTableIds() as $tableId) {
             self::assertNotNull(
                 $htmlDocument->getElementById(HtmlHelper::toId($tableId)), 'Missing table of ID ' . $tableId

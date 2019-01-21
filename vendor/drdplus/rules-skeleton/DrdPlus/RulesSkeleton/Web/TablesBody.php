@@ -5,26 +5,37 @@ namespace DrdPlus\RulesSkeleton\Web;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
 use DrdPlus\RulesSkeleton\Request;
+use Granam\Strict\Object\StrictObject;
+use Granam\WebContentBuilder\HtmlDocument;
+use Granam\WebContentBuilder\Web\BodyInterface;
 
-class TablesBody extends Body
+class TablesBody extends StrictObject implements BodyInterface
 {
+
+    /** @var RulesMainBody */
+    private $rulesMainBody;
     /** @var HtmlHelper */
     private $htmlHelper;
     /** @var Request */
     private $request;
 
-    public function __construct(WebFiles $webFiles, HtmlHelper $htmlHelper, Request $request)
+    public function __construct(RulesMainBody $rulesMainBody, HtmlHelper $htmlHelper, Request $request)
     {
-        parent::__construct($webFiles);
+        $this->rulesMainBody = $rulesMainBody;
         $this->htmlHelper = $htmlHelper;
         $this->request = $request;
     }
 
-    public function getBodyString(): string
+    public function __toString()
     {
-        $rawContent = parent::getBodyString();
-        $rawContentDocument = new \DrdPlus\RulesSkeleton\HtmlDocument($rawContent);
-        $tables = $this->htmlHelper->findTablesWithIds($rawContentDocument, $this->request->getWantedTablesIds());
+        return $this->getValue();
+    }
+
+    public function getValue(): string
+    {
+        $rawContent = $this->rulesMainBody->getValue();
+        $rawContentDocument = new HtmlDocument($rawContent);
+        $tables = $this->htmlHelper->findTablesWithIds($rawContentDocument, $this->request->getRequestedTablesIds());
         $tablesContent = '';
         foreach ($tables as $table) {
             $tablesContent .= $table->outerHTML . "\n";

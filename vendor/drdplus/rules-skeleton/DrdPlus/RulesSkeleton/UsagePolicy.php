@@ -49,11 +49,11 @@ class UsagePolicy extends StrictObject
     /**
      * @param string $cookieName
      * @param string $value
-     * @param \DateTime|null $expiresAt
+     * @param \DateTimeInterface|null $expiresAt
      * @return bool
      * @throws \DrdPlus\RulesSkeleton\Exceptions\CookieCanNotBeSet
      */
-    private function setCookie(string $cookieName, string $value, ?\DateTime $expiresAt): bool
+    private function setCookie(string $cookieName, string $value, ?\DateTimeInterface $expiresAt): bool
     {
         return $this->cookiesService->setCookie($cookieName, $value, false /* accessible also via JS */, $expiresAt);
     }
@@ -99,11 +99,11 @@ class UsagePolicy extends StrictObject
     }
 
     /**
-     * @param \DateTime $expiresAt
+     * @param \DateTimeImmutable $expiresAt
      * @return bool
      * @throws \RuntimeException
      */
-    public function activateTrial(\DateTime $expiresAt): bool
+    public function activateTrial(\DateTimeImmutable $expiresAt): bool
     {
         return $this->setCookie($this->getTrialName(), (string)$expiresAt->getTimestamp(), $expiresAt);
     }

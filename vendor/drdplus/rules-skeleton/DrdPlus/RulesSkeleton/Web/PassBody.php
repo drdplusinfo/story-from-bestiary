@@ -3,23 +3,30 @@ declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton\Web;
 
-class PassBody extends Body
+use Granam\Strict\Object\StrictObject;
+use Granam\WebContentBuilder\Web\BodyInterface;
+
+class PassBody extends StrictObject implements BodyInterface
 {
     /** @var Pass */
     private $pass;
 
-    public function __construct(WebFiles $webFiles, Pass $pass)
+    public function __construct(Pass $pass)
     {
-        parent::__construct($webFiles);
         $this->pass = $pass;
     }
 
-    public function getBodyString(): string
+    public function __toString()
+    {
+        return $this->getValue();
+    }
+
+    public function getValue(): string
     {
         return <<<HTML
 <div class="main pass">
   <div class="background-image"></div>
-  {$this->pass->getPassString()}
+  {$this->pass->getValue()}
 </div>
 HTML;
     }

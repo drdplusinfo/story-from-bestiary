@@ -15,13 +15,13 @@ class StandardModeTest extends AbstractContentTest
     {
         if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasNotes()) {
             self::assertEmpty(
-                $this->getHtmlDocument()->getElementsByClassName(HtmlHelper::NOTE_CLASS),
-                "No elements with '" . HtmlHelper::NOTE_CLASS . "' class expected according to tests config"
+                $this->getHtmlDocument()->getElementsByClassName(HtmlHelper::CLASS_NOTE),
+                "No elements with '" . HtmlHelper::CLASS_NOTE . "' class expected according to tests config"
             );
         } else {
             self::assertNotEmpty(
-                $this->getHtmlDocument()->getElementsByClassName(HtmlHelper::NOTE_CLASS),
-                "Expected at least a single element with '" . HtmlHelper::NOTE_CLASS . "' class according to tests config"
+                $this->getHtmlDocument()->getElementsByClassName(HtmlHelper::CLASS_NOTE),
+                "Expected at least a single element with '" . HtmlHelper::CLASS_NOTE . "' class according to tests config"
             );
         }
     }
@@ -32,8 +32,8 @@ class StandardModeTest extends AbstractContentTest
     public function I_am_not_distracted_by_development_classes(): void
     {
         $htmlDocument = $this->getHtmlDocument();
-        self::assertCount(0, $htmlDocument->getElementsByClassName(HtmlHelper::COVERED_BY_CODE_CLASS));
-        self::assertCount(0, $htmlDocument->getElementsByClassName(HtmlHelper::GENERIC_CLASS));
-        self::assertCount(0, $htmlDocument->getElementsByClassName(HtmlHelper::EXCLUDED_CLASS));
+        self::assertCount(0, $htmlDocument->getElementsByClassName(HtmlHelper::CLASS_COVERED_BY_CODE));
+        self::assertCount(0, $htmlDocument->getElementsByClassName(HtmlHelper::CLASS_GENERIC));
+        self::assertCount(0, $htmlDocument->getElementsByClassName(HtmlHelper::CLASS_EXCLUDED));
     }
 }

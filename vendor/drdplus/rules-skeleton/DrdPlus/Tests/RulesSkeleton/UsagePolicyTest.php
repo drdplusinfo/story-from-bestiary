@@ -33,6 +33,7 @@ class UsagePolicyTest extends TestCase
         self::assertSame('trialOfFoo', $_COOKIE[UsagePolicy::TRIAL_COOKIE_NAME]);
         self::assertSame(UsagePolicy::TRIAL_EXPIRED_AT, $_COOKIE[UsagePolicy::TRIAL_EXPIRED_AT_NAME]);
         self::assertArrayNotHasKey('confirmedOwnershipOfFoo', $_COOKIE);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $usagePolicy->confirmOwnershipOfVisitor($expiresAt = new \DateTime());
         self::assertSame((string)$expiresAt->getTimestamp(), $_COOKIE['confirmedOwnershipOfFoo']);
     }

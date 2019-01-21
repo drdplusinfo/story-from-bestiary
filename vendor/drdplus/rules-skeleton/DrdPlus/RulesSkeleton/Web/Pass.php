@@ -6,8 +6,9 @@ namespace DrdPlus\RulesSkeleton\Web;
 use DrdPlus\RulesSkeleton\Configuration;
 use DrdPlus\RulesSkeleton\UsagePolicy;
 use Granam\Strict\Object\StrictObject;
+use Granam\String\StringInterface;
 
-class Pass extends StrictObject
+class Pass extends StrictObject implements StringInterface
 {
     /** @var Configuration */
     private $configuration;
@@ -22,10 +23,10 @@ class Pass extends StrictObject
 
     public function __toString()
     {
-        return $this->getPassString();
+        return $this->getValue();
     }
 
-    public function getPassString(): string
+    public function getValue(): string
     {
         return <<<HTML
 {$this->getTrialTimeExpiredString()}

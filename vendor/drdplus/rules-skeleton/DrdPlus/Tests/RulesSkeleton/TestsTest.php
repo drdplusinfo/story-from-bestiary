@@ -8,6 +8,26 @@ use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReaderTest;
 
 class TestsTest extends AbstractContentTest
 {
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function Every_test_lives_in_drd_plus_tests_namespace(): void
+    {
+        $reflectionClass = new \ReflectionClass(static::class);
+        $testsDir = \dirname($reflectionClass->getFileName());
+        $testClasses = $this->getClassesFromDir($testsDir);
+        self::assertNotEmpty($testClasses, "No test classes found in {$testsDir}");
+        foreach ($testClasses as $testClass) {
+            self::assertStringStartsWith(
+                'DrdPlus\\Tests',
+                (new \ReflectionClass($testClass))->getNamespaceName(),
+                "Class {$testClass} should be in DrdPlus\\Test namespace"
+            );
+        }
+    }
+
     /**
      * @test
      * @throws \ReflectionException
@@ -16,13 +36,13 @@ class TestsTest extends AbstractContentTest
     {
         $referenceTestClass = new \ReflectionClass($this->getControllerTestClass());
         $referenceTestDir = \dirname($referenceTestClass->getFileName());
-        $notClassesTestingTests = $this->getNotClassesTestingTests();
+        $testingClassesWithoutSut = $this->getTestingClassesWithoutSut();
         foreach ($this->getClassesFromDir($referenceTestDir) as $testClass) {
             $testClassReflection = new \ReflectionClass($testClass);
             if ($testClassReflection->isAbstract()
                 || $testClassReflection->isInterface()
                 || $testClassReflection->isTrait()
-                || \in_array($testClass, $notClassesTestingTests, true)
+                || \in_array($testClass, $testingClassesWithoutSut, true)
             ) {
                 continue;
             }
@@ -34,21 +54,23 @@ class TestsTest extends AbstractContentTest
         }
     }
 
-    private function getNotClassesTestingTests(): array
+    protected function getTestingClassesWithoutSut(): array
     {
         return [
             AnchorsTest::class,
             GraphicsTest::class,
             TestsConfigurationTest::class,
             RulesSkeletonExceptionsHierarchyTest::class,
+            RulesSkeletonTestsExceptionsHierarchyTest::class,
             TablesTest::class,
             GoogleTest::class,
             WebContentVersionTest::class,
             ComposerConfigTest::class,
             TracyTest::class,
             TrialTest::class,
-            WebContentTest::class,
+            PageTitleTest::class,
             StandardModeTest::class,
+            self::class,
             static::class,
             CoveredPartsCanBeHiddenTest::class,
             PassingTest::class,
@@ -57,7 +79,8 @@ class TestsTest extends AbstractContentTest
             CalculationsTest::class,
             SourceCodeLinksTest::class,
             TestsConfigurationReaderTest::class,
-            TableOfContentTest::class,
+            TableOfContentsTest::class,
+            GitTest::class,
         ];
     }
 
