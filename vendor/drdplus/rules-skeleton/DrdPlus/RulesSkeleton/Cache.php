@@ -9,6 +9,9 @@ use Granam\Strict\Object\StrictObject;
 class Cache extends StrictObject
 {
     public const TABLES = 'tables';
+    public const PAGES = 'pages';
+    public const PASS = 'pass';
+    public const PASSED = 'passed';
 
     /** @var string */
     protected $projectRootDir;
@@ -88,7 +91,7 @@ class Cache extends StrictObject
 
     public function getCacheId(): string
     {
-        return $this->getCacheFileBaseNamePartWithoutRequest() . '_' . $this->getCurrentRequestHash();
+        return $this->getCurrentContentHash() . '_' . $this->getCurrentRequestHash();
     }
 
     private function getCacheFileName(): string
@@ -96,7 +99,7 @@ class Cache extends StrictObject
         return $this->getCacheDir() . "/{$this->getCacheId()}.html";
     }
 
-    private function getCacheFileBaseNamePartWithoutRequest(): string
+    private function getCurrentContentHash(): string
     {
         $prefix = \md5($this->getCachePrefix() . $this->getGitStamp());
 
@@ -114,9 +117,11 @@ class Cache extends StrictObject
             return 'production';
         }
         $gitStatus = $this->git->getGitStatus($this->projectRootDir);
-        $diffAgainstOriginMaster = $this->git->getDiffAgainstOriginMaster($this->projectRootDir);
+        $diffAgainstOriginMaster = $this->git->getDiffAgainstOrigin($this->projectRootDir);
+        $gitStatusImploded = \implode($gitStatus);
+        $diffAgainstOriginMasterImploded = \implode($diffAgainstOriginMaster);
 
-        return \md5(\implode(\array_merge($gitStatus, $diffAgainstOriginMaster)));
+        return \md5($gitStatusImploded . $diffAgainstOriginMasterImploded);
     }
 
     /**
@@ -162,7 +167,7 @@ class Cache extends StrictObject
 
     private function geCacheDebugFileBaseNamePartWithoutGet(): string
     {
-        return 'debug_' . $this->getCacheFileBaseNamePartWithoutRequest();
+        return 'debug_' . $this->getCurrentContentHash();
     }
 
     /**

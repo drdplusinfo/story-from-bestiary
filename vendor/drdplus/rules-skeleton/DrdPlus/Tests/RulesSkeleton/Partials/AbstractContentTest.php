@@ -13,12 +13,14 @@ use DrdPlus\RulesSkeleton\Request;
 use DrdPlus\RulesSkeleton\RulesController;
 use DrdPlus\RulesSkeleton\ServicesContainer;
 use DrdPlus\RulesSkeleton\UsagePolicy;
+use DrdPlus\RulesSkeleton\Web\RulesMainBody;
 use DrdPlus\Tests\RulesSkeleton\TestsConfiguration;
 use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\String\StringTools;
 use Granam\Tests\Tools\TestWithMockery;
 use Granam\WebContentBuilder\HtmlDocument;
+use Granam\WebContentBuilder\Web\HeadInterface;
 use Gt\Dom\Element;
 use Mockery\MockInterface;
 
@@ -183,6 +185,16 @@ abstract class AbstractContentTest extends TestWithMockery
         $titles->rewind();
 
         return $titles->current()->nodeValue;
+    }
+
+    protected function getHtmlHelper(): HtmlHelper
+    {
+        static $htmlHelper;
+        if ($htmlHelper === null) {
+            $htmlHelper = $this->createHtmlHelper();
+        }
+
+        return $htmlHelper;
     }
 
     /**
@@ -412,19 +424,29 @@ abstract class AbstractContentTest extends TestWithMockery
         return [[$this, 'passIn'], [$this, 'passOut']];
     }
 
+    protected function isRulesSkeletonChecked(): bool
+    {
+        return $this->isSkeletonChecked($this->getRulesSkeletonProjectRoot());
+    }
+
+    private function getRulesSkeletonProjectRoot(): string
+    {
+        return __DIR__ . '/../../../..';
+    }
+
     protected function isSkeletonChecked(string $skeletonDocumentRoot = null): bool
     {
-        static $rulesSkeletonChecked;
-        if ($rulesSkeletonChecked === null) {
+        static $skeletonChecked = [];
+        $skeletonDocumentRoot = $skeletonDocumentRoot ?? $this->getRulesSkeletonProjectRoot();
+        if (($skeletonChecked[$skeletonDocumentRoot] ?? null) === null) {
             $projectRootRealPath = \realpath($this->getProjectRoot());
             self::assertNotEmpty($projectRootRealPath, 'Can not find out real path of project root ' . \var_export($this->getProjectRoot(), true));
-            $skeletonRootRealPath = \realpath($skeletonDocumentRoot ?? __DIR__ . '/../../../..');
+            $skeletonRootRealPath = \realpath($skeletonDocumentRoot);
             self::assertNotEmpty($skeletonRootRealPath, 'Can not find out real path of skeleton root ' . \var_export($skeletonRootRealPath, true));
-            self::assertRegExp('~^rules[.-]skeleton$~', \basename($skeletonRootRealPath), 'Expected different trailing dir of skeleton project root');
-            $rulesSkeletonChecked = $projectRootRealPath === $skeletonRootRealPath;
+            $skeletonChecked[$skeletonDocumentRoot] = $projectRootRealPath === $skeletonRootRealPath;
         }
 
-        return $rulesSkeletonChecked;
+        return $skeletonChecked[$skeletonDocumentRoot];
     }
 
     protected function getPassDocument(bool $notCached = false): HtmlDocument
@@ -619,5 +641,67 @@ abstract class AbstractContentTest extends TestWithMockery
         }
 
         return $projectRoot;
+    }
+
+    protected function createEmptyHead(): HeadInterface
+    {
+        return new class implements HeadInterface
+        {
+            public function __toString()
+            {
+                return $this->getValue();
+            }
+
+            public function getValue(): string
+            {
+                return '';
+            }
+
+        };
+    }
+
+    /**
+     * @param string $content
+     * @return RulesMainBody|MockInterface
+     */
+    protected function createMainBody(string $content): RulesMainBody
+    {
+        $rulesMainBody = $this->mockery(RulesMainBody::class);
+        $rulesMainBody->shouldReceive('getValue')
+            ->andReturn($content);
+        $rulesMainBody->makePartial();
+
+        return $rulesMainBody;
+    }
+
+    protected function getComposerConfig(): array
+    {
+        static $composerConfig;
+        if ($composerConfig === null) {
+            $composerFilePath = $this->getProjectRoot() . '/composer.json';
+            self::assertFileExists($composerFilePath, 'composer.json has not been found in document root');
+            $content = \file_get_contents($composerFilePath);
+            self::assertNotEmpty($content, "Nothing has been fetched from $composerFilePath, is readable?");
+            $composerConfig = \json_decode($content, true /*as array */);
+            self::assertIsArray($composerConfig, 'Can not decode composer.json content fetched from ' . $composerFilePath);
+        }
+
+        return $composerConfig;
+    }
+
+    /**
+     * @param HtmlDocument $htmlDocument
+     * @return array|string[]
+     */
+    protected function parseTableIds(HtmlDocument $htmlDocument): array
+    {
+        $tableIds = [];
+        foreach ($htmlDocument->getElementsByTagName('table') as $table) {
+            if (\preg_match('~\sid\s*=\s*"(?<id>[^"]+)~', $table->prop_get_outerHTML(), $idMatch)) {
+                $tableIds[] = \html_entity_decode($idMatch['id']);
+            }
+        }
+
+        return $tableIds;
     }
 }

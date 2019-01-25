@@ -10,27 +10,12 @@ use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReader;
  */
 class ComposerConfigTest extends AbstractContentTest
 {
-    protected static $composerConfig;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        if (static::$composerConfig === null) {
-            $composerFilePath = $this->getProjectRoot() . '/composer.json';
-            self::assertFileExists($composerFilePath, 'composer.json has not been found in document root');
-            $content = \file_get_contents($composerFilePath);
-            self::assertNotEmpty($content, "Nothing has been fetched from $composerFilePath, is readable?");
-            static::$composerConfig = \json_decode($content, true /*as array */);
-            self::assertNotEmpty(static::$composerConfig, 'Can not decode composer.json content');
-        }
-    }
-
     /**
      * @test
      */
     public function Project_is_using_php_of_version_with_nullable_type_hints(): void
     {
-        $requiredPhpVersion = static::$composerConfig['require']['php'];
+        $requiredPhpVersion = $this->getComposerConfig()['require']['php'];
         self::assertGreaterThan(0, \preg_match('~(?<version>\d.+)$~', $requiredPhpVersion, $matches));
         $minimalPhpVersion = $matches['version'];
         self::assertGreaterThanOrEqual(
@@ -49,12 +34,12 @@ class ComposerConfigTest extends AbstractContentTest
 
             return;
         }
-        $postInstallScripts = static::$composerConfig['scripts']['post-install-cmd'] ?? [];
+        $postInstallScripts = $this->getComposerConfig()['scripts']['post-install-cmd'] ?? [];
         self::assertNotEmpty(
             $postInstallScripts,
             'Missing post-install-cmd scripts, expected at least "php vendor/bin/assets --css --dir=css"'
         );
-        $postUpdateScripts = static::$composerConfig['scripts']['post-update-cmd'] ?? [];
+        $postUpdateScripts = $this->getComposerConfig()['scripts']['post-update-cmd'] ?? [];
         self::assertNotEmpty(
             $postUpdateScripts,
             'Missing post-update-cmd scripts, expected at least "php vendor/bin/assets --css --dir=css"'
@@ -75,20 +60,6 @@ class ComposerConfigTest extends AbstractContentTest
     public function Has_licence_matching_to_access(): void
     {
         $expectedLicence = $this->getTestsConfiguration()->getExpectedLicence();
-        self::assertSame($expectedLicence, static::$composerConfig['license'], "Expected licence '$expectedLicence'");
-    }
-
-    /**
-     * @test
-     */
-    public function Package_is_injected(): void
-    {
-        if (!$this->isSkeletonChecked()) {
-            self::assertFalse(false, 'Intended for skeleton only');
-
-            return;
-        }
-        self::assertSame('composer-plugin', static::$composerConfig['type']);
-        self::assertSame(SkeletonInjectorComposerPlugin::class, static::$composerConfig['extra']['class']);
+        self::assertSame($expectedLicence, $this->getComposerConfig()['license'], "Expected licence '$expectedLicence'");
     }
 }

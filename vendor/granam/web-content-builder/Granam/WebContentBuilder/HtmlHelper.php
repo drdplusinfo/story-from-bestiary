@@ -6,7 +6,6 @@ namespace Granam\WebContentBuilder;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
 use Gt\Dom\Element;
-use Gt\Dom\HTMLCollection;
 
 class HtmlHelper extends StrictObject
 {
@@ -67,30 +66,20 @@ class HtmlHelper extends StrictObject
 
     public function replaceDiacriticsFromIds(HtmlDocument $htmlDocument): HtmlDocument
     {
-        $this->replaceDiacriticsFromChildrenIds($htmlDocument->body->children);
-
-        return $htmlDocument;
-    }
-
-    private function replaceDiacriticsFromChildrenIds(HTMLCollection $children): void
-    {
-        foreach ($children as $child) {
-            // recursion
-            $this->replaceDiacriticsFromChildrenIds($child->children);
-            $id = $child->getAttribute('id');
-            if (!$id) {
-                continue;
-            }
+        foreach ($this->getElementsWithId($htmlDocument) as $id => $elementWithId) {
             $idWithoutDiacritics = static::toId($id);
             if ($idWithoutDiacritics === $id) {
                 continue;
             }
-            $child->setAttribute(self::DATA_ORIGINAL_ID, $id);
-            $child->setAttribute('id', $this->sanitizeId($idWithoutDiacritics));
-            $child->appendChild($invisibleId = new Element('span'));
+            $elementWithId = $this->getElementWithId($id, $htmlDocument);
+            $elementWithId->setAttribute(self::DATA_ORIGINAL_ID, $id);
+            $elementWithId->setAttribute('id', $this->sanitizeId($idWithoutDiacritics));
+            $elementWithId->appendChild($invisibleId = new Element('span'));
             $invisibleId->setAttribute('id', $this->sanitizeId($id));
             $invisibleId->className = self::CLASS_INVISIBLE_ID;
         }
+
+        return $htmlDocument;
     }
 
     private function sanitizeId(string $id): string
@@ -98,26 +87,33 @@ class HtmlHelper extends StrictObject
         return \str_replace('#', '_', $id);
     }
 
-    public function replaceDiacriticsFromAnchorHashes(HtmlDocument $htmlDocument): void
+    public function replaceDiacriticsFromAnchorHashes(
+        HtmlDocument $htmlDocument,
+        string $includingUrlPattern = null,
+        string $excludingUrlPattern = null
+    ): HtmlDocument
     {
-        $this->replaceDiacriticsFromChildrenAnchorHashes($htmlDocument->getElementsByTagName('a'));
+        $this->replaceDiacriticsFromChildrenAnchorHashes(
+            $htmlDocument->getElementsByTagName('a'),
+            $includingUrlPattern,
+            $excludingUrlPattern
+        );
+
+        return $htmlDocument;
     }
 
-    private function replaceDiacriticsFromChildrenAnchorHashes(\Traversable $children): void
+    private function replaceDiacriticsFromChildrenAnchorHashes(
+        \Traversable $anchors,
+        ?string $includingUrlPattern,
+        ?string $excludingUrlPattern
+    ): void
     {
-        /** @var Element $child */
-        foreach ($children as $child) {
+        /** @var Element $anchor */
+        foreach ($anchors as $anchor) {
             // recursion
-            $this->replaceDiacriticsFromChildrenAnchorHashes($child->children);
-            $href = $child->getAttribute('href');
-            if (!$href) {
-                continue;
-            }
-            $hashPosition = \strpos($href, '#');
-            if ($hashPosition === false) {
-                continue;
-            }
-            $hash = substr($href, $hashPosition + 1);
+            $this->replaceDiacriticsFromChildrenAnchorHashes($anchor->getElementsByTagName('a'), $includingUrlPattern, $excludingUrlPattern);
+            $href = (string)$anchor->getAttribute('href');
+            $hash = $this->parseHash($href, $includingUrlPattern, $excludingUrlPattern);
             if ($hash === '') {
                 continue;
             }
@@ -125,51 +121,100 @@ class HtmlHelper extends StrictObject
             if ($hashWithoutDiacritics === $hash) {
                 continue;
             }
-            $hrefWithoutDiacritics = substr($href, 0, $hashPosition) . '#' . $hashWithoutDiacritics;
-            $child->setAttribute('href', $hrefWithoutDiacritics);
+            $hrefWithoutDiacritics = \str_replace('#' . $hash, '#' . $hashWithoutDiacritics, $href);
+            $anchor->setAttribute('href', $hrefWithoutDiacritics);
         }
     }
 
-    /**
-     * @param HtmlDocument $htmlDocument
-     * @return HtmlDocument
-     */
-    public function addAnchorsToIds(HtmlDocument $htmlDocument): HtmlDocument
+    private function parseHash(string $href, string $urlMatchingPattern = null, string $urlExcludingPattern = null): string
     {
-        $this->addAnchorsToChildrenWithIds($htmlDocument->body->children);
+        if (!$href) {
+            return '';
+        }
+        $hashPosition = \strpos($href, '#');
+        if ($hashPosition === false) {
+            return '';
+        }
+        if ($urlMatchingPattern !== null || $urlExcludingPattern !== null) {
+            $link = \substr($href, 0, $hashPosition);
+            if ($urlMatchingPattern !== null && !\preg_match($urlMatchingPattern, $link)) {
+                return '';
+            }
+            if ($urlExcludingPattern !== null && \preg_match($urlExcludingPattern, $link)) {
+                return '';
+            }
+        }
 
-        return $htmlDocument;
+        return (string)\substr($href, $hashPosition + 1);
     }
 
-    private function addAnchorsToChildrenWithIds(HTMLCollection $children): void
+    public function addAnchorsToIds(HtmlDocument $htmlDocument): HtmlDocument
     {
-        /** @var Element $child */
-        foreach ($children as $child) {
-            if (!\in_array($child->nodeName, ['a', 'button'], true)
-                && $child->getAttribute('id')
-                && $child->getElementsByTagName('a')->length === 0 // already have some anchors, skipp it to avoid wrapping them by another one
-                && !$child->prop_get_classList()->contains(self::CLASS_INVISIBLE_ID)
+        foreach ($this->getElementsWithId($htmlDocument) as $elementWithId) {
+            if (!\in_array($elementWithId->nodeName, ['a', 'button'], true)
+                && $elementWithId->getElementsByTagName('a')->length === 0 // already have some anchors, skip it to avoid wrapping them by another one
+                && !$elementWithId->prop_get_classList()->contains(self::CLASS_INVISIBLE_ID)
             ) {
                 $toMove = [];
-                /** @var \DOMElement $grandChildNode */
-                foreach ($child->childNodes as $grandChildNode) {
-                    if (!\in_array($grandChildNode->nodeName, ['span', 'strong', 'b', 'i', '#text'], true)) {
+                /** @var \DOMElement $childNode */
+                foreach ($elementWithId->childNodes as $childNode) {
+                    if (!\in_array($childNode->nodeName, ['span', 'strong', 'b', 'i', '#text'], true)) {
                         break;
                     }
-                    $toMove[] = $grandChildNode;
+                    $toMove[] = $childNode;
                 }
-                if (\count($toMove) > 0) {
+                if ($toMove) {
                     $anchorToSelf = new Element('a');
-                    $child->replaceChild($anchorToSelf, $toMove[0]); // pairs anchor with parent element
-                    $anchorToSelf->setAttribute('href', '#' . $child->getAttribute('id'));
+                    $elementWithId->replaceChild($anchorToSelf, $toMove[0]); // pairs anchor with parent element
+                    $anchorToSelf->setAttribute('href', '#' . $elementWithId->getAttribute('id'));
                     foreach ($toMove as $index => $item) {
                         $anchorToSelf->appendChild($item);
                     }
                 }
             }
-            // recursion
-            $this->addAnchorsToChildrenWithIds($child->children);
         }
+
+        return $htmlDocument;
+    }
+
+    /**
+     * @param HtmlDocument $htmlDocument
+     * @return array|Element[]
+     */
+    private function getElementsWithId(HtmlDocument $htmlDocument): array
+    {
+        $elementsWithId = [];
+        foreach ($this->getIds($htmlDocument) as $id) {
+            $elementsWithId[$id] = $this->getElementWithId($id, $htmlDocument);
+        }
+
+        return $elementsWithId;
+    }
+
+    private function getElementWithId(string $id, HtmlDocument $htmlDocument): Element
+    {
+        $elementById = $htmlDocument->getElementById($id);
+        if (!$elementById) {
+            throw new Exceptions\ElementNotFoundById(
+                \sprintf("No element has been found by ID '%s'", $id)
+            );
+        }
+
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $elementById;
+    }
+
+    /**
+     * @param HtmlDocument $htmlDocument
+     * @return array|string[]
+     */
+    private function getIds(HtmlDocument $htmlDocument): array
+    {
+        if (!\preg_match_all('~\Wid\s*=\s*"(?<ids>[^"]+)"~', $htmlDocument->body->prop_get_innerHTML(), $matches)) {
+            return [];
+        }
+
+        return \array_map('html_entity_decode', $matches['ids']);
     }
 
     /**
@@ -234,5 +279,21 @@ class HtmlHelper extends StrictObject
     private function getFileHash(string $fileName): string
     {
         return \md5_file($fileName) ?: (string)\time(); // time is a fallback
+    }
+
+    public function getFirstIdFrom(Element $element): ?string
+    {
+        $id = (string)$element->getAttribute('id');
+        if ($id !== '') {
+            return $id;
+        }
+        foreach ($element->children as $child) {
+            $id = $this->getFirstIdFrom($child);
+            if ($id !== null) {
+                return $id;
+            }
+        }
+
+        return null;
     }
 }

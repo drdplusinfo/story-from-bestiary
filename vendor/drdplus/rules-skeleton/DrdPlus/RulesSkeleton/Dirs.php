@@ -6,8 +6,6 @@ namespace DrdPlus\RulesSkeleton;
 class Dirs extends \Granam\WebContentBuilder\Dirs
 {
     /** @var string */
-    private $webRoot;
-    /** @var string */
     private $cacheRoot;
     /** @var string */
     private $pdfRoot;
@@ -15,12 +13,6 @@ class Dirs extends \Granam\WebContentBuilder\Dirs
     public function __construct(string $projectRoot)
     {
         parent::__construct($projectRoot);
-        $this->populateSubRoots($projectRoot);
-    }
-
-    private function populateSubRoots(string $projectRoot): void
-    {
-        $this->webRoot = $projectRoot . '/web';
         $this->cacheRoot = $projectRoot . '/cache/' . \PHP_SAPI;
         $this->pdfRoot = $projectRoot . '/pdf';
     }
