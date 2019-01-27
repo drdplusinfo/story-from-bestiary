@@ -374,7 +374,7 @@
         "version_normalized": "1.1.26.0",
         "source": {
             "type": "git",
-            "url": "/var/www/rules.skeleton",
+            "url": "https://github.com/drdplusinfo/rules-skeleton.git",
             "reference": "3e0bbd57456b81907ab1c9207536b9a1ccc79695"
         },
         "require": {
