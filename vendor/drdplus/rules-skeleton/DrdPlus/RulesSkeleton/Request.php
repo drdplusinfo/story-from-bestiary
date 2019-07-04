@@ -15,8 +15,10 @@ class Request extends StrictObject
     public const TABLES = 'tables';
     public const TABULKY = 'tabulky';
     public const CONFIRM = 'confirm';
-    public const TRIAL = 'trial';
     public const PDF = 'pdf';
+    // trial
+    public const TRIAL = 'trial';
+    public const TRIAL_EXPIRED_AT = 'trial_expired_at';
 
     /** @var Bot */
     private $botParser;
@@ -141,11 +143,16 @@ class Request extends StrictObject
 
     public function isRequestedPdf(): bool
     {
-        return $this->getQueryString() === self::PDF;
+        return $this->getQueryString() === self::PDF || $this->getValueFromGet(self::PDF) !== null;
     }
 
     public function getPhpSapi(): string
     {
         return \PHP_SAPI;
+    }
+
+    public function trialJustExpired(): bool
+    {
+        return !empty($_GET[static::TRIAL_EXPIRED_AT]) && ((int)$_GET[static::TRIAL_EXPIRED_AT]) <= \time();
     }
 }

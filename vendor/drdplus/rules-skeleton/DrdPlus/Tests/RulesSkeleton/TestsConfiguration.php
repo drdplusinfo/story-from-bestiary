@@ -21,7 +21,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const HAS_HEADINGS = 'has_headings';
     public const HAS_AUTHORS = 'has_authors';
 
-    public const PUBLIC_URL = 'public_url';
+    public const EXPECTED_PUBLIC_URL = 'expected_public_url';
     public const HAS_EXTERNAL_ANCHORS_WITH_HASHES = 'has_external_anchors_with_hashes';
     public const HAS_CUSTOM_BODY_CONTENT = 'has_custom_body_content';
     public const HAS_NOTES = 'has_notes';
@@ -42,6 +42,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const TOO_SHORT_FAILURE_NAMES = 'too_short_failure_names';
     public const TOO_SHORT_SUCCESS_NAMES = 'too_short_success_names';
     public const TOO_SHORT_RESULT_NAMES = 'too_short_result_names';
+    public const HAS_PDF = 'has_pdf';
 
     public static function createFromYaml(string $yamlConfigFile)
     {
@@ -83,9 +84,11 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     /** @var array|string[] */
     private $allowedCalculationIdPrefixes = ['Hod proti', 'Hod na', 'Výpočet'];
     /** @var string */
-    private $publicUrl;
+    private $expectedPublicUrl;
     /** @var bool */
     private $hasProtectedAccess = true;
+    /** @var bool */
+    private $hasPdf = true;
     /** @var bool */
     private $canBeBoughtOnEshop = true;
     /** @var bool */
@@ -119,7 +122,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setHasHeadings($values);
         $this->setHasAuthors($values);
         $this->setPublicUrl($values);
-        $this->setLocalUrl($this->publicUrl);
+        $this->setLocalUrl($this->expectedPublicUrl);
         $this->setHasExternalAnchorsWithHashes($values);
         $this->setHasCustomBodyContent($values);
         $this->setHasNotes($values);
@@ -131,6 +134,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setExpectedPageTitle($values);
         $this->setExpectedGoogleAnalyticsId($values);
         $this->setHasProtectedAccess($values);
+        $this->setHasPdf($values);
         $this->setCanBeBoughtOnEshop($values);
         $this->setHasDebugContacts($values);
         $this->setExpectedLicence($values);
@@ -230,12 +234,12 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
 
     private function setPublicUrl(array $values)
     {
-        $publicUrl = \trim($values[self::PUBLIC_URL] ?? '');
+        $publicUrl = \trim($values[self::EXPECTED_PUBLIC_URL] ?? '');
         try {
             $this->guardValidUrl($publicUrl);
         } catch (InvalidUrl $invalidUrl) {
             throw new Exceptions\InvalidPublicUrl(
-                sprintf("Given public URL under key '%s' is not valid: '%s'", self::PUBLIC_URL, $publicUrl),
+                sprintf("Given public URL under key '%s' is not valid: '%s'", self::EXPECTED_PUBLIC_URL, $publicUrl),
                 $invalidUrl->getCode(),
                 $invalidUrl
             );
@@ -243,7 +247,7 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         if (\strpos($publicUrl, 'https://') !== 0) {
             throw new Exceptions\PublicUrlShouldUseHttps("Given public URL should use HTTPS: '$publicUrl'");
         }
-        $this->publicUrl = $publicUrl;
+        $this->expectedPublicUrl = $publicUrl;
     }
 
     /**
@@ -354,6 +358,11 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->hasProtectedAccess = (bool)($values[self::HAS_PROTECTED_ACCESS] ?? $this->hasProtectedAccess);
     }
 
+    private function setHasPdf(array $values)
+    {
+        $this->hasPdf = (bool)($values[self::HAS_PDF] ?? $this->hasPdf);
+    }
+
     private function setCanBeBoughtOnEshop(array $values)
     {
         $this->canBeBoughtOnEshop = (bool)($values[self::CAN_BE_BOUGHT_ON_ESHOP] ?? $this->canBeBoughtOnEshop);
@@ -423,9 +432,9 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         }
     }
 
-    public function getPublicUrl(): string
+    public function getExpectedPublicUrl(): string
     {
-        return $this->publicUrl;
+        return $this->expectedPublicUrl;
     }
 
     public function getLocalUrl(): string
@@ -487,6 +496,11 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public function hasProtectedAccess(): bool
     {
         return $this->hasProtectedAccess;
+    }
+
+    public function hasPdf(): bool
+    {
+        return $this->hasPdf;
     }
 
     public function canBeBoughtOnEshop(): bool

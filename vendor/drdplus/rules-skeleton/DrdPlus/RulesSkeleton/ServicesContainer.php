@@ -4,71 +4,64 @@ declare(strict_types=1);
 namespace DrdPlus\RulesSkeleton;
 
 use DeviceDetector\Parser\Bot;
-use DrdPlus\RulesSkeleton\Web\DebugContactsBody;
 use DrdPlus\RulesSkeleton\Web\EmptyMenu;
 use DrdPlus\RulesSkeleton\Web\Head;
 use DrdPlus\RulesSkeleton\Web\Menu;
 use DrdPlus\RulesSkeleton\Web\Pass;
-use DrdPlus\RulesSkeleton\Web\PassBody;
 use DrdPlus\RulesSkeleton\Web\PassContent;
-use DrdPlus\RulesSkeleton\Web\PdfBody;
-use DrdPlus\RulesSkeleton\Web\RulesMainBody;
 use DrdPlus\RulesSkeleton\Web\RulesMainContent;
-use DrdPlus\RulesSkeleton\Web\TablesBody;
 use DrdPlus\RulesSkeleton\Web\TablesContent;
 use DrdPlus\RulesSkeleton\Web\WebFiles;
+use DrdPlus\RulesSkeleton\Web\WebPartsContainer;
 use DrdPlus\WebVersions\WebVersions;
 use Granam\Git\Git;
 use Granam\Strict\Object\StrictObject;
 use Granam\String\StringTools;
-use Granam\WebContentBuilder\Web\Body;
 use Granam\WebContentBuilder\Web\CssFiles;
 use Granam\WebContentBuilder\Web\HtmlContentInterface;
 use Granam\WebContentBuilder\Web\JsFiles;
 
 class ServicesContainer extends StrictObject
 {
-
+    
     /** @var CurrentWebVersion */
-    protected $currentWebVersion;
+    private $currentWebVersion;
     /** @var WebVersions */
-    protected $webVersions;
+    private $webVersions;
     /** @var Git */
-    protected $git;
+    private $git;
     /** @var Configuration */
-    protected $configuration;
+    private $configuration;
     /** @var HtmlHelper */
-    protected $htmlHelper;
-    /** @var Cache */
-    protected $webCache;
+    private $htmlHelper;
     /** @var Head */
-    protected $head;
+    private $head;
     /** @var Menu */
-    protected $menu;
-    /** @var Body */
-    protected $rulesMainBody;
-    /** @var TablesBody */
-    protected $tablesBody;
+    private $menu;
     /** @var Cache */
     private $tablesWebCache;
     /** @var CssFiles */
-    protected $cssFiles;
+    private $cssFiles;
     /** @var JsFiles */
-    protected $jsFiles;
+    private $jsFiles;
     /** @var WebFiles */
-    protected $webFiles;
+    private $webFiles;
     /** @var Request */
-    protected $request;
+    private $request;
+    /** @var ContentIrrelevantParametersFilter */
+    private $contentIrrelevantParametersFilter;
     /** @var Bot */
-    protected $botParser;
+    private $botParser;
+    /** @var WebPartsContainer */
+    private $webPartsContainer;
     /** @var RulesMainContent */
-    protected $rulesMainContent;
+    private $rulesMainContent;
     /** @var RulesMainContent */
-    protected $tablesMainContent;
+    private $tablesMainContent;
     /** @var HtmlContentInterface */
-    protected $rulesPdfWebContent;
+    private $rulesPdfWebContent;
     /** @var RulesMainContent */
-    protected $passContent;
+    private $passContent;
     /** @var CookiesService */
     private $cookiesService;
     /** @var \DateTimeImmutable */
@@ -81,12 +74,6 @@ class ServicesContainer extends StrictObject
     private $usagePolicy;
     /** @var Pass */
     private $pass;
-    /** @var PassBody */
-    private $passBody;
-    /** @var DebugContactsBody */
-    private $debugContactsBody;
-    /** @var PdfBody */
-    private $pdfBody;
 
     public function __construct(Configuration $configuration, HtmlHelper $htmlHelper)
     {
@@ -108,7 +95,6 @@ class ServicesContainer extends StrictObject
                 $this->getWebVersions()
             );
         }
-
         return $this->currentWebVersion;
     }
 
@@ -117,7 +103,6 @@ class ServicesContainer extends StrictObject
         if ($this->webVersions === null) {
             $this->webVersions = new WebVersions($this->getGit(), $this->getDirs()->getProjectRoot());
         }
-
         return $this->webVersions;
     }
 
@@ -126,7 +111,6 @@ class ServicesContainer extends StrictObject
         if ($this->request === null) {
             $this->request = new Request($this->getBotParser());
         }
-
         return $this->request;
     }
 
@@ -135,7 +119,6 @@ class ServicesContainer extends StrictObject
         if ($this->git === null) {
             $this->git = new Git();
         }
-
         return $this->git;
     }
 
@@ -144,7 +127,6 @@ class ServicesContainer extends StrictObject
         if ($this->botParser === null) {
             $this->botParser = new Bot();
         }
-
         return $this->botParser;
     }
 
@@ -154,11 +136,24 @@ class ServicesContainer extends StrictObject
             $this->rulesMainContent = new RulesMainContent(
                 $this->getHtmlHelper(),
                 $this->getHead(),
-                $this->getRulesMainBody()
+                $this->getWebPartsContainer()->getRulesMainBody()
             );
         }
-
         return $this->rulesMainContent;
+    }
+
+    public function getWebPartsContainer(): WebPartsContainer
+    {
+        if ($this->webPartsContainer === null) {
+            $this->webPartsContainer = new WebPartsContainer(
+                $this->getPass(),
+                $this->getWebFiles(),
+                $this->getDirs(),
+                $this->getHtmlHelper(),
+                $this->getRequest()
+            );
+        }
+        return $this->webPartsContainer;
     }
 
     public function getTablesContent(): TablesContent
@@ -167,19 +162,17 @@ class ServicesContainer extends StrictObject
             $this->tablesMainContent = new TablesContent(
                 $this->getHtmlHelper(),
                 $this->getHeadForTables(),
-                $this->getTablesBody()
+                $this->getWebPartsContainer()->getTablesBody()
             );
         }
-
         return $this->tablesMainContent;
     }
 
     public function getPdfContent(): PdfContent
     {
         if ($this->rulesPdfWebContent === null) {
-            $this->rulesPdfWebContent = new PdfContent($this->getPdfBody());
+            $this->rulesPdfWebContent = new PdfContent($this->getWebPartsContainer()->getPdfBody());
         }
-
         return $this->rulesPdfWebContent;
     }
 
@@ -189,10 +182,9 @@ class ServicesContainer extends StrictObject
             $this->passContent = new PassContent(
                 $this->getHtmlHelper(),
                 $this->getHead(),
-                $this->getPassBody()
+                $this->getWebPartsContainer()->getPassBody()
             );
         }
-
         return $this->passContent;
     }
 
@@ -206,7 +198,6 @@ class ServicesContainer extends StrictObject
         if ($this->menu === null) {
             $this->menu = new Menu($this->getConfiguration(), $this->getWebVersions(), $this->getCurrentWebVersion(), $this->getRequest());
         }
-
         return $this->menu;
     }
 
@@ -215,22 +206,7 @@ class ServicesContainer extends StrictObject
         if ($this->head === null) {
             $this->head = new Head($this->getConfiguration(), $this->getHtmlHelper(), $this->getCssFiles(), $this->getJsFiles());
         }
-
         return $this->head;
-    }
-
-    public function getRulesMainBody(): RulesMainBody
-    {
-        if ($this->rulesMainBody === null) {
-            $this->rulesMainBody = new RulesMainBody($this->getWebFiles(), $this->getRulesMainBodyParameters());
-        }
-
-        return $this->rulesMainBody;
-    }
-
-    public function getRulesMainBodyParameters(): array
-    {
-        return ['debugContacts' => $this->getDebugContactsBody()];
     }
 
     public function getHeadForTables(): Head
@@ -244,15 +220,6 @@ class ServicesContainer extends StrictObject
         );
     }
 
-    public function getTablesBody(): TablesBody
-    {
-        if ($this->tablesBody === null) {
-            $this->tablesBody = new TablesBody($this->getRulesMainBody(), $this->getHtmlHelper(), $this->getRequest());
-        }
-
-        return $this->tablesBody;
-    }
-
     public function getTablesWebCache(): Cache
     {
         if ($this->tablesWebCache === null) {
@@ -260,13 +227,21 @@ class ServicesContainer extends StrictObject
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
+                $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
                 Cache::TABLES
             );
         }
-
         return $this->tablesWebCache;
+    }
+
+    public function getContentIrrelevantParametersFilter(): ContentIrrelevantParametersFilter
+    {
+        if ($this->contentIrrelevantParametersFilter === null) {
+            $this->contentIrrelevantParametersFilter = new ContentIrrelevantParametersFilter([Request::TRIAL]);
+        }
+        return $this->contentIrrelevantParametersFilter;
     }
 
     public function getCssFiles(): CssFiles
@@ -274,7 +249,6 @@ class ServicesContainer extends StrictObject
         if ($this->cssFiles === null) {
             $this->cssFiles = new CssFiles($this->getDirs(), $this->getHtmlHelper()->isInProduction());
         }
-
         return $this->cssFiles;
     }
 
@@ -283,7 +257,6 @@ class ServicesContainer extends StrictObject
         if ($this->jsFiles === null) {
             $this->jsFiles = new JsFiles($this->getConfiguration()->getDirs(), $this->getHtmlHelper()->isInProduction());
         }
-
         return $this->jsFiles;
     }
 
@@ -297,7 +270,6 @@ class ServicesContainer extends StrictObject
         if ($this->webFiles === null) {
             $this->webFiles = new WebFiles($this->getDirs());
         }
-
         return $this->webFiles;
     }
 
@@ -306,7 +278,6 @@ class ServicesContainer extends StrictObject
         if ($this->cookiesService === null) {
             $this->cookiesService = new CookiesService();
         }
-
         return $this->cookiesService;
     }
 
@@ -316,7 +287,6 @@ class ServicesContainer extends StrictObject
             /** @noinspection PhpUnhandledExceptionInspection */
             $this->now = new \DateTimeImmutable();
         }
-
         return $this->now;
     }
 
@@ -327,12 +297,12 @@ class ServicesContainer extends StrictObject
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
+                $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
                 Cache::PASS
             );
         }
-
         return $this->passWebCache;
     }
 
@@ -343,31 +313,13 @@ class ServicesContainer extends StrictObject
                 $this->getCurrentWebVersion(),
                 $this->getDirs(),
                 $this->getRequest(),
+                $this->getContentIrrelevantParametersFilter(),
                 $this->getGit(),
                 $this->getHtmlHelper()->isInProduction(),
                 Cache::PASSED
             );
         }
-
         return $this->passedWebCache;
-    }
-
-    public function getPassBody(): PassBody
-    {
-        if ($this->passBody === null) {
-            $this->passBody = new PassBody($this->getPass());
-        }
-
-        return $this->passBody;
-    }
-
-    public function getDebugContactsBody(): DebugContactsBody
-    {
-        if ($this->debugContactsBody === null) {
-            $this->debugContactsBody = new DebugContactsBody();
-        }
-
-        return $this->debugContactsBody;
     }
 
     public function getPass(): Pass
@@ -375,7 +327,6 @@ class ServicesContainer extends StrictObject
         if ($this->pass === null) {
             $this->pass = new Pass($this->getConfiguration(), $this->getUsagePolicy());
         }
-
         return $this->pass;
     }
 
@@ -388,17 +339,7 @@ class ServicesContainer extends StrictObject
                 $this->getCookiesService()
             );
         }
-
         return $this->usagePolicy;
-    }
-
-    public function getPdfBody(): PdfBody
-    {
-        if ($this->pdfBody === null) {
-            $this->pdfBody = new PdfBody($this->getDirs());
-        }
-
-        return $this->pdfBody;
     }
 
     public function getEmptyMenu(): EmptyMenu
@@ -417,6 +358,7 @@ class ServicesContainer extends StrictObject
             $this->getCurrentWebVersion(),
             $this->getDirs(),
             $this->getRequest(),
+            $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
             $this->getHtmlHelper()->isInProduction(),
             'empty'

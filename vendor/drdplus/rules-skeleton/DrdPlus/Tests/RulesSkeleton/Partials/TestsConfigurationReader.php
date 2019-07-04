@@ -31,9 +31,11 @@ interface TestsConfigurationReader
 
     public function hasHeadings(): bool;
 
-    public function getPublicUrl(): string;
+    public function getExpectedPublicUrl(): string;
 
     public function hasProtectedAccess(): bool;
+
+    public function hasPdf(): bool;
 
     public function canBeBoughtOnEshop(): bool;
 
