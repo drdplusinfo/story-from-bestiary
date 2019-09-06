@@ -1,4 +1,4 @@
-public_url: 'https://pribeh.bestiar.drdplus.info'
+expected_public_url: 'https://pribeh.bestiar.drdplus.info'
 has_links_to_journals: false
 has_link_to_single_journal: false
 has_tables: false
@@ -13,6 +13,9 @@ has_links_to_altar: false
 has_more_versions: false
 has_external_anchors_with_hashes: false
 has_table_of_contents: false
+has_pdf: false
+has_calculations: false
+has_marked_result: false
 expected_google_analytics_id: 'UA-121206931-13'
 expected_last_version: 'master'
 expected_web_name: 'Příběh z DrD+ bestiáře'

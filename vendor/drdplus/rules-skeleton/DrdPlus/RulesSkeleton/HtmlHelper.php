@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\RulesSkeleton;
 
@@ -26,8 +25,10 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
     public const CLASS_INVISIBLE = 'invisible';
     public const CLASS_DELIMITER = 'delimiter';
     public const CLASS_CONTENT = 'content';
+    public const CLASS_RESULT = 'result';
     public const CLASS_EXTERNAL_URL = 'external-url';
     public const CLASS_HIDDEN = 'hidden';
+    public const CLASS_FORMULA = 'formula';
     public const CLASS_SOURCE_CODE_TITLE = 'source-code-title';
     public const DATA_CACHE_STAMP = 'data-cache-stamp';
     public const DATA_CACHED_AT = 'data-cached-at';
@@ -104,25 +105,6 @@ class HtmlHelper extends \Granam\WebContentBuilder\HtmlHelper
         }
 
         return \array_intersect_key($tablesWithIds, $unifiedRequiredIds);
-    }
-
-    /**
-     * @param HtmlDocument $htmlDocument
-     * @return HtmlDocument
-     */
-    public function makeDrdPlusLinksLocal(HtmlDocument $htmlDocument): HtmlDocument
-    {
-        /** @var Element $anchor */
-        foreach ($htmlDocument->getElementsByTagName('a') as $anchor) {
-            $anchor->setAttribute('href', static::turnToLocalLink($anchor->getAttribute('href')));
-        }
-        /** @var Element $iFrame */
-        foreach ($htmlDocument->getElementsByTagName('iframe') as $iFrame) {
-            $iFrame->setAttribute('src', static::turnToLocalLink($iFrame->getAttribute('src')));
-            $iFrame->setAttribute('id', \str_replace('drdplus.info', 'drdplus.loc', $iFrame->getAttribute('id')));
-        }
-
-        return $htmlDocument;
     }
 
     public function markExternalLinksByClass(HtmlDocument $htmlDocument): HtmlDocument

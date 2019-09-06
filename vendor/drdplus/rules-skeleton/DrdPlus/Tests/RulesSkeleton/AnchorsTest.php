@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
@@ -24,19 +23,30 @@ class AnchorsTest extends AbstractContentTest
     {
         $html = $this->getHtmlDocument();
         $localAnchors = $this->getLocalAnchors();
-        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasLocalLinks()) {
+        if (!$this->getTestsConfiguration()->hasLocalLinks()) {
             self::assertCount(
                 0,
                 $localAnchors,
-                'No local anchors expected as tests config says there are no IDs to make anchors from: '
-                . "\n" . \implode("\n", \array_map(function (Element $anchor) {
-                    return $anchor->getAttribute('href');
-                }, $localAnchors))
+                sprintf(
+                    "No local anchors expected as tests config says by '%s'. But there are IDs to make anchors from: %s",
+                    TestsConfiguration::HAS_LOCAL_LINKS,
+                    "\n" . \implode(
+                        "\n", \array_map(
+                            function (Element $anchor) {
+                                return $anchor->getAttribute('href');
+                            },
+                            $localAnchors
+                        )
+                    )
+                )
             );
 
             return;
         }
-        self::assertNotEmpty($localAnchors, 'Some local anchors expected');
+        self::assertNotEmpty(
+            $localAnchors,
+            sprintf("Some local anchors expected as tests config says by '%s'", TestsConfiguration::HAS_LOCAL_LINKS)
+        );
         foreach ($this->getLocalAnchors() as $localAnchor) {
             $expectedId = \substr($localAnchor->getAttribute('href'), 1); // just remove leading #
             /** @var Element $target */
@@ -47,7 +57,7 @@ class AnchorsTest extends AbstractContentTest
                     return;
                 }
             }
-            self::assertNotContains('hidden', (string)$target->className, "Inner link of ID $expectedId should not be hidden");
+            self::assertStringNotContainsString('hidden', (string)$target->className, "Inner link of ID $expectedId should not be hidden");
             self::assertNotRegExp('~(display:\s*none|visibility:\s*hidden)~', (string)$target->getAttribute('style'));
         }
     }
@@ -178,16 +188,26 @@ class AnchorsTest extends AbstractContentTest
     public function External_anchors_with_hashes_point_to_existing_ids(): void
     {
         $externalAnchorsWithHash = $this->getExternalAnchorsWithHash();
-        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasExternalAnchorsWithHashes()) {
+        if (!$this->getTestsConfiguration()->hasExternalAnchorsWithHashes()) {
             self::assertCount(
                 0,
                 $externalAnchorsWithHash,
-                'No external anchors expected according to tests config'
+                sprintf(
+                    "No external anchors expected as tests configuration says by '%s', got %s",
+                    TestsConfiguration::HAS_EXTERNAL_ANCHORS_WITH_HASHES,
+                    implode(',', $externalAnchorsWithHash)
+                )
             );
 
             return;
         }
-        self::assertNotEmpty($externalAnchorsWithHash, 'Some external anchors expected');
+        self::assertNotEmpty(
+            $externalAnchorsWithHash,
+            sprintf(
+                "Some external anchors expected as test configuration says by '%s'",
+                TestsConfiguration::HAS_EXTERNAL_ANCHORS_WITH_HASHES
+            )
+        );
         $skippedExternalUrls = [];
         foreach ($externalAnchorsWithHash as $originalLink) {
             $link = HtmlHelper::turnToLocalLink($originalLink);
@@ -276,7 +296,7 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Anchor_to_ID_self_is_not_created_if_contains_anchor_element(): void
+    public function Anchor_to_id_self_is_not_created_if_contains_anchor_element(): void
     {
         $document = $this->getHtmlDocument();
         $noAnchorsForMe = $document->getElementById(StringTools::toConstantLikeValue('no-anchor-for-me'));
@@ -303,7 +323,7 @@ class AnchorsTest extends AbstractContentTest
     {
         $document = $this->getHtmlDocument();
         $originalIds = $document->getElementsByClassName(HtmlHelper::CLASS_INVISIBLE_ID);
-        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasIds()) {
+        if (!$this->getTestsConfiguration()->hasIds()) {
             self::assertCount(
                 0,
                 $originalIds,
@@ -318,7 +338,7 @@ class AnchorsTest extends AbstractContentTest
         self::assertNotEmpty(
             $originalIds,
             sprintf(
-                'Expected some IDs identified by a HTML class %s according to test configuration %s',
+                "Expected some IDs identified by a HTML class '%s' as test configuration says by '%s'",
                 HtmlHelper::CLASS_INVISIBLE,
                 TestsConfiguration::HAS_IDS
             )
@@ -367,52 +387,22 @@ class AnchorsTest extends AbstractContentTest
     /**
      * @test
      */
-    public function I_can_navigate_to_every_calculation_as_it_has_its_id_with_anchor(): void
-    {
-        $document = $this->getHtmlDocument();
-        $calculations = $document->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
-        if (\count($calculations) === 0 && !$this->isSkeletonChecked()) {
-            self::assertFalse(false, 'No calculations in current document');
-
-            return;
-        }
-        self::assertNotEmpty($calculations);
-        $allowedCalculationIdPrefixes = $this->getTestsConfiguration()->getAllowedCalculationIdPrefixes();
-        $allowedCalculationIdPrefixesRegexp = $this->toRegexpOr($allowedCalculationIdPrefixes);
-        $allowedCalculationIdConstantLikePrefixes = \array_map(function (string $allowedPrefix) {
-            return StringTools::toConstantLikeValue($allowedPrefix);
-        }, $allowedCalculationIdPrefixes);
-        $allowedCalculationIdConstantLikePrefixesRegexp = $this->toRegexpOr($allowedCalculationIdConstantLikePrefixes);
-        foreach ($calculations as $calculation) {
-            self::assertNotEmpty($calculation->id, 'Missing ID for calculation: ' . \trim($calculation->innerHTML));
-            self::assertRegExp("~^($allowedCalculationIdPrefixesRegexp) ~u", $calculation->getAttribute('data-original-id'));
-            self::assertRegExp("~^($allowedCalculationIdConstantLikePrefixesRegexp)_~u", $calculation->id);
-        }
-    }
-
-    private function toRegexpOr(array $values, string $regexpDelimiter = '~'): string
-    {
-        $escaped = [];
-        foreach ($values as $value) {
-            $escaped[] = \preg_quote($value, $regexpDelimiter);
-        }
-
-        return \implode('|', $escaped);
-    }
-
-    /**
-     * @test
-     */
     public function Calculation_does_not_have_another_calculation_inside(): void
     {
-        $document = $this->getHtmlDocument();
-        $calculations = $document->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
-        if (\count($calculations) === 0 && !$this->isSkeletonChecked()) {
+        if (!$this->getTestsConfiguration()->hasCalculations()) {
             self::assertFalse(false, 'No calculations in current document');
 
             return;
         }
-        self::assertNotEmpty($calculations);
+        $document = $this->getHtmlDocument();
+        $calculations = $document->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
+        self::assertNotEmpty(
+            $calculations,
+            sprintf(
+                "Some calculations expected as test configuration says by '%s'",
+                TestsConfiguration::HAS_CALCULATIONS
+            )
+        );
         foreach ($calculations as $calculation) {
             foreach ($calculation->children as $child) {
                 $innerCalculations = $child->getElementsByClassName(HtmlHelper::CLASS_CALCULATION);
@@ -437,8 +427,15 @@ class AnchorsTest extends AbstractContentTest
             }
             $linksToAltar[] = $link;
         }
-        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasLinksToAltar()) {
-            self::assertCount(0, $linksToAltar, 'No link to Altar expected according to tests config');
+        if (!$this->getTestsConfiguration()->hasLinksToAltar()) {
+            self::assertCount(
+                0,
+                $linksToAltar,
+                sprintf(
+                    "No link to Altar expected as test configuration says by '%s'",
+                    TestsConfiguration::HAS_LINKS_TO_ALTAR
+                )
+            );
 
             return;
         }
@@ -531,8 +528,8 @@ class AnchorsTest extends AbstractContentTest
      */
     public function I_can_go_directly_to_eshop_item_page(): void
     {
-        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->canBeBoughtOnEshop()) {
-            self::assertFalse(false);
+        if (!$this->getTestsConfiguration()->canBeBoughtOnEshop()) {
+            self::assertFalse(false, 'Can not be bought');
 
             return;
         }
@@ -647,7 +644,7 @@ class AnchorsTest extends AbstractContentTest
             return;
         }
         self::assertGreaterThan(0, \count($linksToJournal), 'PDF journals are missing');
-        if ($this->isSkeletonChecked() || !$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
+        if (!$this->getTestsConfiguration()->hasLinkToSingleJournal()) {
             foreach ($linksToJournal as $linkToJournal) {
                 self::assertRegExp(
                     '~^' . \preg_quote(HtmlHelper::turnToLocalLink('https://www.drdplus.info'), '~') . '/pdf/deniky/denik_\w+[.]pdf$~',
@@ -696,12 +693,10 @@ class AnchorsTest extends AbstractContentTest
         foreach ($this->getLicenceSwitchers() as $licenceSwitcher) {
             $licenceSwitcher();
             $buttons = $this->getHtmlDocument()->getElementsByTagName('button');
-            if ($buttons->count() === 0 && !$this->isSkeletonChecked()) {
-                self::assertCount(0, $buttons, 'Simply no buttons');
-
+            if (!$this->getTestsConfiguration()->hasButtons()) {
+                self::assertCount(0, $buttons, 'No buttons to test');
                 return;
             }
-            self::assertNotEmpty($buttons, 'Some buttons expected in a skeleton to test');
             foreach ($buttons as $button) {
                 $buttonAnchors = $button->getElementsByTagName('a');
                 self::assertCount(0, $buttonAnchors, 'No anchors expected in button: ' . $button->outerHTML);

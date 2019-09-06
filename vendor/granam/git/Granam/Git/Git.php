@@ -129,11 +129,12 @@ class Git extends StrictObject
 
     /**
      * @param string $repositoryDir
+     * @param int $maxAttempts
      * @return array|string[] Rows with result of branch update
      * @throws \Granam\Git\Exceptions\CanNotLocallyCloneWebVersionViaGit
      * @throws \Granam\Git\Exceptions\UnknownMinorVersion
      */
-    public function update(string $repositoryDir): array
+    public function update(string $repositoryDir, int $maxAttempts = 3): array
     {
         $repositoryDirEscaped = escapeshellarg($repositoryDir);
         $attempt = 1;
@@ -147,18 +148,21 @@ class Git extends StrictObject
             try {
                 return $this->executeCommandsChainArray($commands);
             } catch (Exceptions\ExecutingCommandFailed $executingCommandFailed) {
-                if (preg_match("~Unable to create '[^']+[.]lock': File exists[.]~", $executingCommandFailed->getMessage())) {
-                    $attempt++;
-                    if ($attempt === 3) {
-                        throw $executingCommandFailed;
-                    }
-                    sleep($this->sleepMultiplierOnLock * $attempt); // some update currently proceeds
-                    $commands[0] = "echo 'attempt number $attempt'";
-                    continue;
+                if (!preg_match(
+                    "~(Unable to create '[^']+[.]lock': File exists[.]|It doesn't make sense to pull all tags|is at [[:alnum:]]{20,} but expected [[:alnum:]]{20,})~",
+                    $executingCommandFailed->getMessage()
+                )) {
+                    throw $executingCommandFailed;
                 }
-                throw $executingCommandFailed;
+                if ($attempt === $maxAttempts) {
+                    throw $executingCommandFailed;
+                }
+                sleep($this->sleepMultiplierOnLock * $attempt); // like 1 s, 2 s, ...
+                $attempt++;
+                $commands[0] = "echo 'attempt number $attempt'";
+                continue;
             }
-        } while ($attempt < 3);
+        } while ($attempt <= $maxAttempts);
     }
 
     /**
@@ -320,7 +324,7 @@ class Git extends StrictObject
      * @return string[]|array
      * @throws \Granam\Git\Exceptions\ExecutingCommandFailed
      */
-    private function executeArray(string $command, bool $sendErrorsToStdOut = true, bool $solveMissingHomeDir = true): array
+    protected function executeArray(string $command, bool $sendErrorsToStdOut = true, bool $solveMissingHomeDir = true): array
     {
         if ($sendErrorsToStdOut) {
             $command .= ' 2>&1';

@@ -41,7 +41,6 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
             'Symfony\\Component\\HttpFoundation\\' => 33,
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Filesystem\\' => 29,
-            'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Config\\' => 25,
             'Seld\\PharUtils\\' => 15,
@@ -50,6 +49,7 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Prophecy\\' => 9,
             'PHPMailer\\PHPMailer\\' => 20,
@@ -61,6 +61,7 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         'G' => 
         array (
             'Gt\\Dom\\' => 7,
+            'Gt\\CssXPath\\' => 12,
             'Granam\\' => 7,
         ),
         'D' => 
@@ -143,10 +144,6 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         array (
             0 => __DIR__ . '/..' . '/symfony/filesystem',
         ),
-        'Symfony\\Component\\CssSelector\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/css-selector',
-        ),
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
@@ -167,6 +164,10 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
@@ -186,6 +187,10 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         'Gt\\Dom\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpgt/dom/src',
+        ),
+        'Gt\\CssXPath\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpgt/cssxpath/src',
         ),
         'Granam\\' => 
         array (
@@ -551,6 +556,7 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         'PHP_Token_CLOSE_SQUARE' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_CLOSE_TAG' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_COALESCE' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
+        'PHP_Token_COALESCE_EQUAL' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_COLON' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_COMMA' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_COMMENT' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
@@ -596,6 +602,7 @@ class ComposerStaticInitd3c82011e814383e3c33bfab00df0ac1
         'PHP_Token_FILE' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_FINAL' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_FINALLY' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
+        'PHP_Token_FN' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_FOR' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_FOREACH' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_FUNCTION' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',

@@ -20,6 +20,7 @@
   },
   "require-dev": {
     "composer/composer": "^1.8",
+    "granam/exceptions-hierarchy": "^5.0",
     "mockery/mockery": "^1.1",
     "phpunit/phpunit": "~7.0",
     "roave/security-advisories": "dev-master"

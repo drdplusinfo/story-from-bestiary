@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace DrdPlus\Tests\RulesSkeleton;
 
@@ -16,33 +15,46 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public const LICENCE_PROPRIETARY = 'proprietary';
 
     public const HAS_TABLES = 'has_tables';
-    public const SOME_EXPECTED_TABLE_IDS = 'some_expected_table_ids';
     public const HAS_TABLE_OF_CONTENTS = 'has_table_of_contents';
     public const HAS_HEADINGS = 'has_headings';
     public const HAS_AUTHORS = 'has_authors';
-
-    public const EXPECTED_PUBLIC_URL = 'expected_public_url';
     public const HAS_EXTERNAL_ANCHORS_WITH_HASHES = 'has_external_anchors_with_hashes';
     public const HAS_CUSTOM_BODY_CONTENT = 'has_custom_body_content';
     public const HAS_NOTES = 'has_notes';
     public const HAS_IDS = 'has_ids';
+    public const HAS_CALCULATIONS = 'has_calculations';
+    /** @see \DrdPlus\RulesSkeleton\HtmlHelper::CLASS_CALCULATION */
+    public const HAS_MARKED_CONTENT = 'has_marked_content';
+    /** @see \DrdPlus\RulesSkeleton\HtmlHelper::CLASS_CONTENT */
+    public const HAS_MARKED_RESULT = 'has_marked_result';
+    /** @see \DrdPlus\RulesSkeleton\HtmlHelper::CLASS_RESULT */
     public const HAS_LOCAL_LINKS = 'has_local_links';
     public const HAS_LINKS_TO_ALTAR = 'has_links_to_altar';
+    public const HAS_PROTECTED_ACCESS = 'has_protected_access';
+    public const HAS_CHARACTER_SHEET = 'has_character_sheet';
+    public const HAS_LINKS_TO_JOURNALS = 'has_links_to_journals';
+    public const HAS_LINK_TO_SINGLE_JOURNAL = 'has_link_to_single_journal';
+    public const HAS_PDF = 'has_pdf';
+    public const HAS_DEBUG_CONTACTS = 'has_debug_contacts';
+    public const HAS_BUTTONS = 'has_buttons';
+    public const HAS_SHOWN_HOME_BUTTON = 'has_shown_home_button';
+    public const HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE = 'has_shown_home_button_on_homepage';
+    public const HAS_SHOWN_HOME_BUTTON_ON_ROUTES = 'has_shown_home_button_on_routes';
+    public const HAS_LOCAL_REPOSITORIES = 'has_local_repositories';
+
+    public const SOME_EXPECTED_TABLE_IDS = 'some_expected_table_ids';
+    public const EXPECTED_PUBLIC_URL = 'expected_public_url';
     public const EXPECTED_WEB_NAME = 'expected_web_name';
     public const ALLOWED_CALCULATION_ID_PREFIXES = 'allowed_calculation_id_prefixes';
     public const EXPECTED_PAGE_TITLE = 'expected_page_title';
     public const EXPECTED_GOOGLE_ANALYTICS_ID = 'expected_google_analytics_id';
-    public const HAS_PROTECTED_ACCESS = 'has_protected_access';
     public const CAN_BE_BOUGHT_ON_ESHOP = 'can_be_bought_on_eshop';
-    public const HAS_DEBUG_CONTACTS = 'has_debug_contacts';
     public const EXPECTED_LICENCE = 'expected_licence';
-    public const HAS_CHARACTER_SHEET = 'has_character_sheet';
-    public const HAS_LINKS_TO_JOURNALS = 'has_links_to_journals';
-    public const HAS_LINK_TO_SINGLE_JOURNAL = 'has_link_to_single_journal';
     public const TOO_SHORT_FAILURE_NAMES = 'too_short_failure_names';
     public const TOO_SHORT_SUCCESS_NAMES = 'too_short_success_names';
     public const TOO_SHORT_RESULT_NAMES = 'too_short_result_names';
-    public const HAS_PDF = 'has_pdf';
+    public const EXPECTED_HOME_BUTTON_TARGET_FROM_HOMEPAGE = 'expected_home_button_target_from_homepage';
+    public const EXPECTED_HOME_BUTTON_TARGET_FROM_ROUTES = 'expected_home_button_target_from_routes';
 
     public static function createFromYaml(string $yamlConfigFile)
     {
@@ -72,9 +84,25 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     /** @var bool */
     private $hasIds = true;
     /** @var bool */
+    private $hasCalculations = true;
+    /** @var bool */
     private $hasLocalLinks = true;
     /** @var bool */
     private $hasLinksToAltar = true;
+    /** @var bool */
+    private $hasButtons = true;
+    /** @var bool @deprecated */
+    private $hasShownHomeButton = false;
+    /** @var bool */
+    private $hasShownHomeButtonOnHomepage = true;
+    /** @var bool */
+    private $hasShownHomeButtonOnRoutes = true;
+    /** @var bool */
+    private $hasMarkedContent = true;
+    /** @var bool */
+    private $hasMarkedResult = true;
+    /** @var bool */
+    private $hasLocalRepositories = false;
     /** @var string */
     private $expectedWebName;
     /** @var string */
@@ -107,6 +135,10 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     private $tooShortSuccessNames = ['všiml si'];
     /** @var array|string[] */
     private $tooShortResultNames = ['Bonus', 'Postih'];
+    /** @var string */
+    private $expectedHomeButtonTargetFromHomepage = 'https://www.drdplus.info';
+    /** @var string */
+    private $expectedHomeButtonTargetFromRoutes = 'https://www.drdplus.info';
 
     /**
      * @param array $values
@@ -144,6 +176,16 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->setTooShortFailureNames($values);
         $this->setTooShortSuccessNames($values);
         $this->setTooShortResultNames($values);
+        $this->setHasCalculations($values);
+        $this->setHasShownHomeButton($values);
+        $this->setHasShownHomeButtonOnHomepage($values);
+        $this->setHasShownHomeButtonOnRoutes($values);
+        $this->setHasButtons($values);
+        $this->setHasMarkedContent($values);
+        $this->setHasMarkedResult($values);
+        $this->setHasLocalRepositories($values);
+        $this->setExpectedHomeButtonTargetFromHomepage($values);
+        $this->setExpectedHomeButtonTargetFromRoutes($values);
     }
 
     /**
@@ -300,6 +342,46 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         $this->hasIds = (bool)($values[self::HAS_IDS] ?? $this->hasIds);
     }
 
+    private function setHasCalculations(array $values)
+    {
+        $this->hasCalculations = (bool)($values[self::HAS_CALCULATIONS] ?? $this->hasCalculations);
+    }
+
+    private function setHasShownHomeButton(array $values)
+    {
+        $this->hasShownHomeButton = (bool)($values[self::HAS_SHOWN_HOME_BUTTON] ?? $this->hasShownHomeButton);
+    }
+
+    private function setHasShownHomeButtonOnHomepage(array $values)
+    {
+        $this->hasShownHomeButtonOnHomepage = (bool)($values[self::HAS_SHOWN_HOME_BUTTON_ON_HOMEPAGE] ?? $this->hasShownHomeButtonOnHomepage);
+    }
+
+    private function setHasShownHomeButtonOnRoutes(array $values)
+    {
+        $this->hasShownHomeButtonOnRoutes = (bool)($values[self::HAS_SHOWN_HOME_BUTTON_ON_ROUTES] ?? $this->hasShownHomeButtonOnRoutes);
+    }
+
+    private function setHasButtons(array $values)
+    {
+        $this->hasButtons = (bool)($values[self::HAS_BUTTONS] ?? $this->hasButtons);
+    }
+
+    private function setHasMarkedContent(array $values)
+    {
+        $this->hasMarkedContent = (bool)($values[self::HAS_MARKED_CONTENT] ?? $this->hasMarkedContent);
+    }
+
+    private function setHasMarkedResult(array $values)
+    {
+        $this->hasMarkedResult = (bool)($values[self::HAS_MARKED_RESULT] ?? $this->hasMarkedResult);
+    }
+
+    private function setHasLocalRepositories(array $values)
+    {
+        $this->hasLocalRepositories = (bool)($values[self::HAS_LOCAL_REPOSITORIES] ?? $this->hasLocalRepositories);
+    }
+
     private function setHasLocalLinks(array $values)
     {
         $this->hasLocalLinks = (bool)($values[self::HAS_LOCAL_LINKS] ?? $this->hasLocalLinks);
@@ -432,6 +514,18 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
         }
     }
 
+    private function setExpectedHomeButtonTargetFromHomepage(array $values)
+    {
+        $this->expectedHomeButtonTargetFromHomepage = $values[self::EXPECTED_HOME_BUTTON_TARGET_FROM_HOMEPAGE]
+            ?? $this->expectedHomeButtonTargetFromHomepage;
+    }
+
+    private function setExpectedHomeButtonTargetFromRoutes(array $values)
+    {
+        $this->expectedHomeButtonTargetFromRoutes = $values[self::EXPECTED_HOME_BUTTON_TARGET_FROM_ROUTES]
+            ?? $this->expectedHomeButtonTargetFromRoutes;
+    }
+
     public function getExpectedPublicUrl(): string
     {
         return $this->expectedPublicUrl;
@@ -460,6 +554,46 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public function hasIds(): bool
     {
         return $this->hasIds;
+    }
+
+    public function hasCalculations(): bool
+    {
+        return $this->hasCalculations;
+    }
+
+    public function hasButtons(): bool
+    {
+        return $this->hasButtons;
+    }
+
+    public function hasMarkedContent(): bool
+    {
+        return $this->hasMarkedContent;
+    }
+
+    public function hasMarkedResult(): bool
+    {
+        return $this->hasMarkedResult;
+    }
+
+    public function hasLocalRepositories(): bool
+    {
+        return $this->hasLocalRepositories;
+    }
+
+    public function hasShownHomeButton(): bool
+    {
+        return $this->hasShownHomeButton;
+    }
+
+    public function hasShownHomeButtonOnHomepage(): bool
+    {
+        return $this->hasShownHomeButtonOnHomepage;
+    }
+
+    public function hasShownHomeButtonOnRoutes(): bool
+    {
+        return $this->hasShownHomeButtonOnRoutes;
     }
 
     public function hasLocalLinks(): bool
@@ -555,5 +689,15 @@ class TestsConfiguration extends StrictObject implements TestsConfigurationReade
     public function getTooShortResultNames(): array
     {
         return $this->tooShortResultNames;
+    }
+
+    public function getExpectedHomeButtonTargetFromHomepage(): string
+    {
+        return $this->expectedHomeButtonTargetFromHomepage;
+    }
+
+    public function getExpectedHomeButtonTargetFromRoutes(): string
+    {
+        return $this->expectedHomeButtonTargetFromRoutes;
     }
 }

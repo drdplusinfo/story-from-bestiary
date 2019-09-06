@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use DrdPlus\RulesSkeleton\HtmlHelper;
@@ -90,7 +91,7 @@ class PassingTest extends AbstractContentTest
      */
     public function Crawlers_can_pass_without_licence_owning_confirmation(): void
     {
-        if (!$this->isSkeletonChecked() && !$this->getTestsConfiguration()->hasProtectedAccess()) {
+        if (!$this->getTestsConfiguration()->hasProtectedAccess()) {
             self::assertTrue(true, 'Crawlers can access content as anyone else');
 
             return;
@@ -122,7 +123,6 @@ class PassingTest extends AbstractContentTest
 
     /**
      * @test
-     * @backupGlobals enabled
      */
     public function I_see_message_about_trial_expiration_if_happens(): void
     {
@@ -136,7 +136,14 @@ class PassingTest extends AbstractContentTest
         self::assertCount(0, $warningsOnFirstVisit, 'No warnings expected so far');
         $warningsOnTrialExpiration = $this->getHtmlDocument([Request::TRIAL_EXPIRED_AT => time() - 1])
             ->getElementsByClassName('warning');
-        self::assertCount(1, $warningsOnTrialExpiration, 'Expected single warning about trial expiration');
+        self::assertCount(
+            1,
+            $warningsOnTrialExpiration,
+            sprintf(
+                "Expected single warning about trial expiration as test configuration says by '%s'",
+                TestsConfiguration::HAS_PROTECTED_ACCESS
+            )
+        );
         /** @var Element $warningAboutTrialExpiration */
         $warningAboutTrialExpiration = $warningsOnTrialExpiration->current();
         self::assertSame('⌛ Čas tvého testování se naplnil ⌛', $warningAboutTrialExpiration->textContent);

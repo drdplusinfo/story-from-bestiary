@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace DrdPlus\Tests\RulesSkeleton\Partials;
 
 interface TestsConfigurationReader
@@ -16,6 +17,22 @@ interface TestsConfigurationReader
     public function hasNotes(): bool;
 
     public function hasIds(): bool;
+
+    public function hasCalculations(): bool;
+
+    public function hasButtons(): bool;
+
+    public function hasShownHomeButton(): bool;
+
+    public function hasShownHomeButtonOnHomepage(): bool;
+
+    public function hasShownHomeButtonOnRoutes(): bool;
+
+    public function hasMarkedContent(): bool;
+
+    public function hasMarkedResult(): bool;
+
+    public function hasLocalRepositories(): bool;
 
     public function hasLocalLinks(): bool;
 
@@ -58,4 +75,8 @@ interface TestsConfigurationReader
     public function getTooShortResultNames(): array;
 
     public function hasTableOfContents(): bool;
+
+    public function getExpectedHomeButtonTargetFromHomepage(): string;
+
+    public function getExpectedHomeButtonTargetFromRoutes(): string;
 }
