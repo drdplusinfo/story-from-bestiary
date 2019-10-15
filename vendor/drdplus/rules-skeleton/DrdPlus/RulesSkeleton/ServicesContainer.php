@@ -592,7 +592,7 @@ class ServicesContainer extends StrictObject
         if ($this->tablesRequestDetector === null) {
             $this->tablesRequestDetector = new TablesRequestDetector(
                 $this->getRulesUrlMatcher(),
-                $this->request
+                $this->getRequest()
             );
         }
         return $this->tablesRequestDetector;

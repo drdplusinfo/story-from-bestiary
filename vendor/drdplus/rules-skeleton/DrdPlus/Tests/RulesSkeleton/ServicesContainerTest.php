@@ -159,4 +159,19 @@ class ServicesContainerTest extends AbstractContentTest
         $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
         self::assertEquals(new CookiesService($servicesContainer->getRequest()), $servicesContainer->getCookiesService());
     }
+
+    /**
+     * @test
+     */
+    public function I_can_get_table_request_detector_even_if_no_route_file()
+    {
+        $servicesContainer = new class($this->getConfiguration(), $this->getHtmlHelper()) extends ServicesContainer {
+            protected function getYamlFileWithRoutes(): string
+            {
+                return '';
+            }
+        };
+        $tablesRequestDetector = $servicesContainer->getTablesRequestDetector();
+        self::assertNotEmpty($tablesRequestDetector);
+    }
 }
