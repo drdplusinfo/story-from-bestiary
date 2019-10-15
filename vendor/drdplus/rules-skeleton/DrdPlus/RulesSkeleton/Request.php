@@ -91,6 +91,9 @@ class Request extends StrictObject
             unset($queryParameters[$excludeParameter]);
         }
         $queryParameters = \array_merge($queryParameters ?? [], $overwriteParameters);
+        if (!$queryParameters) {
+            return $path;
+        }
 
         return $path . '?' . \http_build_query($queryParameters);
     }
@@ -171,7 +174,7 @@ class Request extends StrictObject
         );
     }
 
-    public function areRequestedTables(): bool
+    public function areTablesRequested(): bool
     {
         return $this->getValueFromGet(self::TABLES) !== null || $this->getValueFromGet(self::TABULKY) !== null;
     }

@@ -6,11 +6,12 @@ use DrdPlus\RulesSkeleton\Cache;
 use DrdPlus\RulesSkeleton\CurrentWebVersion;
 use DrdPlus\RulesSkeleton\Exceptions\CanNotReadCachedContent;
 use DrdPlus\RulesSkeleton\Request;
+use DrdPlus\RulesSkeleton\WebCache;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use Granam\String\StringTools;
 use Mockery\MockInterface;
 
-class CacheTest extends AbstractContentTest
+class WebCacheTest extends AbstractContentTest
 {
     /** @var string */
     protected $temporaryRootDir;
@@ -32,18 +33,20 @@ class CacheTest extends AbstractContentTest
     {
         // using temporary NON-existing dir to use more code
         $dirs = $this->createDirs($this->getTemporaryRootDir());
-        $cacheClass = $this->getCacheClass();
-        /** @var Cache $cache */
-        $cache = new $cacheClass(
+        $webCacheClass = $this->getWebCacheClass();
+        $cacheSubDir = \uniqid(__FUNCTION__, true);
+        /** @var WebCache $cache */
+        $cache = new $webCacheClass(
             $this->createCurrentWebVersionMock($version),
             $dirs,
+            $cacheSubDir,
             $this->getRequest(),
+            $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
-            Cache::NOT_IN_PRODUCTION,
-            'foo'
+            Cache::NOT_IN_PRODUCTION
         );
-        self::assertSame($dirs->getCacheRoot() . '/' . $version, $cache->getCacheDir());
+        self::assertSame($dirs->getCacheRoot() . '/web/' . $cacheSubDir . '/' . $version, $cache->getCacheDir());
     }
 
     /**
@@ -84,16 +87,18 @@ class CacheTest extends AbstractContentTest
         $request = $this->mockery($this->getRequestClass());
         $request->makePartial();
 
-        $cacheClass = $this->getCacheClass();
-        /** @var Cache $cache */
-        $cache = new $cacheClass(
+        $webCacheClass = $this->getWebCacheClass();
+        $cacheSubDir = \uniqid(__FUNCTION__, true);
+        /** @var WebCache $cache */
+        $cache = new $webCacheClass(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
+            $cacheSubDir,
             $request,
+            $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
-            Cache::NOT_IN_PRODUCTION,
-            \uniqid(__FUNCTION__, true)
+            Cache::NOT_IN_PRODUCTION
         );
         self::assertFalse($cache->isCacheValid(), 'Nothing should be cached so far');
         $cache->cacheContent($content = 'foo of bar over baz!');
@@ -116,16 +121,18 @@ class CacheTest extends AbstractContentTest
      */
     public function I_can_disable_cache(?string $cacheParameter, bool $expectedCacheValid): void
     {
-        $cacheClass = $this->getCacheClass();
-        /** @var Cache $cache */
-        $cache = new $cacheClass(
+        $webCacheClass = $this->getWebCacheClass();
+        $cacheSubDir = \uniqid(__FUNCTION__, true);
+        /** @var WebCache $cache */
+        $cache = new $webCacheClass(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
+            $cacheSubDir,
             $this->createRequest([Request::CACHE => $cacheParameter]),
+            $this->getContentIrrelevantRequestAliases(),
             $this->getContentIrrelevantParametersFilter(),
             $this->getGit(),
-            Cache::NOT_IN_PRODUCTION,
-            \uniqid(__FUNCTION__, true)
+            Cache::NOT_IN_PRODUCTION
         );
         self::assertFalse($cache->isCacheValid(), 'Nothing should be cached so far');
         $cache->cacheContent($content = 'pocked world');
@@ -165,16 +172,18 @@ class CacheTest extends AbstractContentTest
             'Some parameters are not irrelevant for cache (and therefore page content)'
         );
 
-        $cacheClass = $this->getCacheClass();
+        $webCacheClass = $this->getWebCacheClass();
+        $cacheSubDir = \uniqid(__FUNCTION__, true);
         /** @var Cache $cacheWithoutTrial */
-        $cacheWithoutTrial = new $cacheClass(
+        $cacheWithoutTrial = new $webCacheClass(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
+            $cacheSubDir,
             $this->getRequest(),
+            $this->getContentIrrelevantRequestAliases(),
             $contentIrrelevantParametersFilter,
             $this->getGit(),
-            Cache::NOT_IN_PRODUCTION,
-            $prefix = \uniqid(__FUNCTION__, true)
+            Cache::NOT_IN_PRODUCTION
         );
         self::assertFalse($cacheWithoutTrial->isCacheValid(), 'Nothing should be cached so far');
         $cacheWithoutTrial->cacheContent($content = 'foo of bar over baz!');
@@ -182,14 +191,15 @@ class CacheTest extends AbstractContentTest
         self::assertSame($content, $cacheWithoutTrial->getCachedContent());
 
         /** @var Cache $cacheWithTrialRequest */
-        $cacheWithTrialRequest = new $cacheClass(
+        $cacheWithTrialRequest = new $webCacheClass(
             $this->getCurrentWebVersion(),
             $this->getDirs(),
+            $cacheSubDir, // same sub-dir
             $this->createRequest($cacheIrrelevantParameters),
+            $this->getContentIrrelevantRequestAliases(),
             $contentIrrelevantParametersFilter,
             $this->getGit(),
-            Cache::NOT_IN_PRODUCTION,
-            $prefix //same prefix
+            Cache::NOT_IN_PRODUCTION
         );
         self::assertTrue($cacheWithTrialRequest->isCacheValid(), 'Expected content to be already cached');
         self::assertSame($content, $cacheWithTrialRequest->getCachedContent());

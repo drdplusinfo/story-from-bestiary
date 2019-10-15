@@ -31,7 +31,7 @@ class ServicesContainerTest extends AbstractContentTest
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
         $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
-        self::assertNotEmpty($servicesContainer->getWebFiles());
+        self::assertNotEmpty($servicesContainer->getRoutedWebFiles());
     }
 
     /**
@@ -67,6 +67,7 @@ class ServicesContainerTest extends AbstractContentTest
         self::assertNotEmpty($rulesUrlMatcher);
         self::assertEquals(
             new RouteMatch([
+                '_route' => 'root',
                 'path' => 'default_frmol',
                 'resource' => null,
                 'type' => null,
@@ -80,6 +81,7 @@ class ServicesContainerTest extends AbstractContentTest
         if ($this->isSkeletonChecked()) {
             self::assertEquals(
                 new RouteMatch([
+                    '_route' => 'root',
                     'path' => 'routed',
                     'resource' => null,
                     'type' => null,
@@ -129,7 +131,7 @@ class ServicesContainerTest extends AbstractContentTest
         $servicesContainer = new $servicesContainerClass($configuration, $this->createHtmlHelper());
         $rulesUrlMatcher = $servicesContainer->getRulesUrlMatcher();
         self::assertNotEmpty($rulesUrlMatcher);
-        self::assertEquals(new RouteMatch(['path' => 'something']), $rulesUrlMatcher->match('/something'));
+        self::assertEquals(new RouteMatch(['path' => 'something', '_route' => 'root']), $rulesUrlMatcher->match('/something'));
     }
 
     /**
