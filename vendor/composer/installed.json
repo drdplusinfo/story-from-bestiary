@@ -371,17 +371,17 @@
     },
     {
         "name": "drdplus/rules-skeleton",
-        "version": "1.7.5",
-        "version_normalized": "1.7.5.0",
+        "version": "1.7.9",
+        "version_normalized": "1.7.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/drdplusinfo/rules-skeleton.git",
-            "reference": "efca18a5e5586f1dcb4c32d8f055030cbd9d218d"
+            "reference": "5cd4883962e8b98a2392d8859cbc557219918482"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/drdplusinfo/rules-skeleton/zipball/efca18a5e5586f1dcb4c32d8f055030cbd9d218d",
-            "reference": "efca18a5e5586f1dcb4c32d8f055030cbd9d218d",
+            "url": "https://api.github.com/repos/drdplusinfo/rules-skeleton/zipball/5cd4883962e8b98a2392d8859cbc557219918482",
+            "reference": "5cd4883962e8b98a2392d8859cbc557219918482",
             "shasum": ""
         },
         "require": {
@@ -414,7 +414,7 @@
             "phpunit/phpunit": "^8.3",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2019-10-15T12:27:36+00:00",
+        "time": "2019-10-16T07:50:36+00:00",
         "bin": [
             "bin/fix_web_permissions.sh"
         ],
@@ -979,28 +979,28 @@
     },
     {
         "name": "justinrainbow/json-schema",
-        "version": "5.2.8",
-        "version_normalized": "5.2.8.0",
+        "version": "5.2.9",
+        "version_normalized": "5.2.9.0",
         "source": {
             "type": "git",
             "url": "https://github.com/justinrainbow/json-schema.git",
-            "reference": "dcb6e1006bb5fd1e392b4daa68932880f37550d4"
+            "reference": "44c6787311242a979fa15c704327c20e7221a0e4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/dcb6e1006bb5fd1e392b4daa68932880f37550d4",
-            "reference": "dcb6e1006bb5fd1e392b4daa68932880f37550d4",
+            "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/44c6787311242a979fa15c704327c20e7221a0e4",
+            "reference": "44c6787311242a979fa15c704327c20e7221a0e4",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.3"
         },
         "require-dev": {
-            "friendsofphp/php-cs-fixer": "~2.2.20",
+            "friendsofphp/php-cs-fixer": "~2.2.20||~2.15.1",
             "json-schema/json-schema-test-suite": "1.2.0",
             "phpunit/phpunit": "^4.8.35"
         },
-        "time": "2019-01-14T23:55:14+00:00",
+        "time": "2019-09-25T14:49:45+00:00",
         "bin": [
             "bin/validate-json"
         ],

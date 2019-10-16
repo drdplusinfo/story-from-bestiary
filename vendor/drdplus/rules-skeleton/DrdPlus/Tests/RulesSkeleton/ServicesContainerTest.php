@@ -174,4 +174,17 @@ class ServicesContainerTest extends AbstractContentTest
         $tablesRequestDetector = $servicesContainer->getTablesRequestDetector();
         self::assertNotEmpty($tablesRequestDetector);
     }
+
+    /**
+     * @test
+     */
+    public function Root_web_files_differs_to_routed_web_files()
+    {
+        $servicesContainerClass = static::getSutClass();
+        /** @var ServicesContainer $servicesContainer */
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $routedWebFiles = $servicesContainer->getRoutedWebFiles();
+        $rootWebFiles = $servicesContainer->getRootWebFiles();
+        self::assertNotEquals($routedWebFiles, $rootWebFiles);
+    }
 }
