@@ -165,7 +165,8 @@ class ServicesContainerTest extends AbstractContentTest
      */
     public function I_can_get_table_request_detector_even_if_no_route_file()
     {
-        $servicesContainer = new class($this->getConfiguration(), $this->getHtmlHelper()) extends ServicesContainer {
+        $servicesContainer = new class($this->getConfiguration(), $this->getHtmlHelper()) extends ServicesContainer
+        {
             protected function getYamlFileWithRoutes(): string
             {
                 return '';
@@ -178,13 +179,26 @@ class ServicesContainerTest extends AbstractContentTest
     /**
      * @test
      */
-    public function Root_web_files_differs_to_routed_web_files()
+    public function Root_web_files_differs_to_routed_one()
     {
         $servicesContainerClass = static::getSutClass();
         /** @var ServicesContainer $servicesContainer */
         $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
-        $routedWebFiles = $servicesContainer->getRoutedWebFiles();
         $rootWebFiles = $servicesContainer->getRootWebFiles();
-        self::assertNotEquals($routedWebFiles, $rootWebFiles);
+        $routedWebFiles = $servicesContainer->getRoutedWebFiles();
+        self::assertNotEquals($rootWebFiles, $routedWebFiles);
+    }
+
+    /**
+     * @test
+     */
+    public function Root_web_parts_container_differs_to_routed_one()
+    {
+        $servicesContainerClass = static::getSutClass();
+        /** @var ServicesContainer $servicesContainer */
+        $servicesContainer = new $servicesContainerClass($this->getConfiguration(), $this->createHtmlHelper());
+        $rootWebPartsContainer = $servicesContainer->getRootWebPartsContainer();
+        $routedWebPartsContainer = $servicesContainer->getRoutedWebPartsContainer();
+        self::assertNotEquals($rootWebPartsContainer, $routedWebPartsContainer);
     }
 }

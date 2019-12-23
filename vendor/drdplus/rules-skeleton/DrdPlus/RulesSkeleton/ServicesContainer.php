@@ -72,7 +72,9 @@ class ServicesContainer extends StrictObject
     /** @var Bot */
     private $botParser;
     /** @var WebPartsContainer */
-    private $webPartsContainer;
+    private $rootWebPartsContainer;
+    /** @var WebPartsContainer */
+    private $routedWebPartsContainer;
     /** @var RulesMainContent */
     private $rulesMainContent;
     /** @var RulesMainContent */
@@ -195,8 +197,8 @@ class ServicesContainer extends StrictObject
 
     public function getRoutedWebPartsContainer(): WebPartsContainer
     {
-        if ($this->webPartsContainer === null) {
-            $this->webPartsContainer = new WebPartsContainer(
+        if ($this->routedWebPartsContainer === null) {
+            $this->routedWebPartsContainer = new WebPartsContainer(
                 $this->getPass(),
                 $this->getRoutedWebFiles(),
                 $this->getDirs(),
@@ -204,7 +206,7 @@ class ServicesContainer extends StrictObject
                 $this->getRequest()
             );
         }
-        return $this->webPartsContainer;
+        return $this->routedWebPartsContainer;
     }
 
     public function getTablesContent(): TablesContent
@@ -221,8 +223,8 @@ class ServicesContainer extends StrictObject
 
     public function getRootWebPartsContainer(): WebPartsContainer
     {
-        if ($this->webPartsContainer === null) {
-            $this->webPartsContainer = new WebPartsContainer(
+        if ($this->rootWebPartsContainer === null) {
+            $this->rootWebPartsContainer = new WebPartsContainer(
                 $this->getPass(),
                 $this->getRootWebFiles(),
                 $this->getDirs(),
@@ -230,7 +232,7 @@ class ServicesContainer extends StrictObject
                 $this->getRequest()
             );
         }
-        return $this->webPartsContainer;
+        return $this->rootWebPartsContainer;
     }
 
     public function getPdfContent(): PdfContent

@@ -3,7 +3,7 @@
 namespace DrdPlus\Tests\RulesSkeleton;
 
 use Composer\Plugin\PluginInterface;
-use DrdPlus\RulesSkeleton\SkeletonInjectorComposerPlugin;
+use DrdPlus\RulesSkeleton\InjectorComposerPlugin\SkeletonInjectorComposerPlugin;
 use DrdPlus\Tests\RulesSkeleton\Partials\AbstractContentTest;
 use DrdPlus\Tests\RulesSkeleton\Partials\TestsConfigurationReaderTest;
 
@@ -15,8 +15,7 @@ class TestsTest extends AbstractContentTest
      */
     public function Every_test_lives_in_drd_plus_tests_namespace(): void
     {
-        $reflectionClass = new \ReflectionClass(static::class);
-        $testsDir = \dirname($reflectionClass->getFileName());
+        $testsDir = $this->getTestsDir();
         $testClasses = $this->getClassesFromDir($testsDir);
         self::assertNotEmpty($testClasses, "No test classes found in {$testsDir}");
         foreach ($testClasses as $testClass) {
@@ -28,36 +27,70 @@ class TestsTest extends AbstractContentTest
         }
     }
 
+    protected function getTestsDir(): string
+    {
+        $reflectionClass = new \ReflectionClass(static::class);
+        return \dirname($reflectionClass->getFileName());
+    }
+
     /**
      * @test
      * @throws \ReflectionException
      */
     public function Every_test_reflects_test_class_namespace(): void
     {
-        $referenceTestClass = new \ReflectionClass($this->getRulesApplicationTestClass());
-        $referenceTestDir = \dirname($referenceTestClass->getFileName());
+        $testsDir = $this->getTestsDir();
+        foreach ($this->getClassesFromDir($testsDir) as $testClass) {
+            $this->Test_is_testing_something($testClass);
+        }
+    }
+
+    protected function Test_is_testing_something(string $testClass)
+    {
         $testingClassesWithoutSut = $this->getTestingClassesWithoutSut();
-        foreach ($this->getClassesFromDir($referenceTestDir) as $testClass) {
-            $testClassReflection = new \ReflectionClass($testClass);
-            if ($testClassReflection->isAbstract()
-                || $testClassReflection->isInterface()
-                || $testClassReflection->isTrait()
-                || \in_array($testClass, $testingClassesWithoutSut, true)
-            ) {
-                continue;
-            }
-            if ($testClass === SkeletonInjectorComposerPlugin::class) {
-                self::assertTrue(
-                    \interface_exists(PluginInterface::class),
-                    "Composer package is required for this test, include it by\ncomposer require --dev composer/composer"
-                );
-            }
-            $testedClass = static::getSutClass($testClass);
+        $testClassReflection = new \ReflectionClass($testClass);
+        if ($testClassReflection->isAbstract()
+            || $testClassReflection->isInterface()
+            || $testClassReflection->isTrait()
+            || \in_array($testClass, $testingClassesWithoutSut, true)
+        ) {
+            return;
+        }
+        if (is_a($testClass, SkeletonInjectorComposerPlugin::class, true)) {
             self::assertTrue(
-                \class_exists($testedClass),
-                "What is testing $testClass? Class $testedClass has not been found."
+                \interface_exists(PluginInterface::class),
+                "Composer package is required for this test, include it by\ncomposer require --dev composer/composer"
             );
         }
+        $sutClass = static::getSutClass($testClass);
+        $classExists = \class_exists($sutClass);
+        if (!$classExists) {
+            foreach ($testingClassesWithoutSut as $testClassWithoutSut) {
+                if (is_a($testClass, $testClassWithoutSut, true)) {
+                    return; // some parent of test class is on white list
+                }
+            }
+        }
+        if (!$classExists) {
+            $classExists = $this->isParentTestTestingSomeExistingClass($testClassReflection);
+        }
+        self::assertTrue(
+            $classExists,
+            "What is testing $testClass? Class $sutClass has not been found."
+        );
+    }
+
+    private function isParentTestTestingSomeExistingClass(\ReflectionClass $testClassReflection): bool
+    {
+        $testParentClassReflection = $testClassReflection->getParentClass();
+        if (!$testParentClassReflection || !preg_match('~Test$~', $testParentClassReflection->getName())) {
+            return false;
+        }
+        $parentSutClass = static::getSutClass($testParentClassReflection->getName());
+        if (class_exists($parentSutClass)) {
+            return true;
+        }
+        return $this->isParentTestTestingSomeExistingClass($testParentClassReflection);
     }
 
     protected function getTestingClassesWithoutSut(): array
@@ -88,17 +121,6 @@ class TestsTest extends AbstractContentTest
             TableOfContentsTest::class,
             GitTest::class,
         ];
-    }
-
-    private function getRulesApplicationTestClass(): string
-    {
-        $rulesApplicationTestClass = \str_replace('DrdPlus\\', 'DrdPlus\\Tests\\', $this->getRulesApplicationClass()) . 'Test';
-        self::assertTrue(
-            \class_exists($rulesApplicationTestClass),
-            'Estimated rules application test class does not exist: ' . $rulesApplicationTestClass
-        );
-
-        return $rulesApplicationTestClass;
     }
 
     protected function getClassesFromDir(string $dir): array
